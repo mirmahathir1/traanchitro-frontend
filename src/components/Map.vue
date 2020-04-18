@@ -1,26 +1,38 @@
 <template>
     <div>
-        <div
-                class="google-map"
-                ref="googleMap"
-        ></div>
+        <div class="google-map" ref="googleMap"></div>
         <template v-if="Boolean(this.google) && Boolean(this.map)">
             <slot
                     :google="google"
                     :map="map"
             />
         </template>
-      <v-btn
-              absolute
-              dark
-              fab
-              top
-              right
-              color="light-blue"
-              style="top: 80vh;"
-      >
-        <v-icon @click="refreshClicked()">mdi-pin-outline</v-icon>
-      </v-btn>
+        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;">
+            <v-icon @click="refreshClicked()">mdi-pin-outline</v-icon>
+        </v-btn>
+        <v-snackbar
+                v-model="snackbar"
+                vertical
+                color="black"
+        >
+            {{ snackbarText }}
+            <div>
+            <v-btn
+                    color="white"
+                    text
+            >
+                Don't show again
+            </v-btn>
+            <v-btn
+                    color="white"
+                    text
+                    @click="snackbar = false"
+            >
+                Close
+            </v-btn>
+            </div>
+
+        </v-snackbar>
     </div>
 </template>
 
@@ -34,6 +46,8 @@
         data() {
             return {
                 sheet: false,
+                snackbar: true,
+                snackbarText: "Please press reload to show pins",
 
                 google: null,
                 map: null,
@@ -68,9 +82,9 @@
         },
 
         methods: {
-            refreshClicked(){
+            refreshClicked() {
                 console.log('Refresh Clicked');
-                console.log('Map bounds:',this.map.getBounds());
+                console.log('Map bounds:', this.map.getBounds());
 
                 //this.map.fitBounds(this.map.getBounds());
 
@@ -84,9 +98,9 @@
 
                 //OVERWRITE
                 data.locations = [
-                    {lat:23.7494231,lng:90.3830754},
+                    {lat: 23.7494231, lng: 90.3830754},
 
-                    {lat: 23.688,lng:90.1}
+                    {lat: 23.688, lng: 90.1}
                 ];
 
                 this.map.setCenter(data.focusLocation);
@@ -95,15 +109,14 @@
                 this.clearAllMarkers();
 
                 //fit the map according to the bound of the new area
-                if(data.bounds!=undefined) {
+                if (data.bounds != undefined) {
                     let northeastlatlng = new this.google.maps.LatLng(data.bounds.northeast.lat, data.bounds.northeast.lng);
                     let southwestlatlng = new this.google.maps.LatLng(data.bounds.southwest.lat, data.bounds.southwest.lng);
                     var bounds = new this.google.maps.LatLngBounds();
                     bounds.extend(northeastlatlng);
                     bounds.extend(southwestlatlng);
                     this.map.fitBounds(bounds);
-                }
-                else{
+                } else {
                     this.map.setZoom(17);
                 }
 
@@ -119,7 +132,6 @@
             },
 
             addNewMarkers(locations) {
-
 
 
                 locations.forEach((location) => {
@@ -144,14 +156,13 @@
                 };
                 this.map.setCenter(selectedLocation);
 
-                let newPath = '/search/details/'+ JSON.stringify(selectedLocation);
+                let newPath = '/search/details/' + JSON.stringify(selectedLocation);
 
                 //console.log(encodeURI(newPath));
 
-                if(this.$route.path !== newPath) {
+                if (this.$route.path !== newPath) {
                     this.$router.push(newPath);
                 }
-
 
 
             },
