@@ -3,7 +3,7 @@
         <v-list>
             <v-list-item>
                 <v-list-item-title>
-                    Page Not Found
+                    Page under maintenance...
                 </v-list-item-title>
             </v-list-item>
         </v-list>
@@ -12,7 +12,7 @@
 
 <script>
     export default {
-        name: "NotFound"
+        name: "HowTo"
     }
 </script>
 

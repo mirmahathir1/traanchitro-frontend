@@ -1,28 +1,37 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app id="inspire">
+    <SideDrawer></SideDrawer>
+    <TopBar></TopBar>
+    <v-content app class="backimage">
+        <router-view></router-view>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  import Map from "./components/Map";
+  import TopBar from "./components/TopBar";
+  import SideDrawer from "./components/SideDrawer";
+  export default {
+    props: {
+      source: String,
+    },
+    components:{
+      Map,
+      SideDrawer,
+      TopBar
+    },
+    data: () => ({
+     })
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .backimage{
+    background-image: url("assets/landing.jpg");
+    background-position: center;
+    background-repeat:repeat;
+    height: 100%;
+    /*background-size:100% 100%;*/
+  }
 </style>
