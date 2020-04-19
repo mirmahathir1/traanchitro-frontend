@@ -12,12 +12,13 @@
                class="mr-2"
         ></v-img>
 
-        <v-toolbar-title class="align-center" v-if="!isMobile()">
+        <v-toolbar-title class="align-center" v-if="!isMobile() || !$route.path.startsWith('/search')">
             <span class="title">Call For Nation</span>
         </v-toolbar-title>
 
 
         <v-spacer />
+        <template v-if="$route.path.startsWith('/search')">
         <v-row
                 align="center"
                 style="max-width: 650px"
@@ -33,8 +34,9 @@
                     v-model="searchAddress"
             />
         </v-row>
-        <v-btn large class="primary darken-3 mr-1 ml-1" dark icon @click="searchClicked" :loading="searchLoaderFlag"><v-icon>mdi-magnify</v-icon></v-btn>
+        <v-btn large class="primary darken-2 mr-1 ml-1" dark icon @click="searchClicked" :loading="searchLoaderFlag"><v-icon>mdi-magnify</v-icon></v-btn>
         <Filters></Filters>
+        </template>
     </v-app-bar>
 </template>
 

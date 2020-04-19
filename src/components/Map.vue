@@ -7,19 +7,23 @@
                     :map="map"
             />
         </template>
-        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;">
-            <v-icon @click="refreshClicked()">mdi-pin-outline</v-icon>
+        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 15vw">
+            <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
         <v-snackbar
                 v-model="snackbar"
+                v-if="$store.getters.getDragZoomNotifier"
                 vertical
                 color="black"
+                left
+                style="width: 300px"
         >
             {{ snackbarText }}
             <div>
             <v-btn
                     color="white"
                     text
+                    @click="stopDragZoomNotifier"
             >
                 Don't show again
             </v-btn>
@@ -82,13 +86,13 @@
         },
 
         methods: {
+            stopDragZoomNotifier(){
+                this.$store.commit('stopDragZoomNotifier');
+                this.snackbar=false;
+            },
             refreshClicked() {
                 console.log('Refresh Clicked');
                 console.log('Map bounds:', this.map.getBounds());
-
-                //this.map.fitBounds(this.map.getBounds());
-
-
             },
 
             mapListener(data) {
@@ -178,18 +182,20 @@
             mapDragEnded() {
                 //console.log("Map dragged and bounds changed");
                 //console.log(this.map.getBounds());
+                this.snackbar=true;
             },
             mapZoomChanged() {
-                console.log("Zoom changed");
-                console.log(this.map.getBounds());
+                // console.log("Zoom changed");
+                // console.log(this.map.getBounds());
+                this.snackbar=true;
             },
 
             initializeMap() {
                 const mapContainer = this.$refs.googleMap;
                 this.map = new this.google.maps.Map(mapContainer, this.mapConfig);
                 //this.map.addListener('click', this.mapClicked);
-                //this.map.addListener('dragend', this.mapDragEnded);
-                //this.map.addListener('zoom_changed', this.mapZoomChanged);
+                this.map.addListener('dragend', this.mapDragEnded);
+                this.map.addListener('zoom_changed', this.mapZoomChanged);
             }
         }
     };
@@ -198,6 +204,6 @@
 <style scoped>
     .google-map {
         width: 100%;
-        height: 95vh;
+        height: 90vh;
     }
 </style>

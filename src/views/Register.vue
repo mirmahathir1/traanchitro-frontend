@@ -1,6 +1,6 @@
 <template>
     <div>
-    <v-card class="mx-auto elevation-12" max-width="500" style="top: 10vh" v-if="!requestCompleted">
+    <v-card class="mx-auto mb-5 elevation-12" max-width="500" v-if="!requestCompleted">
         <v-toolbar
                 dark
                 flat
@@ -17,7 +17,8 @@
                         name="organization"
                         type="text"
                 />
-                <v-text-field
+                <v-textarea
+                        outlined
                         color="primary"
                         label="Brief Description of Organization"
                         name="description"

@@ -19,12 +19,15 @@ app.use(staticFileMiddleware);
 //CONFIGURATION TO SERVE VUEJS APP------END
 
 
-app.post('/test',function (req, res) {
+app.get('/test',function (req, res) {
     console.log(req.body);
+    console.log(req.header('token'));
+    console.log(req.query.page);
+    console.log(req.query.number);
     let hello={
         name: "Mahathir"
     };
-    res.send(hello);
+    res.send(hello);//
 });
 
 app.listen(5000, function () {

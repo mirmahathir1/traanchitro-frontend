@@ -25,11 +25,9 @@
                             sm="12"
                             lg="9"
                     >
-                        <v-select
-                                :items="items"
-                                label="Select Type"
-                                outlined
-                        ></v-select>
+                        <v-checkbox v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
                     </v-col>
                 </v-row>
             </v-list-item>
@@ -49,7 +47,9 @@
                                 class="mr-2"
                                 v-model="searchedLocation"
                         />
-                        <v-btn class="primary lighten-1 mb-5" @click="searchClicked" :loading="searchLoaderFlag">Search</v-btn>
+                        <v-btn class="primary lighten-1 mb-5" @click="searchClicked" :loading="searchLoaderFlag">
+                            Search
+                        </v-btn>
                     </v-col>
                     <v-col
                             cols="12"
@@ -92,7 +92,11 @@
                                         v-on="on"
                                 ></v-text-field>
                             </template>
-                            <v-date-picker color="green" v-model="date" @input="menu2 = false"></v-date-picker>
+                            <v-date-picker color="primary" v-model="date">
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="()=>{menu2=false;date=null;}">Reset</v-btn>
+                                <v-btn text color="primary" @click="menu2 = false">Done</v-btn>
+                            </v-date-picker>
                         </v-menu>
                     </v-col>
                 </v-row>
@@ -139,30 +143,29 @@
                             <v-col
                                     sm="3"
                             >
-                                <v-text-field
-                                        color="primary"
+                                <v-text-field color="primary"
                                         label="Description"
                                         name="description"
                                         type="text"
                                         v-model="inputEntry.description"
                                 />
                             </v-col>
-                            <v-col
-                                    sm="3"
-                            >
-                                <v-btn class="primary lighten-1 ml-4" @click="addToList">Add</v-btn>
+                            <v-col sm="3">
+                                <v-btn class="primary lighten-1 ml-4" fab dark x-small color="primary">
+                                    <v-icon dark @click="addToList">mdi-plus</v-icon>
+                                </v-btn>
                             </v-col>
                         </v-row>
 
                         <v-alert v-for="(entry,index) in list"
                                  :key="index"
                                  close-text="Close Alert"
-                                 class="blue lighten-4"
+                                 class="blue lighten-5"
                         >
+                            {{entry.item}} / {{entry.quantity}} / {{entry.description}}
                             <v-btn class="mx-2" fab dark x-small color="primary">
                                 <v-icon dark @click="removeFromList(index)">mdi-minus</v-icon>
                             </v-btn>
-                            {{entry.item}}-{{entry.quantity}}-{{entry.description}}
                         </v-alert>
                     </v-col>
                 </v-row>
@@ -170,7 +173,7 @@
             <v-list-item>
                 <v-spacer></v-spacer>
                 <v-card-actions>
-                    <v-btn class="red lighten-1" to="/search">Cancel</v-btn>
+                    <v-btn class="red lighten-1" dark to="/search">Cancel</v-btn>
                     <v-btn class="primary lighten-1" @click="saveClicked" :loading="saveLoaderFlag">Save</v-btn>
                 </v-card-actions>
             </v-list-item>
@@ -199,11 +202,13 @@
             return {
                 saveLoaderFlag: false,
                 saveCompleteFlag: false,
-                searchLoaderFlag:false,
+                searchLoaderFlag: false,
 
                 items: ['Food', 'Sanitizer', 'PPE'],
+                selectedTypes: [],
                 searchedLocation: null,
-                date: new Date().toISOString().substr(0, 10),
+                //date: new Date().toISOString().substr(0, 10),
+                date: null,
                 menu2: false,
                 list: [],
                 location: {},
@@ -220,7 +225,7 @@
             LocationSelector
         },
         methods: {
-            setLocation(location){
+            setLocation(location) {
                 console.log('Set location called in Add.vue: ');
 
                 this.location = {
@@ -228,49 +233,50 @@
                     lng: location.lng(),
                 };
 
-                console.log('New Center set at Add.vue: ',this.location);
+                console.log('New Center set at Add.vue: ', this.location);
             },
 
-            searchClicked(){
+            searchClicked() {
                 console.log("Search clicked");
-                console.log('Name of location: ',this.searchedLocation);
-                this.searchLoaderFlag=true;
+                console.log('Name of location: ', this.searchedLocation);
+                this.searchLoaderFlag = true;
 
-                let newSearchAddress=this.searchedLocation+', Bangladesh';
-                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+newSearchAddress+'&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA';
+                let newSearchAddress = this.searchedLocation + ', Bangladesh';
+                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA';
                 let processedURL = url.replace(/ /g, '%20');
                 console.log('Send data: ', processedURL);
                 axios.get(processedURL)
-                    .then(res=>{
+                    .then(res => {
 
-                        console.log("The Full search result is ",res.data.results[0]);
+                        console.log("The Full search result is ", res.data.results[0]);
 
                         console.log(res.data.results[0].geometry.location);
 
-                        let data={
-                            focusLocation:res.data.results[0].geometry.location,
-                            locations:[],
+                        let data = {
+                            focusLocation: res.data.results[0].geometry.location,
+                            locations: [],
                             bounds: res.data.results[0].geometry.bounds,
                         };
 
 
-                        eventBus.$emit('searchClicked',data);
+                        eventBus.$emit('searchClicked', data);
                     })
-                    .finally(()=>{
-                        this.searchLoaderFlag=false;
+                    .finally(() => {
+                        this.searchLoaderFlag = false;
                     });
             },
 
             saveClicked() {
                 console.log('Save button clicked');
-                console.log('Received location from LocationSelector: ',this.location);
-
-
+                console.log('Received location from LocationSelector: ', this.location);
+                console.log('Types of relief selected: ', this.selectedTypes);
+                console.log('Selected date: ', this.date);
+                console.log('list of items', this.list);
                 this.saveLoaderFlag = true;
 
                 setTimeout(() => {
                     this.saveLoaderFlag = false;
-                    this.saveCompleteFlag = true;
+                    //this.saveCompleteFlag = true;
                 }, 3000);
             },
             addToList() {

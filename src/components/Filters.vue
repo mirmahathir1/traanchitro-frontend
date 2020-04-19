@@ -6,7 +6,7 @@
                 offset-x
         >
             <template v-slot:activator="{on}">
-                <v-btn large class="primary darken-4" v-on="on" dark>Filter</v-btn>
+                <v-btn large class="primary darken-2" v-on="on" dark>Filter</v-btn>
             </template>
             <v-card>
                 <v-card-title>Filter Search</v-card-title>
