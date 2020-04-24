@@ -8,6 +8,14 @@ export default new Vuex.Store({
     dragZoomNotifier: true,
 
     token:null,
+
+    filters : {
+      typeOfRelief: [],
+      schedule: null,
+      orgName: null,
+    },
+
+    organizations: [],
   },
   mutations: {
     stopDragZoomNotifier:((state) => {
@@ -15,7 +23,13 @@ export default new Vuex.Store({
     }),
     setToken:((state, token)=>{
       state.token = token;
-    })
+    }),
+    setFilters:((state, filters)=>{
+      state.filters = filters;
+    }),
+    setOrganizations: ((state, organizations)=> {
+      state.organizations = organizations;
+    }),
   },
   actions: {
   },
@@ -27,6 +41,12 @@ export default new Vuex.Store({
     },
     getToken: state =>{
       return state.token;
+    },
+    getFilters: state=>{
+      return state.filters;
+    },
+    getOrganizations: state=>{
+      return state.organizations;
     }
   }
 })

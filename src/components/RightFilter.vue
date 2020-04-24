@@ -1,9 +1,16 @@
 <template>
     <v-card max-width="400" style="position: fixed; top:20vh; right:0px">
-        <v-btn icon v-if="!enabled" @click="enabled=true"><v-icon>mdi-chevron-left</v-icon></v-btn>
+        <v-btn icon v-if="!enabled" @click="enabled=true">
+            <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
         <template v-else>
-        <v-card-title><v-btn icon @click="enabled=false"><v-icon>mdi-chevron-right</v-icon></v-btn>Filter Search</v-card-title>
-        <v-divider></v-divider>
+            <v-card-title>
+                <v-btn icon @click="enabled=false">
+                    <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+                Filter Search
+            </v-card-title>
+            <v-divider></v-divider>
 
             <v-container>
                 <v-row no-gutters>
@@ -11,29 +18,41 @@
                             :cols="4"
                     >
                         <p>Type of Relief:</p>
-                        <v-checkbox v-model="foodChecked" label="Food"></v-checkbox>
-                        <v-checkbox v-model="sanitizerChecked" label="Sanitizer"></v-checkbox>
-                        <v-checkbox v-model="ppeChecked" label="PPE"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
                     </v-col>
                     <v-col
                             :cols="8"
                     >
                         <p>Filter by Organization:</p>
-                        <v-select
-                                :items="Organizations"
-                                label="Select Organization"
-                                outlined
-                        ></v-select>
+                        <!--                        <v-select-->
+                        <!--                                :items="organizations"-->
+                        <!--                                label="Select Organization"-->
+                        <!--                                outlined-->
+                        <!--                                v-model="selectedOrganization"-->
+                        <!--                        ></v-select>-->
+                        <v-autocomplete
+                                v-model="selectedOrganization"
+                                :items="organizations"
+                                :search-input.sync="select"
+                                cache-items
+                                flat
+                                hide-no-data
+                                hide-details
+                                :label="'Type name of organization:' "
+                                class="mb-3"
+                        ></v-autocomplete>
 
                         <p>Schedule:</p>
-                        <v-radio-group v-model="Schedule">
+                        <v-radio-group v-model="schedule">
                             <v-radio
                                     :label="'Past Delivery'"
-                                    :value="1"
+                                    :value="'PAST'"
                             ></v-radio>
                             <v-radio
                                     :label="'Scheduled Delivery'"
-                                    :value="2"
+                                    :value="'FUTURE'"
                             ></v-radio>
                         </v-radio-group>
                     </v-col>
@@ -43,40 +62,55 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="menu = false">Close</v-btn>
-                <v-btn color="primary" text @click="filterSearch" :loading="filterSearchLoadingFlag">Search</v-btn>
+<!--                <v-btn text @click="enabled = false">Cancel</v-btn>-->
+                <v-btn color="primary" text @click="filterSearch">Search</v-btn>
             </v-card-actions>
         </template>
     </v-card>
 </template>
 
 <script>
+    import {eventBus} from "../main";
+
     export default {
         name: "RightFilter",
-        data:()=>{
-            return{
+        data: () => {
+            return {
                 enabled: false,
 
                 menu: false,
-                foodChecked:false,
-                ppeChecked:false,
-                sanitizerChecked:false,
-                Schedule: 1,
-                Organizations: ['WHO', 'Badhan', 'Biddananda', 'BUET','Dhaka University', 'Tran Somiti', 'Home Ministry', 'Ministry of Health','Dhaka Metropolitan Police', 'RAB', 'Notre Dame College', 'Richshaw Somiti','10 Minute School', 'Prothom-Alo', 'Kaler Kantha'],
 
+                selectedTypes: [],
+                selectedOrganization: null,
+                select: null,
+
+                schedule: null,
+                organizations: [],
                 filterSearchLoadingFlag: false,
             }
         },
-        methods:{
-            filterSearch(){
-                console.log("Filter Search Enabled");
+        created() {
+          this.organizations=this.$store.getters.getOrganizations;
+        },
+        methods: {
+            filterSearch() {
+                let filters = {
+                    typeOfRelief: this.selectedTypes,
+                    schedule: this.schedule,
+                    orgName: this.selectedOrganization
+                };
 
-                this.filterSearchLoadingFlag=true;
-                setTimeout(()=>{
+                this.$store.commit('setFilters', filters);
+                //console.log("Filters from store: ", this.$store.getters.getFilters);
+                this.enabled=false;
 
-                    this.menu=false;
-                    this.filterSearchLoadingFlag=false;
-                },2000);
+                eventBus.$emit('reloadMap');
+                // this.filterSearchLoadingFlag = true;
+                // setTimeout(() => {
+                //
+                //     this.menu = false;
+                //     this.filterSearchLoadingFlag = false;
+                // }, 2000);
             }
         }
     }

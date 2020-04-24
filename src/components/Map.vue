@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="google-map" ref="googleMap"></div>
+        <div class="google-map" ref="googleMap" id="map"></div>
         <template v-if="Boolean(this.google) && Boolean(this.map)">
             <slot
                     :google="google"
@@ -8,7 +8,7 @@
             />
         </template>
 
-        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 10vw" :loading="reloadLoaderFlag">
+        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag">
             <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
 
@@ -76,12 +76,16 @@
             eventBus.$on('resetAndShow', (data) => {
                 this.mapListener(data);
             });
+            eventBus.$on('reloadMap',()=>{
+                this.refreshClicked();
+            })
         },
 
         methods: {
             stopDragZoomNotifier() {
                 this.$store.commit('stopDragZoomNotifier');
                 this.snackbar = false;
+                localStorage.setItem('stopDragZoomNotifier','false');
             },
             refreshClicked() {
                 console.log('Refresh Clicked');
@@ -100,11 +104,7 @@
                             lng: bounds.Ua.i
                         }
                     },
-                    filter: {
-                        typeOfRelief: [],
-                        schedule: 'PAST',
-                        orgName: null
-                    }
+                    filter: this.$store.getters.getFilters
                 };
 
                 let headers = {
@@ -113,17 +113,14 @@
                 console.log('params: ',params,", headers: ",headers);
 
                 this.reloadLoaderFlag=true;
-                //https://stormy-lake-20015.herokuapp.com/api/pins
-                //axios.get('http://localhost:5000/test',
-                axios.get('https://stormy-lake-20015.herokuapp.com/api/pins',
+
+                axios.get('/api/pins',
                     {
                         headers: headers,
                         params: params
                     })
                     .then((res)=>{
-                        //console.log(res.data);
                         let data = {
-                            //focusLocation:this.map.getCenter(),
                             locations: res.data.locations,
                         };
                         console.log(data);
@@ -170,7 +167,6 @@
 
             addNewMarkers(locations) {
 
-
                 locations.forEach((location) => {
                     let marker = new this.google.maps.Marker({
                         position: {
@@ -178,6 +174,7 @@
                             lng: location.lng
                         },
                         map: this.map,
+                        animation: this.google.maps.Animation.DROP
                     });
                     this.markers.push(marker);
                     marker.addListener('click', this.seeMarkerDetails);
@@ -238,5 +235,26 @@
     .google-map {
         width: 100%;
         height: 90vh;
+    }
+    #map {
+        position: relative;
+    }
+
+    #map:after {
+        width: 40px;
+        /*width: 22px;*/
+        height: 40px;
+        display: block;
+        content: ' ';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -40px 0 0 -20px;
+        /*margin: -40px 0 0 -11px*/
+        /*background: url('https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi_hdpi.png');*/
+        background: url("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
+        background-size: 40px 40px; /* Since I used the HiDPI marker version this compensates for the 2x size */
+        /*background-size: 22px 40px;*/
+        pointer-events: none; /* This disables clicks on the marker. Not fully supported by all major browsers, though */
     }
 </style>

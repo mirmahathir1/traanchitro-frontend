@@ -133,13 +133,8 @@
 
         },
 
-        mounted() {
-            this.organizationLoaderFlag=true;
-
-            setTimeout(()=>{
-                this.organizationLoaderFlag=false;
-                this.organizations= ['WHO', 'Badhan', 'Biddananda', 'BUET','Dhaka University', 'Tran Somiti', 'Home Ministry', 'Ministry of Health','Dhaka Metropolitan Police', 'RAB', 'Notre Dame College', 'Richshaw Somiti','10 Minute School', 'Prothom-Alo', 'Kaler Kantha'];
-            },2000);
+        created() {
+            this.organizations=this.$store.getters.getOrganizations;
         },
         methods: {
             searchClicked(){

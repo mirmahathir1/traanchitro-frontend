@@ -64,6 +64,7 @@
 
 <script>
     import SelectedActivity from "./SelectedActivity";
+    import axios from "axios";
 
     export default {
         name: "BottomPopup",
@@ -111,7 +112,7 @@
 
             selectActivity(index) {
                 this.selectedActivity = this.activities[index];
-                console.log('Selected Activity in BottomPopup component',this.selectedActivity);
+                console.log('Selected Activity in BottomPopup component', this.selectedActivity);
                 this.activitySelectedFlag = true;
             },
 
@@ -119,16 +120,43 @@
                 let position;
                 try {
                     position = JSON.parse(positionString);
-                }catch (e) {
+                } catch (e) {
                     console.log('Invalid co-ordinates');
                     this.$router.push({name: 'NotFound'});
                     return;
                 }
+
                 console.log(position);
                 console.log("BottomPopup mounted");
                 this.bottomPopupLoadingFlag = true;
-                setTimeout(() => {
 
+
+                let params = {
+                    location: {
+                        lat: position.lat,
+                        lng: position.lng
+                    }
+
+                };
+                let headers = {
+                    TOKEN: this.$store.getters.getToken,
+                };
+                console.log('params: ', params, ", headers: ", headers);
+                // axios.get('/api/activities',
+                //     {
+                //         headers: headers,
+                //         params: params
+                //     })
+                //     .then((res) => {
+                //     }).catch(e => {
+                //     console.log('error');
+                // }).finally(() => {
+                //     console.log('finished');
+                //     this.bottomPopupLoadingFlag = false;
+                // });
+
+
+                setTimeout(() => {
                     this.activities = [
                         {orgName: 'Biddhanondo', typeOfRelief: 'Food', location: {lat: 23.5, lng: 90.1}},
                         {orgName: 'Badhan', typeOfRelief: 'PPE', location: {lat: 25, lng: 29}},

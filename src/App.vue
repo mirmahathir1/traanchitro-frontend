@@ -22,7 +22,17 @@
       TopBar
     },
     data: () => ({
-     })
+     }),
+    mounted() {
+      this.getOrganizations();
+    },
+    methods:{
+      getOrganizations(){
+        let orgName=['WHO', 'Badhan', 'Biddananda', 'BUET','Dhaka University', 'Tran Somiti', 'Home Ministry', 'Ministry of Health','Dhaka Metropolitan Police', 'RAB', 'Notre Dame College', 'Richshaw Somiti','10 Minute School', 'Prothom-Alo', 'Kaler Kantha'];
+
+        this.$store.commit('setOrganizations',orgName);
+      }
+    }
   }
 </script>
 

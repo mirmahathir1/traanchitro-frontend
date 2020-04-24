@@ -5,7 +5,7 @@
             color="primary"
             dark
     >
-        <v-app-bar-nav-icon @click="toggleDrawer" />
+
 
         <v-img :src="require('../assets/Logo-White.png')" max-width="30" max-height="30" class="mr-2"></v-img>
 
@@ -29,13 +29,14 @@
         </v-row>
         <v-btn large class="primary darken-2 mr-1 ml-1" dark icon @click="searchClicked" :loading="searchLoaderFlag"><v-icon>mdi-magnify</v-icon></v-btn>
 <!--        <Filters></Filters>-->
+
         </template>
+        <v-app-bar-nav-icon @click="toggleDrawer" />
     </v-app-bar>
 </template>
 
 <script>
     import {eventBus} from "../main";
-    import Filters from "./Filters";
     import axios from "axios";
     export default {
         name: "TopBar",
@@ -46,7 +47,7 @@
               }
         },
         components:{
-          Filters
+
         },
         methods: {
             isMobile(){
