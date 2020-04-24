@@ -8,6 +8,10 @@
             />
         </template>
 
+        <v-btn absolute dark fab top right color="light-blue" style="top: 70vh;right: 5vw">
+            <v-icon @click="addButtonClicked()">mdi-plus</v-icon>
+        </v-btn>
+
         <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag">
             <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
@@ -82,6 +86,29 @@
         },
 
         methods: {
+            addButtonClicked(){
+                //console.log('Map center: ',this.map.getCenter());
+                //console.log('Map bounds: ',this.map.getBounds());
+                let bounds = this.map.getBounds();
+                let newReliefLocation = {
+                    focusLocation:{
+                        lat:this.map.getCenter().lat(),
+                        lng:this.map.getCenter().lng()
+                    },
+                    northeast: {
+                        lat: bounds.Ya.j,
+                        lng: bounds.Ua.j,
+                    },
+                    southwest: {
+                        lat: bounds.Ya.i,
+                        lng: bounds.Ua.i
+                    }
+                };
+                this.$store.commit('setNewReliefLocation',newReliefLocation);
+                //console.log('Set newReliefLocation in Map.vue: ',this.$store.getters.getNewReliefLocation);
+                this.$router.push({name: 'Add'});
+            },
+
             stopDragZoomNotifier() {
                 this.$store.commit('stopDragZoomNotifier');
                 this.snackbar = false;

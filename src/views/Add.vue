@@ -226,7 +226,7 @@
         },
         methods: {
             setLocation(location) {
-                console.log('Set location called in Add.vue: ');
+                //console.log('Set location called in Add.vue: ');
 
                 this.location = {
                     lat: location.lat(),

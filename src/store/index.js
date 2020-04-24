@@ -5,17 +5,24 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    //a flag to control the notification in Map.vue
     dragZoomNotifier: true,
 
+    //token for authorized access
     token:null,
 
+    //filters used in Map.vue
     filters : {
       typeOfRelief: [],
       schedule: null,
       orgName: null,
     },
 
+    //organization list loaded in App.vue
     organizations: [],
+
+    //Forwarded map information from Map.vue to LocationSelector.vue
+    newReliefLocation: null,
   },
   mutations: {
     stopDragZoomNotifier:((state) => {
@@ -30,6 +37,9 @@ export default new Vuex.Store({
     setOrganizations: ((state, organizations)=> {
       state.organizations = organizations;
     }),
+    setNewReliefLocation:((state, newReliefLocation)=>{
+      state.newReliefLocation = newReliefLocation;
+    })
   },
   actions: {
   },
@@ -47,6 +57,9 @@ export default new Vuex.Store({
     },
     getOrganizations: state=>{
       return state.organizations;
+    },
+    getNewReliefLocation: state=>{
+      return state.newReliefLocation;
     }
   }
 })

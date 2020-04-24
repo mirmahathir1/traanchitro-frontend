@@ -50,11 +50,28 @@
 
             eventBus.$on('searchClicked', (data) => {
                 this.searchClicked(data);
-            })
+            });
+
+            this.checkNewReliefLocation();
 
         },
 
         methods: {
+            checkNewReliefLocation(){
+              if(this.$store.getters.getNewReliefLocation !=null){
+                  let newReliefLocation=this.$store.getters.getNewReliefLocation;
+                  //console.log('newReliefLocation received in LocationSelector.vue: ',newReliefLocation);
+                  this.map.setCenter(newReliefLocation.focusLocation);
+
+                  let northeastlatlng = new this.google.maps.LatLng(newReliefLocation.northeast, newReliefLocation.northeast.lng);
+                  let southwestlatlng = new this.google.maps.LatLng(newReliefLocation.southwest.lat, newReliefLocation.southwest.lng);
+                  var bounds = new this.google.maps.LatLngBounds();
+                  bounds.extend(northeastlatlng);
+                  bounds.extend(southwestlatlng);
+                  this.map.fitBounds(bounds)
+              }
+            },
+
             searchClicked(data) {
                 console.log("Received data in location selector: ", data);
 
