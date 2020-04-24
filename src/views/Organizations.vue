@@ -1,7 +1,7 @@
 <template>
     <div>
     <v-card
-            class="mx-auto light-blue lighten-5 text-center"
+            class="mx-auto secondary lighten-4 text-center"
             max-width="344"
             outlined
             :elevation="12"
@@ -28,7 +28,7 @@
                         hide-details
                         :label="organizationLoaderFlag?'Loading Names of organizations...':'Type name of organization:' "
                 ></v-autocomplete>
-                <v-btn text class="blue darken-4 mt-3" dark rounded :loading="searchLoaderFlag" :disabled="organizationLoaderFlag" @click="searchClicked">Search</v-btn>
+                <v-btn text class="primary lighten-3 mt-3" dark rounded :loading="searchLoaderFlag" :disabled="organizationLoaderFlag" @click="searchClicked">Search</v-btn>
 
             </v-list-item-content>
         </v-list-item>

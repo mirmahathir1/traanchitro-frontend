@@ -20,10 +20,8 @@ app.use(staticFileMiddleware);
 
 
 app.get('/test',function (req, res) {
-    console.log(req.body);
-    console.log(req.header('token'));
-    console.log(req.query.page);
-    console.log(req.query.number);
+    console.log('token: ',req.header('TOKEN'));
+    console.log('query: ',req.query);
     let hello={
         name: "Mahathir"
     };

@@ -6,24 +6,17 @@
             dark
     >
         <v-app-bar-nav-icon @click="toggleDrawer" />
-        <v-img :src="require('../assets/Logo-White.png')"
-               max-width="30"
-               max-height="30"
-               class="mr-2"
-        ></v-img>
+
+        <v-img :src="require('../assets/Logo-White.png')" max-width="30" max-height="30" class="mr-2"></v-img>
 
         <v-toolbar-title class="align-center" v-if="!isMobile() || !$route.path.startsWith('/search')">
-            <span class="title">Call For Nation</span>
+            <span class="title">ত্রাণচিত্র</span>
         </v-toolbar-title>
 
 
         <v-spacer />
         <template v-if="$route.path.startsWith('/search')">
-        <v-row
-                align="center"
-                style="max-width: 650px"
-                class="mr-1 ml-2"
-        >
+        <v-row align="center" style="max-width: 650px" class="mr-1 ml-2">
             <v-text-field
                     :append-icon-cb="() => {}"
                     label="Search"
@@ -35,7 +28,7 @@
             />
         </v-row>
         <v-btn large class="primary darken-2 mr-1 ml-1" dark icon @click="searchClicked" :loading="searchLoaderFlag"><v-icon>mdi-magnify</v-icon></v-btn>
-        <Filters></Filters>
+<!--        <Filters></Filters>-->
         </template>
     </v-app-bar>
 </template>
@@ -70,7 +63,6 @@
                 }
                 console.log("Search clicked. Search address: ",this.searchAddress);
 
-
                 if(this.searchAddress===null){
                     console.log("Search address is null");
                     return;
@@ -80,7 +72,6 @@
                     text: this.searchAddress
                 };
 
-
                 this.searchLoaderFlag=true;
 
                 let newSearchAddress=this.searchAddress+', Bangladesh';
@@ -89,43 +80,19 @@
                 console.log('Send data: ', processedURL);
                 axios.get(processedURL)
                 .then(res=>{
-
-
                     console.log("The Full search result is ",res.data.results[0]);
-
                     console.log(res.data.results[0].geometry.location);
 
                     let data={
                         focusLocation:res.data.results[0].geometry.location,
-                        locations:[],
                         bounds: res.data.results[0].geometry.bounds,
                     };
-
-
-
                     eventBus.$emit('resetAndShow',data);
-
                 })
                 .finally(()=>{
                     this.searchLoaderFlag=false;
                 });
-
-                // axios.post('/api/getpins',sendData)
-                // .then(res=>{
-                //     console.log('Received from network: ',res.data,res.status);
-                //
-                //     if(this.$route.name!=='Search'){
-                //         this.$router.push({name: 'Search'});
-                //     }
-                //
-                //     eventBus.$emit('resetAndShow',res.data);
-                // })
-                // .catch(error=>{
-                //     console.log(error);
-                // })
-                // .finally(()=>{
-                //     this.searchLoaderFlag=false;
-                // });
+                ;
             }
         }
     }

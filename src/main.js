@@ -5,7 +5,8 @@ import router from './router'
 import axios from 'axios';
 import store from './store'
 
-//axios.defaults.baseURL="https://young-refuge-37756.herokuapp.com";
+axios.defaults.baseURL="https://young-refuge-37756.herokuapp.com";
+
 Vue.config.productionTip = false;
 
 

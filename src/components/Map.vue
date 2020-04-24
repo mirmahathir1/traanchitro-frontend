@@ -7,48 +7,40 @@
                     :map="map"
             />
         </template>
-        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 15vw">
+
+        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 10vw" :loading="reloadLoaderFlag">
             <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
-        <v-snackbar
-                v-model="snackbar"
-                v-if="$store.getters.getDragZoomNotifier"
-                vertical
-                color="black"
-                left
-                style="width: 300px"
-        >
+
+        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="black" left style="width: 300px">
             {{ snackbarText }}
             <div>
-            <v-btn
-                    color="white"
-                    text
-                    @click="stopDragZoomNotifier"
-            >
-                Don't show again
-            </v-btn>
-            <v-btn
-                    color="white"
-                    text
-                    @click="snackbar = false"
-            >
-                Close
-            </v-btn>
+                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>
+                <v-btn color="white" text @click="snackbar = false">Close</v-btn>
             </div>
-
         </v-snackbar>
+
+        <RightFilter></RightFilter>
+
     </div>
 </template>
 
 <script>
     import GoogleMapsApiLoader from "google-maps-api-loader";
     import {eventBus} from "../main";
+    import axios from 'axios';
+    import RightFilter from "./RightFilter";
+
 
     export default {
+        components: {
+          RightFilter,
 
-
+        },
         data() {
             return {
+                reloadLoaderFlag: false,
+
                 sheet: false,
                 snackbar: true,
                 snackbarText: "Please press reload to show pins",
@@ -62,7 +54,8 @@
                     zoom: 9,
                     options: {
                         gestureHandling: 'greedy'
-                    }
+                    },
+                    disableDefaultUI: true,
                 },
 
                 currentPosition: null,
@@ -86,31 +79,73 @@
         },
 
         methods: {
-            stopDragZoomNotifier(){
+            stopDragZoomNotifier() {
                 this.$store.commit('stopDragZoomNotifier');
-                this.snackbar=false;
+                this.snackbar = false;
             },
             refreshClicked() {
                 console.log('Refresh Clicked');
-                console.log('Map bounds:', this.map.getBounds());
+
+                let bounds = this.map.getBounds();
+                console.log('Map bounds:', bounds);
+
+                let params = {
+                    bounds: {
+                        northeast: {
+                            lat: bounds.Ya.j,
+                            lng: bounds.Ua.j,
+                        },
+                        southwest: {
+                            lat: bounds.Ya.i,
+                            lng: bounds.Ua.i
+                        }
+                    },
+                    filter: {
+                        typeOfRelief: [],
+                        schedule: 'PAST',
+                        orgName: null
+                    }
+                };
+
+                let headers = {
+                    TOKEN: this.$store.getters.getToken,
+                };
+                console.log('params: ',params,", headers: ",headers);
+
+                this.reloadLoaderFlag=true;
+                //https://stormy-lake-20015.herokuapp.com/api/pins
+                //axios.get('http://localhost:5000/test',
+                axios.get('https://stormy-lake-20015.herokuapp.com/api/pins',
+                    {
+                        headers: headers,
+                        params: params
+                    })
+                    .then((res)=>{
+                        //console.log(res.data);
+                        let data = {
+                            //focusLocation:this.map.getCenter(),
+                            locations: res.data.locations,
+                        };
+                        console.log(data);
+                        this.putMarkersOnBound(data);
+                    }).catch(e=>{
+                    console.log('error');
+                }).finally(()=>{
+                    console.log('finished');
+                    this.reloadLoaderFlag=false;
+                });
+
+            },
+
+            putMarkersOnBound(data){
+                console.log("array of markers: ", data.locations);
+                this.clearAllMarkers();
+                this.addNewMarkers(data.locations);
             },
 
             mapListener(data) {
-                console.log("Received data inside Map component: ", data);
                 console.log("focusPosition: ", data.focusLocation);
-                console.log("array of markers: ", data.locations);
-
-                //OVERWRITE
-                data.locations = [
-                    {lat: 23.7494231, lng: 90.3830754},
-
-                    {lat: 23.688, lng: 90.1}
-                ];
-
                 this.map.setCenter(data.focusLocation);
-
-
-                this.clearAllMarkers();
 
                 //fit the map according to the bound of the new area
                 if (data.bounds != undefined) {
@@ -123,9 +158,7 @@
                 } else {
                     this.map.setZoom(17);
                 }
-
-                this.addNewMarkers(data.locations);
-
+                this.refreshClicked();
             },
 
             clearAllMarkers() {
@@ -182,12 +215,12 @@
             mapDragEnded() {
                 //console.log("Map dragged and bounds changed");
                 //console.log(this.map.getBounds());
-                this.snackbar=true;
+                this.snackbar = true;
             },
             mapZoomChanged() {
                 // console.log("Zoom changed");
                 // console.log(this.map.getBounds());
-                this.snackbar=true;
+                this.snackbar = true;
             },
 
             initializeMap() {

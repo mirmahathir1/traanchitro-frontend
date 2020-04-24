@@ -39,13 +39,12 @@
         name: "Login",
         methods:{
             signInClicked(){
-                // let sendData={
-                //     address: "33/3, Azimpur"
-                // };
+
                 console.log('Sign in clicked');
                 this.$store.commit('setToken','dlshrionlk');
                 console.log('Token: ',this.$store.getters.getToken);
                 this.$router.push({name:'Search'});
+
                 // axios.get('http://localhost:5000/test',sendData)
                 // .then((res)=>{
                 //     console.log(res.data);
