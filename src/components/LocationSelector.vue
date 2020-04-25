@@ -33,7 +33,8 @@
                     zoom: 9,
                     options: {
                         gestureHandling: 'greedy'
-                    }
+                    },
+                    disableDefaultUI: true,
                 },
 
                 currentPosition: null,

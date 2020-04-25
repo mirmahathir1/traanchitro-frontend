@@ -47,7 +47,11 @@
 
 
 
-                axios.get('http://localhost:5000/test',sendData)
+                axios.post('http://localhost:5000/test2',{name:'Mahathir'},{
+                    headers: {
+                        TOKEN: '987456321',
+                    }
+                })
                 .then((res)=>{
                     console.log(res.data);
                 }).catch(e=>{

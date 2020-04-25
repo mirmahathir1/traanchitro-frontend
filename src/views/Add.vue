@@ -110,63 +110,71 @@
                             sm="12"
                             lg="3"
                     >
-                        Add relief item:
+                        Add relief Description:
                     </v-col>
                     <v-col
                             cols="12"
                             sm="12"
                             lg="9"
                     >
-                        <v-row no-gutters>
-                            <v-col
-                                    sm="3"
-                            >
-                                <v-text-field
-                                        color="green"
-                                        label="Item"
-                                        name="item"
-                                        type="text"
-                                        v-model="inputEntry.item"
-                                />
-                            </v-col>
-                            <v-col
-                                    sm="3"
-                            >
-                                <v-text-field
-                                        color="primary"
-                                        label="Quantity"
-                                        name="quantity"
-                                        type="text"
-                                        v-model="inputEntry.quantity"
-                                />
-                            </v-col>
-                            <v-col
-                                    sm="3"
-                            >
-                                <v-text-field color="primary"
-                                        label="Description"
-                                        name="description"
-                                        type="text"
-                                        v-model="inputEntry.description"
-                                />
-                            </v-col>
-                            <v-col sm="3">
-                                <v-btn class="primary lighten-1 ml-4" fab dark x-small color="primary">
-                                    <v-icon dark @click="addToList">mdi-plus</v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
+                        <v-textarea
+                                outlined
+                                color="primary"
+                                label="Brief Description of Relief"
+                                name="description"
+                                type="text"
+                                v-model="content"
+                        />
+<!--                        <v-row no-gutters>-->
+<!--                            <v-col-->
+<!--                                    sm="3"-->
+<!--                            >-->
+<!--                                <v-text-field-->
+<!--                                        color="green"-->
+<!--                                        label="Item"-->
+<!--                                        name="item"-->
+<!--                                        type="text"-->
+<!--                                        v-model="inputEntry.item"-->
+<!--                                />-->
+<!--                            </v-col>-->
+<!--                            <v-col-->
+<!--                                    sm="3"-->
+<!--                            >-->
+<!--                                <v-text-field-->
+<!--                                        color="primary"-->
+<!--                                        label="Quantity"-->
+<!--                                        name="quantity"-->
+<!--                                        type="text"-->
+<!--                                        v-model="inputEntry.quantity"-->
+<!--                                />-->
+<!--                            </v-col>-->
+<!--                            <v-col-->
+<!--                                    sm="3"-->
+<!--                            >-->
+<!--                                <v-text-field color="primary"-->
+<!--                                        label="Description"-->
+<!--                                        name="description"-->
+<!--                                        type="text"-->
+<!--                                        v-model="inputEntry.description"-->
+<!--                                />-->
+<!--                            </v-col>-->
+<!--                            <v-col sm="3">-->
+<!--                                <v-btn class="primary lighten-1 ml-4" fab dark x-small color="primary">-->
+<!--                                    <v-icon dark @click="addToList">mdi-plus</v-icon>-->
+<!--                                </v-btn>-->
+<!--                            </v-col>-->
+<!--                        </v-row>-->
 
-                        <v-alert v-for="(entry,index) in list"
-                                 :key="index"
-                                 close-text="Close Alert"
-                                 class="blue lighten-5"
-                        >
-                            {{entry.item}} / {{entry.quantity}} / {{entry.description}}
-                            <v-btn class="mx-2" fab dark x-small color="primary">
-                                <v-icon dark @click="removeFromList(index)">mdi-minus</v-icon>
-                            </v-btn>
-                        </v-alert>
+<!--                        <v-alert v-for="(entry,index) in list"-->
+<!--                                 :key="index"-->
+<!--                                 close-text="Close Alert"-->
+<!--                                 class="blue lighten-5"-->
+<!--                        >-->
+<!--                            {{entry.item}} / {{entry.quantity}} / {{entry.description}}-->
+<!--                            <v-btn class="mx-2" fab dark x-small color="primary">-->
+<!--                                <v-icon dark @click="removeFromList(index)">mdi-minus</v-icon>-->
+<!--                            </v-btn>-->
+<!--                        </v-alert>-->
                     </v-col>
                 </v-row>
             </v-list-item>
@@ -200,24 +208,35 @@
         name: "Add",
         data: () => {
             return {
+                //loader flags
                 saveLoaderFlag: false,
                 saveCompleteFlag: false,
                 searchLoaderFlag: false,
 
+                //types
                 items: ['Food', 'Sanitizer', 'PPE'],
                 selectedTypes: [],
+
+                //location search textbox
                 searchedLocation: null,
-                //date: new Date().toISOString().substr(0, 10),
+
+                //Calender
                 date: null,
                 menu2: false,
-                list: [],
+
+                //current center
                 location: {},
 
-                inputEntry: {
-                    item: 'Rice',
-                    quantity: 2,
-                    description: 'Chikon chal'
-                }
+                //content text box
+                content:null,
+
+                // list: [],
+                // inputEntry: {
+                //     item: 'Rice',
+                //     quantity: 2,
+                //     description: 'Chikon chal'
+                // }
+                // date: new Date().toISOString().substr(0, 10),
 
             }
         },
@@ -247,18 +266,13 @@
                 console.log('Send data: ', processedURL);
                 axios.get(processedURL)
                     .then(res => {
-
                         console.log("The Full search result is ", res.data.results[0]);
-
                         console.log(res.data.results[0].geometry.location);
-
                         let data = {
                             focusLocation: res.data.results[0].geometry.location,
                             locations: [],
                             bounds: res.data.results[0].geometry.bounds,
                         };
-
-
                         eventBus.$emit('searchClicked', data);
                     })
                     .finally(() => {
@@ -271,7 +285,8 @@
                 console.log('Received location from LocationSelector: ', this.location);
                 console.log('Types of relief selected: ', this.selectedTypes);
                 console.log('Selected date: ', this.date);
-                console.log('list of items', this.list);
+                //console.log('list of items', this.list);
+                console.log('Content: ',this.content);
                 this.saveLoaderFlag = true;
 
                 setTimeout(() => {
@@ -279,18 +294,18 @@
                     //this.saveCompleteFlag = true;
                 }, 3000);
             },
-            addToList() {
-                this.list.push(this.inputEntry);
-                this.inputEntry = {
-                    item: null,
-                    quantity: null,
-                    description: null
-                }
-            },
-            removeFromList(index) {
-                console.log('remove from list clicked');
-                this.list.splice(index, 1);
-            }
+            // addToList() {
+            //     this.list.push(this.inputEntry);
+            //     this.inputEntry = {
+            //         item: null,
+            //         quantity: null,
+            //         description: null
+            //     }
+            // },
+            // removeFromList(index) {
+            //     console.log('remove from list clicked');
+            //     this.list.splice(index, 1);
+            // }
         }
     }
 </script>

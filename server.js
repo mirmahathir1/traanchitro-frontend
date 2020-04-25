@@ -20,8 +20,8 @@ app.use(staticFileMiddleware);
 
 
 app.get('/test',function (req, res) {
-    //console.log('token: ',req.header('TOKEN'));
-    //console.log('query: ',req.query);
+    console.log('token: ',req.header('TOKEN'));
+    console.log('query: ',req.query);
     let hello={
         name: "Mahathir"
     };
@@ -31,8 +31,8 @@ app.get('/test',function (req, res) {
 
 app.post('/test2',function (req,res) {
     console.log(req.body);
+    console.log(req.headers.token);
 
-    res.append('TOKEN', '123654789');
     res.send({name: "Mahathir"});
 });
 

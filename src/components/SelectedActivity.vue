@@ -35,37 +35,41 @@
         </div>
 
         <v-card class="ma-2" v-if="seeMoreFlag">
-            <v-card-text>
-                <p>Last Supplied: {{"29 Dec, 2019"}}</p>
+            <v-card-text class="title">Supplied: </v-card-text>
+            <v-card-text class="subtitle-2">
+                {{date}}
             </v-card-text>
-            <v-card-text
-                    id="scroll-target"
-                    style="max-height: 200px"
-                    class="overflow-y-auto"
+            <v-card-text class="title">Description: </v-card-text>
+            <v-card-text class="subtitle-2"
             >
-                <v-simple-table>
+                {{activity.content}}{{'A relief labaid hospital'}}
 
-                    <thead>
-                    <tr>
-                        <th class="text-left">Item</th>
-                        <th class="text-left">Quantity</th>
-                        <th class="text-left">Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(relief,index) in reliefs" :key="index">
-                        <td>{{ relief.item }}</td>
-                        <td>{{ relief.quantity }}</td>
-                        <td>{{ relief.description }}</td>
-                    </tr>
-                    </tbody>
-                </v-simple-table>
+
+<!--                <v-simple-table>-->
+
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th class="text-left">Item</th>-->
+<!--                        <th class="text-left">Quantity</th>-->
+<!--                        <th class="text-left">Description</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr v-for="(relief,index) in reliefs" :key="index">-->
+<!--                        <td>{{ relief.item }}</td>-->
+<!--                        <td>{{ relief.quantity }}</td>-->
+<!--                        <td>{{ relief.description }}</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </v-simple-table>-->
             </v-card-text>
         </v-card>
     </div>
 </template>
 
 <script>
+    import axios from "axios";
+
     export default {
         name: "SelectedActivity",
         props: ['activity'],
@@ -73,35 +77,23 @@
             return {
                 seeMoreFlag: false,
                 seeMoreLoadingFlag: false,
-                reliefs: []
+                reliefs: [],
+
+                date:null,
             }
         },
         mounted(){
             console.log('Activity loaded in SelectedActivity component, ',this.activity);
         },
         methods: {
-
             seeMoreClicked() {
                 if (this.seeMoreFlag) {
                     this.seeMoreFlag = false;
                 } else {
-                    this.seeMoreLoadingFlag = true;
                     this.seeMoreFlag = false;
-                    setTimeout(() => {
-                        this.reliefs = [
-                            {item: "Rice", quantity: "100kg", description: "Imported from Lalbagh"},
-                            {item: "Vegetables", quantity: "50kg", description: "From Vikrampur"},
-                            {item: "Beaf", quantity: "20kg", description: "Cattle Meat"},
-                            {item: "Chicken", quantity: "50kg", description: "Deshi"},
-                            {item: "Carrots", quantity: "20kg", description: "Ripe"},
-                            {item: "Potato", quantity: "100kg", description: "Old Potatoes"},
-                            {item: "Spice", quantity: "10kg", description: "Gol morich"},
-                        ];
-                        this.seeMoreFlag = true;
-                        this.seeMoreLoadingFlag = false;
-                    }, 3000);
+                    this.date=new Date(this.activity.supplyDate).toDateString();
+                    this.seeMoreFlag = true;
                 }
-
             }
         }
     }
