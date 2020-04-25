@@ -114,6 +114,8 @@
 
 <script>
 
+    import axios from "axios";
+
     export default {
         name: "Organization",
         data:()=>{
@@ -143,21 +145,45 @@
                 this.detailsLoadedFlag=false;
 
 
-                setTimeout(()=>{
-                    this.reliefs=[
-                        {item: "Rice", quantity: "100kg", description: "Imported from Lalbagh"},
-                        {item: "Vegetables", quantity: "50kg", description: "From Vikrampur"},
-                        {item: "Beaf", quantity: "20kg", description: "Cattle Meat"},
-                        {item: "Chicken", quantity: "50kg", description: "Deshi"},
-                        {item: "Carrots", quantity: "20kg", description: "Ripe"},
-                        {item: "Potato", quantity: "100kg", description: "Old Potatoes"},
-                        {item: "Spice", quantity: "10kg", description: "Gol morich"},
-                    ];
+                let params = {
+                    orgName: this.selectedOrganization,
+                };
+                let headers = {
+                    TOKEN: this.$store.getters.getToken,
+                };
+                console.log('params: ', params, ", headers: ", headers);
+                axios.get('/api/orgdetails',
+                    {
+                        headers: headers,
+                        params: params
+                    })
+                    .then((res) => {
+                        console.log('received orgdetails: ',res.data);
 
+                    }).catch(e => {
+                    console.log(e.response);
+                    //console.log('error');
+                }).finally(() => {
+                    console.log('finished');
                     this.searchLoaderFlag=false;
                     this.detailsLoadedFlag=true;
+                });
 
-                },3000);
+                // setTimeout(()=>{
+                //     this.reliefs=[
+                //         {item: "Rice", quantity: "100kg", description: "Imported from Lalbagh"},
+                //         {item: "Vegetables", quantity: "50kg", description: "From Vikrampur"},
+                //         {item: "Beaf", quantity: "20kg", description: "Cattle Meat"},
+                //         {item: "Chicken", quantity: "50kg", description: "Deshi"},
+                //         {item: "Carrots", quantity: "20kg", description: "Ripe"},
+                //         {item: "Potato", quantity: "100kg", description: "Old Potatoes"},
+                //         {item: "Spice", quantity: "10kg", description: "Gol morich"},
+                //     ];
+                //
+                //     this.searchLoaderFlag=false;
+                //     this.detailsLoadedFlag=true;
+                //
+                // },3000);
             }
         }
     }

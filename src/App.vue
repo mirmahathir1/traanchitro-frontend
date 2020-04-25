@@ -12,6 +12,7 @@
   import Map from "./components/Map";
   import TopBar from "./components/TopBar";
   import SideDrawer from "./components/SideDrawer";
+  import axios from "axios";
   export default {
     props: {
       source: String,
@@ -28,9 +29,29 @@
     },
     methods:{
       getOrganizations(){
-        let orgName=['WHO', 'Badhan', 'Biddananda', 'BUET','Dhaka University', 'Tran Somiti', 'Home Ministry', 'Ministry of Health','Dhaka Metropolitan Police', 'RAB', 'Notre Dame College', 'Richshaw Somiti','10 Minute School', 'Prothom-Alo', 'Kaler Kantha'];
+        //let orgName=['WHO', 'Badhan', 'Biddananda', 'BUET','Dhaka University', 'Tran Somiti', 'Home Ministry', 'Ministry of Health','Dhaka Metropolitan Police', 'RAB', 'Notre Dame College', 'Richshaw Somiti','10 Minute School', 'Prothom-Alo', 'Kaler Kantha'];
 
-        this.$store.commit('setOrganizations',orgName);
+        let params = {};
+
+        let headers = {
+          TOKEN: this.$store.getters.getToken,
+        };
+
+        axios.get('/api/orgs',
+                {
+                  headers: headers,
+                  params: params
+                })
+                .then((res)=>{
+                  console.log('received organization names: ',res.data.orgNames);
+                  this.$store.commit('setOrganizations',res.data.orgNames);
+                }).catch(e=>{
+          console.log('error');
+        }).finally(()=>{
+          console.log('Organizations loaded finished');
+        });
+
+        //this.$store.commit('setOrganizations',orgName);
       }
     }
   }

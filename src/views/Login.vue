@@ -45,9 +45,20 @@
                 console.log('Token: ',this.$store.getters.getToken);
                 this.$router.push({name:'Search'});
 
-                // axios.get('http://localhost:5000/test',sendData)
+
+
+                axios.get('http://localhost:5000/test',sendData)
+                .then((res)=>{
+                    console.log(res.data);
+                }).catch(e=>{
+                    console.log('error');
+                }).finally(()=>{
+                    console.log('finished');
+                })
+
+                // axios.post('/test2',{address: '33/3, Azimpur road, Dhaka'})
                 // .then((res)=>{
-                //     console.log(res.data);
+                //     console.log('main data: ',res.data,', res:',res,', res.headers:',res.headers);
                 // }).catch(e=>{
                 //     console.log('error');
                 // }).finally(()=>{

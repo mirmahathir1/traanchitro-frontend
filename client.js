@@ -26,6 +26,7 @@ let axios = require('axios');
 let sendData = {
     address: '33/3, Azimpur Road'
 };
+
 axios.get('http://localhost:5000/test',
     {
         data: sendData,
@@ -40,3 +41,4 @@ axios.get('http://localhost:5000/test',
 }).finally(()=>{
     console.log('finished');
 });
+

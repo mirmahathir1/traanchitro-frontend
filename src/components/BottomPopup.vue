@@ -126,12 +126,12 @@
                     return;
                 }
 
-                console.log(position);
-                console.log("BottomPopup mounted");
+                //console.log(position);
+                //console.log("BottomPopup mounted");
+
                 this.bottomPopupLoadingFlag = true;
-
-
                 let params = {
+                    filter: this.$store.getters.getFilters,
                     location: {
                         lat: position.lat,
                         lng: position.lng
@@ -141,32 +141,32 @@
                 let headers = {
                     TOKEN: this.$store.getters.getToken,
                 };
+
                 console.log('params: ', params, ", headers: ", headers);
-                // axios.get('/api/activities',
-                //     {
-                //         headers: headers,
-                //         params: params
-                //     })
-                //     .then((res) => {
-                //     }).catch(e => {
-                //     console.log('error');
-                // }).finally(() => {
-                //     console.log('finished');
-                //     this.bottomPopupLoadingFlag = false;
-                // });
-
-
-                setTimeout(() => {
-                    this.activities = [
-                        {orgName: 'Biddhanondo', typeOfRelief: 'Food', location: {lat: 23.5, lng: 90.1}},
-                        {orgName: 'Badhan', typeOfRelief: 'PPE', location: {lat: 25, lng: 29}},
-                        {orgName: 'WHO', typeOfRelief: 'Sanitizer', location: {lat: 30, lng: 29}}
-                    ];
-
-                    this.lat = position.lat;
-                    this.lng = position.lng;
+                axios.get('/api/activities',
+                    {
+                        headers: headers,
+                        params: params
+                    })
+                    .then((res) => {
+                        console.log('received activities: ',res.data);
+                        this.activities=res.data.activities;
+                    }).catch(e => {
+                        console.log(e.response);
+                    //console.log('error');
+                }).finally(() => {
+                    console.log('finished');
                     this.bottomPopupLoadingFlag = false;
-                }, 2000);
+                });
+
+
+
+                this.activities = [
+                    {orgName: 'Biddhanondo', typeOfRelief: 'Food', location: {lat: 23.5, lng: 90.1}},
+                    {orgName: 'Badhan', typeOfRelief: 'PPE', location: {lat: 25, lng: 29}},
+                    {orgName: 'WHO', typeOfRelief: 'Sanitizer', location: {lat: 30, lng: 29}}
+                ];
+
             },
 
             closeClicked() {

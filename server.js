@@ -20,12 +20,20 @@ app.use(staticFileMiddleware);
 
 
 app.get('/test',function (req, res) {
-    console.log('token: ',req.header('TOKEN'));
-    console.log('query: ',req.query);
+    //console.log('token: ',req.header('TOKEN'));
+    //console.log('query: ',req.query);
     let hello={
         name: "Mahathir"
     };
+
     res.send(hello);//
+});
+
+app.post('/test2',function (req,res) {
+    console.log(req.body);
+
+    res.append('TOKEN', '123654789');
+    res.send({name: "Mahathir"});
 });
 
 app.listen(5000, function () {
