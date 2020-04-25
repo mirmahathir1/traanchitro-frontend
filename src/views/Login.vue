@@ -15,6 +15,7 @@
                                             label="Username"
                                             name="username"
                                             type="text"
+                                            v-model="username"
                                     />
 
                                     <v-text-field
@@ -23,12 +24,13 @@
                                             label="Password"
                                             name="password"
                                             type="password"
+                                            v-model="password"
                                     />
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer />
-                                <v-btn class="primary lighten-2" @click="signInClicked">Login</v-btn>
+                                <v-btn class="primary lighten-2" @click="signInClicked" :loading="signInLoaderFlag">Login</v-btn>
                             </v-card-actions>
                         </v-card>
 </template>
@@ -37,28 +39,42 @@
     import axios from 'axios';
     export default {
         name: "Login",
+        data(){
+            return{
+                username: null,
+                password: null,
+
+                signInLoaderFlag: false,
+            }
+        },
         methods:{
             signInClicked(){
+                let data={
+                    username: this.username,
+                    password: this.password
+                };
+                let headers={
+                    // TOKEN: '987456321',
+                };
+                console.log('Data: ',data);
+                console.log('Headers: ',headers);
 
-                console.log('Sign in clicked');
-                this.$store.commit('setToken','dlshrionlk');
-                console.log('Token: ',this.$store.getters.getToken);
-                this.$router.push({name:'Search'});
-
-
-
-                axios.post('http://localhost:5000/test2',{name:'Mahathir'},{
-                    headers: {
-                        TOKEN: '987456321',
-                    }
-                })
+                this.signInLoaderFlag=true;
+                axios.post('/api/login',data)
                 .then((res)=>{
                     console.log(res.data);
+                    this.$store.commit('setToken',res.data.token);
+                    this.$router.push({name:'Search'});
                 }).catch(e=>{
                     console.log('error');
+                    console.log(e.response);
                 }).finally(()=>{
                     console.log('finished');
+                    this.signInLoaderFlag=false;
                 })
+
+                //turjo
+                //biri001
 
                 // axios.post('/test2',{address: '33/3, Azimpur road, Dhaka'})
                 // .then((res)=>{

@@ -154,6 +154,7 @@
                         this.putMarkersOnBound(data);
                     }).catch(e=>{
                     console.log('error');
+                    console.log(e.response);
                 }).finally(()=>{
                     console.log('finished');
                     this.reloadLoaderFlag=false;

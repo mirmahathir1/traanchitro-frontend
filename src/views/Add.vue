@@ -125,56 +125,56 @@
                                 type="text"
                                 v-model="content"
                         />
-<!--                        <v-row no-gutters>-->
-<!--                            <v-col-->
-<!--                                    sm="3"-->
-<!--                            >-->
-<!--                                <v-text-field-->
-<!--                                        color="green"-->
-<!--                                        label="Item"-->
-<!--                                        name="item"-->
-<!--                                        type="text"-->
-<!--                                        v-model="inputEntry.item"-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                            <v-col-->
-<!--                                    sm="3"-->
-<!--                            >-->
-<!--                                <v-text-field-->
-<!--                                        color="primary"-->
-<!--                                        label="Quantity"-->
-<!--                                        name="quantity"-->
-<!--                                        type="text"-->
-<!--                                        v-model="inputEntry.quantity"-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                            <v-col-->
-<!--                                    sm="3"-->
-<!--                            >-->
-<!--                                <v-text-field color="primary"-->
-<!--                                        label="Description"-->
-<!--                                        name="description"-->
-<!--                                        type="text"-->
-<!--                                        v-model="inputEntry.description"-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                            <v-col sm="3">-->
-<!--                                <v-btn class="primary lighten-1 ml-4" fab dark x-small color="primary">-->
-<!--                                    <v-icon dark @click="addToList">mdi-plus</v-icon>-->
-<!--                                </v-btn>-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
+                        <!--                        <v-row no-gutters>-->
+                        <!--                            <v-col-->
+                        <!--                                    sm="3"-->
+                        <!--                            >-->
+                        <!--                                <v-text-field-->
+                        <!--                                        color="green"-->
+                        <!--                                        label="Item"-->
+                        <!--                                        name="item"-->
+                        <!--                                        type="text"-->
+                        <!--                                        v-model="inputEntry.item"-->
+                        <!--                                />-->
+                        <!--                            </v-col>-->
+                        <!--                            <v-col-->
+                        <!--                                    sm="3"-->
+                        <!--                            >-->
+                        <!--                                <v-text-field-->
+                        <!--                                        color="primary"-->
+                        <!--                                        label="Quantity"-->
+                        <!--                                        name="quantity"-->
+                        <!--                                        type="text"-->
+                        <!--                                        v-model="inputEntry.quantity"-->
+                        <!--                                />-->
+                        <!--                            </v-col>-->
+                        <!--                            <v-col-->
+                        <!--                                    sm="3"-->
+                        <!--                            >-->
+                        <!--                                <v-text-field color="primary"-->
+                        <!--                                        label="Description"-->
+                        <!--                                        name="description"-->
+                        <!--                                        type="text"-->
+                        <!--                                        v-model="inputEntry.description"-->
+                        <!--                                />-->
+                        <!--                            </v-col>-->
+                        <!--                            <v-col sm="3">-->
+                        <!--                                <v-btn class="primary lighten-1 ml-4" fab dark x-small color="primary">-->
+                        <!--                                    <v-icon dark @click="addToList">mdi-plus</v-icon>-->
+                        <!--                                </v-btn>-->
+                        <!--                            </v-col>-->
+                        <!--                        </v-row>-->
 
-<!--                        <v-alert v-for="(entry,index) in list"-->
-<!--                                 :key="index"-->
-<!--                                 close-text="Close Alert"-->
-<!--                                 class="blue lighten-5"-->
-<!--                        >-->
-<!--                            {{entry.item}} / {{entry.quantity}} / {{entry.description}}-->
-<!--                            <v-btn class="mx-2" fab dark x-small color="primary">-->
-<!--                                <v-icon dark @click="removeFromList(index)">mdi-minus</v-icon>-->
-<!--                            </v-btn>-->
-<!--                        </v-alert>-->
+                        <!--                        <v-alert v-for="(entry,index) in list"-->
+                        <!--                                 :key="index"-->
+                        <!--                                 close-text="Close Alert"-->
+                        <!--                                 class="blue lighten-5"-->
+                        <!--                        >-->
+                        <!--                            {{entry.item}} / {{entry.quantity}} / {{entry.description}}-->
+                        <!--                            <v-btn class="mx-2" fab dark x-small color="primary">-->
+                        <!--                                <v-icon dark @click="removeFromList(index)">mdi-minus</v-icon>-->
+                        <!--                            </v-btn>-->
+                        <!--                        </v-alert>-->
                     </v-col>
                 </v-row>
             </v-list-item>
@@ -228,7 +228,7 @@
                 location: {},
 
                 //content text box
-                content:null,
+                content: null,
 
                 // list: [],
                 // inputEntry: {
@@ -286,13 +286,42 @@
                 console.log('Types of relief selected: ', this.selectedTypes);
                 console.log('Selected date: ', this.date);
                 //console.log('list of items', this.list);
-                console.log('Content: ',this.content);
-                this.saveLoaderFlag = true;
+                console.log('Content: ', this.content);
 
-                setTimeout(() => {
+                let data = {
+                    typeOfRelief: ["FOOD"],
+                    location: {
+                        lat: 23,
+                        lng: 29
+                    },
+                    contents: "Hello",
+                    supplyDate: '2020-04-07'
+
+                };
+                let headers = {
+                    'x-auth': this.$store.getters.getToken
+                };
+
+                console.log('Data: ',data);
+                console.log('Headers: ',headers);
+
+                this.saveLoaderFlag = true;
+                axios.post('/api/activity', data, {
+                    headers: headers
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        this.saveLoaderFlag = true;
+                    }).catch(e => {
+                    console.log('error: ', e.response);
+                }).finally(() => {
+                    console.log('finished');
                     this.saveLoaderFlag = false;
-                    //this.saveCompleteFlag = true;
-                }, 3000);
+                });
+
+
+
+
             },
             // addToList() {
             //     this.list.push(this.inputEntry);

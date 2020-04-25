@@ -183,7 +183,7 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log('received orgdetails: ',res.data);
+                        console.log('received orgdetails: ',res);
 
                     }).catch(e => {
                     console.log(e.response);
