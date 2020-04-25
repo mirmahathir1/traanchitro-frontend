@@ -137,6 +137,31 @@
 
         created() {
             this.organizations=this.$store.getters.getOrganizations;
+            //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
+
+            if(this.organizations.length===0) {
+                let params = {};
+
+                let headers = {
+                    TOKEN: this.$store.getters.getToken,
+                };
+                this.organizationLoaderFlag=true;
+                axios.get('/api/orgs',
+                    {
+                        headers: headers,
+                        params: params
+                    })
+                    .then((res)=>{
+                        console.log('received organization names: ',res.data.orgNames);
+                        this.$store.commit('setOrganizations',res.data.orgNames);
+                        this.organizations=this.$store.getters.getOrganizations;
+                    }).catch(e=>{
+                    console.log('error');
+                }).finally(()=>{
+                    console.log('Organizations loaded finished');
+                    this.organizationLoaderFlag=false;
+                });
+            }
         },
         methods: {
             searchClicked(){
