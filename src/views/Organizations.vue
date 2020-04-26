@@ -1,32 +1,34 @@
 <template>
     <div>
-    <v-card
-            class="mx-auto secondary lighten-4 text-center"
-            max-width="344"
-            outlined
-            :elevation="12"
-    >
-        <v-list-item three-line>
-            <v-list-item-content>
-                <v-list-item-title class="headline mb-1">Organizations</v-list-item-title>
-                <v-divider></v-divider>
-                <v-autocomplete
-                        v-model="selectedOrganization"
-                        :loading="organizationLoaderFlag"
-                        :items="organizations"
-                        :search-input.sync="select"
-                        cache-items
-                        :disabled="organizationLoaderFlag"
-                        flat
-                        hide-no-data
-                        hide-details
-                        :label="organizationLoaderFlag?'Loading Names of organizations...':'Type name of organization:' "
-                ></v-autocomplete>
-                <v-btn text class="primary lighten-3 mt-3" dark rounded :loading="searchLoaderFlag" :disabled="organizationLoaderFlag" @click="searchClicked">Search</v-btn>
+        <v-card
+                class="mx-auto secondary lighten-4 text-center"
+                max-width="344"
+                outlined
+                :elevation="12"
+        >
+            <v-list-item three-line>
+                <v-list-item-content>
+                    <v-list-item-title class="headline mb-1">Organizations</v-list-item-title>
+                    <v-divider></v-divider>
+                    <v-autocomplete
+                            v-model="selectedOrganization"
+                            :loading="organizationLoaderFlag"
+                            :items="organizations"
+                            :search-input.sync="select"
+                            cache-items
+                            :disabled="organizationLoaderFlag"
+                            flat
+                            hide-no-data
+                            hide-details
+                            :label="organizationLoaderFlag?'Loading Names of organizations...':'Type name of organization:' "
+                    ></v-autocomplete>
+                    <v-btn text class="primary lighten-3 mt-3" dark rounded :loading="searchLoaderFlag"
+                           :disabled="organizationLoaderFlag" @click="searchClicked">Search
+                    </v-btn>
 
-            </v-list-item-content>
-        </v-list-item>
-    </v-card>
+                </v-list-item-content>
+            </v-list-item>
+        </v-card>
 
         <v-card
                 class="mx-auto white pa-4 mt-5"
@@ -40,74 +42,61 @@
                     <v-list-item-title class="headline mb-1">{{organization.orgName}}</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
-<!--            <v-card-text>-->
-<!--                The World Health Organization (WHO) is a specialized agency of the United Nations responsible for international public health. The WHO Constitution, which establishes the agency's governing structure and principles, states its main objective as ensuring "the attainment by all peoples of the highest possible level of health." It is headquartered in Geneva, Switzerland, with six semi-autonomous regional offices and 150 field offices worldwide.-->
-<!--            </v-card-text>-->
             <v-card-text>
                 {{organization.description}}
             </v-card-text>
 
             <v-card-actions>
-                    <v-btn class="blue-grey" dark>Donate</v-btn>
-                    <v-btn class="blue-grey" dark>Website</v-btn>
-                    <v-btn class="blue-grey" dark>Facebook</v-btn>
+                <v-btn class="blue-grey" dark>Donate</v-btn>
+                <v-btn class="blue-grey" dark>Website</v-btn>
+                <v-btn class="blue-grey" dark>Facebook</v-btn>
             </v-card-actions>
 
             <v-card-text>
-                Phone: +blahblahblah
+                Phone: {{organization.contact.phone}}
             </v-card-text>
             <v-card-text>
-                Email: blahblah@blah.blha
+                Email: {{organization.contact.email}}
+            </v-card-text>
+            <v-card-text>
+                Website: {{organization.contact.website}}
+            </v-card-text>
+            <v-card-text>
+                Facebook: {{organization.contact.facebook}}
             </v-card-text>
 
-            <v-card-title>Relief Records: </v-card-title>
-
-
-            <v-expansion-panels
-                    :accordion="false"
-                    :popout="true"
-                    :inset="false"
-                    :multiple="false"
-                    :focusable="true"
-                    :disabled="false"
-                    :readonly="false"
-                    :flat="false"
-                    :hover="false"
-                    :tile="false"
-            >
-                <v-expansion-panel
-                        v-for="(activity,index) in activities"
-                        :key="index"
+            <template v-if="$store.getters.getLoggedIn">
+                <v-card-title>Relief Records:</v-card-title>
+                <v-expansion-panels
+                        :accordion="false"
+                        :popout="true"
+                        :inset="false"
+                        :multiple="false"
+                        :focusable="true"
+                        :disabled="false"
+                        :readonly="false"
+                        :flat="false"
+                        :hover="false"
+                        :tile="false"
                 >
-                    <v-expansion-panel-header>
-<!--                        <p>Location: Uttara, Dhaka</p>-->
-                        <p>Relief Type: <span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}} </span></p>
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content class="pt-3">
-                        <p><b>Supply Date:</b></p>
-                        <p> {{new Date(activity.supplyDate).toDateString()}}</p>
-                        <p><b>Contents:</b></p>
-                        <p> blah blah blah blah blah blah blah blah blah blah blah blah</p>
-<!--                        <v-simple-table>-->
-
-<!--                            <thead>-->
-<!--                            <tr>-->
-<!--                                <th class="text-left">Item</th>-->
-<!--                                <th class="text-left">Quantity</th>-->
-<!--                                <th class="text-left">Description</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr v-for="(relief,index) in reliefs" :key="index">-->
-<!--                                <td>{{ relief.item }}</td>-->
-<!--                                <td>{{ relief.quantity }}</td>-->
-<!--                                <td>{{ relief.description }}</td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </v-simple-table>-->
-                    </v-expansion-panel-content>
-                </v-expansion-panel>
-            </v-expansion-panels>
+                    <v-expansion-panel
+                            v-for="(activity,index) in activities"
+                            :key="index"
+                    >
+                        <v-expansion-panel-header>
+                            <!--                        <p>Location: Uttara, Dhaka</p>-->
+                            <p>Relief Type: <span v-for="(type,index) in activity.typeOfRelief"
+                                                  :key="index">{{type}} </span></p>
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content class="pt-3">
+                            <p><b>Supply Date:</b></p>
+                            <p> {{new Date(activity.supplyDate).toDateString()}}</p>
+                            <p><b>Contents:</b></p>
+                            <p>{{activity.contents}}</p>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+            </template>
         </v-card>
     </div>
 </template>
@@ -118,8 +107,8 @@
 
     export default {
         name: "Organization",
-        data:()=>{
-            return{
+        data: () => {
+            return {
                 detailsLoadedFlag: false,
                 searchLoaderFlag: false,
                 organizationLoaderFlag: false,
@@ -128,56 +117,54 @@
                 selectedOrganization: null,
                 select: "",
 
-                reliefs:[],
+                reliefs: [],
 
                 organization: null,
                 activities: []
             }
         },
-        components:{
-
-        },
+        components: {},
 
         created() {
-            this.organizations=this.$store.getters.getOrganizations;
+            this.organizations = this.$store.getters.getOrganizations;
             //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
 
-            if(this.organizations.length===0) {
+            if (this.organizations.length === 0) {
                 let params = {};
 
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                if(headers["x-auth"]){
+                if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
-                }else{
+                } else {
                     console.log("USER IS NOT AUTHORIZED");
                 }
 
-                this.organizationLoaderFlag=true;
+                this.organizationLoaderFlag = true;
                 axios.get('/api/orgs',
                     {
                         headers: headers,
                         params: params
                     })
-                    .then((res)=>{
-                        console.log('received organization names: ',res.data.orgNames);
-                        this.$store.commit('setOrganizations',res.data.orgNames);
-                        this.organizations=this.$store.getters.getOrganizations;
-                    }).catch(e=>{
+                    .then((res) => {
+                        console.log('received organization names: ', res.data.orgNames);
+                        this.$store.commit('setOrganizations', res.data.orgNames);
+                        this.organizations = this.$store.getters.getOrganizations;
+                    }).catch(e => {
                     console.log('error');
-                }).finally(()=>{
+                }).finally(() => {
                     console.log('Organizations loaded finished');
-                    this.organizationLoaderFlag=false;
+                    this.organizationLoaderFlag = false;
                 });
             }
         },
         methods: {
-            searchClicked(){
-                console.log('selected organization: ',this.selectedOrganization);
-                this.searchLoaderFlag=true;
-                this.detailsLoadedFlag=false;
+            searchClicked() {
+                console.log('selected organization: ', this.selectedOrganization);
+                this.searchLoaderFlag = true;
+                this.detailsLoadedFlag = false;
 
 
                 let params = {
@@ -189,9 +176,9 @@
 
                 console.log('params: ', params);
 
-                if(headers["x-auth"]){
+                if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
-                }else{
+                } else {
                     console.log("USER IS NOT AUTHORIZED");
                 }
 
@@ -205,15 +192,15 @@
                         this.organization = res.data.organization;
                         this.activities = res.data.activities;
 
-                        console.log('organization: ',this.organization );
+                        console.log('organization: ', this.organization);
                         console.log('activities: ', this.activities);
                     }).catch(e => {
                     console.log(e.response);
                     //console.log('error');
                 }).finally(() => {
                     console.log('finished');
-                    this.searchLoaderFlag=false;
-                    this.detailsLoadedFlag=true;
+                    this.searchLoaderFlag = false;
+                    this.detailsLoadedFlag = true;
                 });
 
                 // setTimeout(()=>{

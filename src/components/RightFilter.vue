@@ -18,9 +18,13 @@
                             :cols="4"
                     >
                         <p>Type of Relief:</p>
-                        <v-checkbox v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
+                        <v-checkbox hide-details v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
+                        <v-checkbox hide-details v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
+                        <v-checkbox hide-details v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
+                        <v-checkbox hide-details v-model="selectedTypes" dense label="Mask" value="MASK"></v-checkbox>
+                        <v-checkbox hide-details v-model="selectedTypes" dense label="Glove" value="GLOVE"></v-checkbox>
+
+
                     </v-col>
                     <v-col
                             :cols="8"
@@ -114,7 +118,7 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log('received organization names: ', res.data.orgNames);
+                        console.log('received organization names: ', res);
                         this.$store.commit('setOrganizations', res.data.orgNames);
                         this.organizations = this.$store.getters.getOrganizations;
                     }).catch(e => {

@@ -76,7 +76,12 @@
                 this.searchLoaderFlag=true;
 
                 let newSearchAddress=this.searchAddress+', Bangladesh';
-                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+newSearchAddress+'&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA';
+
+                let apiKey=process.env.VUE_APP_API_KEY;
+                //let apiKey = 'AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA';
+
+                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+newSearchAddress+'&key='+apiKey;
+
                 let processedURL = url.replace(/ /g, '%20');
                 console.log('Send data: ', processedURL);
                 axios.get(processedURL)

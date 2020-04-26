@@ -56,17 +56,17 @@
                             sm="6"
                             lg="4"
                     >
-                        <v-checkbox v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" hide-details dense label="Food" value="FOOD"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" hide-details dense label="PPE" value="PPE"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" hide-details dense label="Sanitizer" value="SANITIZER"></v-checkbox>
                     </v-col>
                     <v-col
                             cols="12"
                             sm="6"
                             lg="4"
                     >
-                        <v-checkbox v-model="selectedTypes" dense label="Mask" value="MASK"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="Glove" value="GLOVE"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" hide-details dense label="Mask" value="MASK"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" hide-details dense label="Glove" value="GLOVE"></v-checkbox>
                     </v-col>
 
 
@@ -74,7 +74,7 @@
             </v-list-item>
 
 
-            <v-list-item>
+            <v-list-item class="mt-2">
                 <v-row no-gutters>
                     <v-col
                             cols="12"
@@ -145,56 +145,6 @@
                                 type="text"
                                 v-model="content"
                         />
-                        <!--                        <v-row no-gutters>-->
-                        <!--                            <v-col-->
-                        <!--                                    sm="3"-->
-                        <!--                            >-->
-                        <!--                                <v-text-field-->
-                        <!--                                        color="green"-->
-                        <!--                                        label="Item"-->
-                        <!--                                        name="item"-->
-                        <!--                                        type="text"-->
-                        <!--                                        v-model="inputEntry.item"-->
-                        <!--                                />-->
-                        <!--                            </v-col>-->
-                        <!--                            <v-col-->
-                        <!--                                    sm="3"-->
-                        <!--                            >-->
-                        <!--                                <v-text-field-->
-                        <!--                                        color="primary"-->
-                        <!--                                        label="Quantity"-->
-                        <!--                                        name="quantity"-->
-                        <!--                                        type="text"-->
-                        <!--                                        v-model="inputEntry.quantity"-->
-                        <!--                                />-->
-                        <!--                            </v-col>-->
-                        <!--                            <v-col-->
-                        <!--                                    sm="3"-->
-                        <!--                            >-->
-                        <!--                                <v-text-field color="primary"-->
-                        <!--                                        label="Description"-->
-                        <!--                                        name="description"-->
-                        <!--                                        type="text"-->
-                        <!--                                        v-model="inputEntry.description"-->
-                        <!--                                />-->
-                        <!--                            </v-col>-->
-                        <!--                            <v-col sm="3">-->
-                        <!--                                <v-btn class="primary lighten-1 ml-4" fab dark x-small color="primary">-->
-                        <!--                                    <v-icon dark @click="addToList">mdi-plus</v-icon>-->
-                        <!--                                </v-btn>-->
-                        <!--                            </v-col>-->
-                        <!--                        </v-row>-->
-
-                        <!--                        <v-alert v-for="(entry,index) in list"-->
-                        <!--                                 :key="index"-->
-                        <!--                                 close-text="Close Alert"-->
-                        <!--                                 class="blue lighten-5"-->
-                        <!--                        >-->
-                        <!--                            {{entry.item}} / {{entry.quantity}} / {{entry.description}}-->
-                        <!--                            <v-btn class="mx-2" fab dark x-small color="primary">-->
-                        <!--                                <v-icon dark @click="removeFromList(index)">mdi-minus</v-icon>-->
-                        <!--                            </v-btn>-->
-                        <!--                        </v-alert>-->
                     </v-col>
                 </v-row>
             </v-list-item>

@@ -1,44 +1,39 @@
 let axios = require('axios');
-// let sendData = {
-//     address: '33/3, Azimpur Road'
-// };
-//
-// let page=2;
-// let number=3;
-// let queryParameters = '?page='+page+'&number='+number;
-//
-// axios.get('http://localhost:5000/test'+queryParameters,
-//     {
-//         data: sendData,
-//         headers: {
-//             token: "147595741",
-//         }
-//     })
-//     .then((res)=>{
-//         console.log(res.data);
-//     }).catch(e=>{
-//     console.log('error');
-// }).finally(()=>{
-//     console.log('finished');
-// });
+let params = {
+    bounds: {
+        northeast: {
+            lat: 24.510338411688174,
+            lng: 90.9214621008292,
+        },
+        southwest: {
 
-
-let sendData = {
-    address: '33/3, Azimpur Road'
+            lat: 22.8544133690995,
+            lng: 89.79113789917083,
+        },
+    },
+    filter:
+        {
+            orgName: null,
+            schedule: null,
+            typeOfRelief: []
+        }
+};
+let headers = {
+    'x-auth': null,
 };
 
-axios.get('http://localhost:5000/test',
+this.organizationLoaderFlag = true;
+axios.get('https://protean-smile-275412.el.r.appspot.com/api/pins',
     {
-        data: sendData,
-        headers: {
-            TOKEN: "147595741",
-        }
+        headers: headers,
+        params: params
     })
-    .then((res)=>{
-        console.log(res.data);
-    }).catch(e=>{
+    .then((res) => {
+        console.log('response ', res);
+    }).catch(e => {
     console.log('error');
-}).finally(()=>{
-    console.log('finished');
+}).finally(() => {
+    console.log('loaded finished');
+
 });
 

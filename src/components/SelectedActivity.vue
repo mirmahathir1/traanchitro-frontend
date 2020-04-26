@@ -11,12 +11,12 @@
                     </tr>
                     <tr>
                         <td>Relief Type:</td>
-                        <td>{{activity.typeOfRelief}}</td>
+                        <td><span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}}, </span></td>
                     </tr>
-                    <tr>
-                        <td>Location:</td>
-                        <td>{{activity.location}}</td>
-                    </tr>
+<!--                    <tr>-->
+<!--                        <td>Location:</td>-->
+<!--                        <td>{{activity.location}}</td>-->
+<!--                    </tr>-->
                     </tbody>
                 </template>
             </v-simple-table>
@@ -42,26 +42,7 @@
             <v-card-text class="title">Description: </v-card-text>
             <v-card-text class="subtitle-2"
             >
-                {{activity.content}}{{'A relief labaid hospital'}}
-
-
-<!--                <v-simple-table>-->
-
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th class="text-left">Item</th>-->
-<!--                        <th class="text-left">Quantity</th>-->
-<!--                        <th class="text-left">Description</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-<!--                    <tr v-for="(relief,index) in reliefs" :key="index">-->
-<!--                        <td>{{ relief.item }}</td>-->
-<!--                        <td>{{ relief.quantity }}</td>-->
-<!--                        <td>{{ relief.description }}</td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </v-simple-table>-->
+                {{activity.contents}}
             </v-card-text>
         </v-card>
     </div>
@@ -88,6 +69,7 @@
             let lng = this.activity.location.coordinates[0];
 
             axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
+            //axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key='+'AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
             .then(response=>{
                 console.log('Received formatted address: ',response.data.results[0].formatted_address);
                 this.formattedAddress = response.data.results[0].formatted_address

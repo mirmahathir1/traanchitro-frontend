@@ -45,7 +45,7 @@
                                 </tr>
                                 <tr v-for="(activity,index) in activities" :key="index" @click="selectActivity(index)">
                                     <td>Activity {{index}}</td>
-                                    <td>{{activity.typeOfRelief}}</td>
+                                    <td><span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}}, </span></td>
                                 </tr>
                                 </tbody>
                             </template>
