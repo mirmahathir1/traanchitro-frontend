@@ -53,16 +53,17 @@
                     username: this.username,
                     password: this.password
                 };
-                let headers={
-                    // TOKEN: '987456321',
-                };
+
                 console.log('Data: ',data);
-                console.log('Headers: ',headers);
+
 
                 this.signInLoaderFlag=true;
                 axios.post('/api/login',data)
                 .then((res)=>{
-                    console.log(res.data);
+                    if(res.data.token){
+                        console.log('token received');
+                    }
+                    //console.log(res.data);
                     this.$store.commit('setToken',res.data.token);
                     this.$router.push({name:'Search'});
                     localStorage.setItem('x-auth',res.data.token);

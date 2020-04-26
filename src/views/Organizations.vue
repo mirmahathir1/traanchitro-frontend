@@ -9,13 +9,7 @@
         <v-list-item three-line>
             <v-list-item-content>
                 <v-list-item-title class="headline mb-1">Organizations</v-list-item-title>
-<!--                <v-list-item-subtitle>Enter name of Organization to continue</v-list-item-subtitle>-->
                 <v-divider></v-divider>
-<!--                <v-select-->
-<!--                        :items="organizations"-->
-<!--                        label="Select Organization"-->
-<!--                        outlined-->
-<!--                ></v-select>-->
                 <v-autocomplete
                         v-model="selectedOrganization"
                         :loading="organizationLoaderFlag"
@@ -43,11 +37,14 @@
         >
             <v-list-item three-line class="text-center">
                 <v-list-item-content>
-                    <v-list-item-title class="headline mb-1">{{selectedOrganization}}</v-list-item-title>
+                    <v-list-item-title class="headline mb-1">{{organization.orgName}}</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
+<!--            <v-card-text>-->
+<!--                The World Health Organization (WHO) is a specialized agency of the United Nations responsible for international public health. The WHO Constitution, which establishes the agency's governing structure and principles, states its main objective as ensuring "the attainment by all peoples of the highest possible level of health." It is headquartered in Geneva, Switzerland, with six semi-autonomous regional offices and 150 field offices worldwide.-->
+<!--            </v-card-text>-->
             <v-card-text>
-                The World Health Organization (WHO) is a specialized agency of the United Nations responsible for international public health. The WHO Constitution, which establishes the agency's governing structure and principles, states its main objective as ensuring "the attainment by all peoples of the highest possible level of health." It is headquartered in Geneva, Switzerland, with six semi-autonomous regional offices and 150 field offices worldwide.
+                {{organization.description}}
             </v-card-text>
 
             <v-card-actions>
@@ -57,10 +54,10 @@
             </v-card-actions>
 
             <v-card-text>
-                Phone: +41-22-7912111
+                Phone: +blahblahblah
             </v-card-text>
             <v-card-text>
-                Email: erecruit@who.int
+                Email: blahblah@blah.blha
             </v-card-text>
 
             <v-card-title>Relief Records: </v-card-title>
@@ -79,32 +76,35 @@
                     :tile="false"
             >
                 <v-expansion-panel
-                        v-for="(item,i) in 5"
-                        :key="i"
+                        v-for="(activity,index) in activities"
+                        :key="index"
                 >
                     <v-expansion-panel-header>
-                        <p>Location: Uttara, Dhaka</p>
-                        <p>Relief Type: Food</p>
+<!--                        <p>Location: Uttara, Dhaka</p>-->
+                        <p>Relief Type: <span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}} </span></p>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content class="pt-3">
-                        <p>Last Supplied: 19 Nov, 2020</p>
-                        <v-simple-table>
+                        <p><b>Supply Date:</b></p>
+                        <p> {{new Date(activity.supplyDate).toDateString()}}</p>
+                        <p><b>Contents:</b></p>
+                        <p> blah blah blah blah blah blah blah blah blah blah blah blah</p>
+<!--                        <v-simple-table>-->
 
-                            <thead>
-                            <tr>
-                                <th class="text-left">Item</th>
-                                <th class="text-left">Quantity</th>
-                                <th class="text-left">Description</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(relief,index) in reliefs" :key="index">
-                                <td>{{ relief.item }}</td>
-                                <td>{{ relief.quantity }}</td>
-                                <td>{{ relief.description }}</td>
-                            </tr>
-                            </tbody>
-                        </v-simple-table>
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th class="text-left">Item</th>-->
+<!--                                <th class="text-left">Quantity</th>-->
+<!--                                <th class="text-left">Description</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(relief,index) in reliefs" :key="index">-->
+<!--                                <td>{{ relief.item }}</td>-->
+<!--                                <td>{{ relief.quantity }}</td>-->
+<!--                                <td>{{ relief.description }}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </v-simple-table>-->
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-expansion-panels>
@@ -129,6 +129,9 @@
                 select: "",
 
                 reliefs:[],
+
+                organization: null,
+                activities: []
             }
         },
         components:{
@@ -143,8 +146,15 @@
                 let params = {};
 
                 let headers = {
-                    TOKEN: localStorage.getItem('x-auth'),
+                    'x-auth': localStorage.getItem('x-auth'),
                 };
+
+                if(headers["x-auth"]){
+                    console.log("USER IS AUTHORIZED");
+                }else{
+                    console.log("USER IS NOT AUTHORIZED");
+                }
+
                 this.organizationLoaderFlag=true;
                 axios.get('/api/orgs',
                     {
@@ -174,17 +184,29 @@
                     orgName: this.selectedOrganization,
                 };
                 let headers = {
-                    TOKEN: localStorage.getItem('x-auth'),
+                    'x-auth': localStorage.getItem('x-auth'),
                 };
-                console.log('params: ', params, ", headers: ", headers);
+
+                console.log('params: ', params);
+
+                if(headers["x-auth"]){
+                    console.log("USER IS AUTHORIZED");
+                }else{
+                    console.log("USER IS NOT AUTHORIZED");
+                }
+
                 axios.get('/api/orgdetails',
                     {
                         headers: headers,
                         params: params
                     })
                     .then((res) => {
-                        console.log('received orgdetails: ',res);
+                        //console.log('received orgdetails: ',res);
+                        this.organization = res.data.organization;
+                        this.activities = res.data.activities;
 
+                        console.log('organization: ',this.organization );
+                        console.log('activities: ', this.activities);
                     }).catch(e => {
                     console.log(e.response);
                     //console.log('error');

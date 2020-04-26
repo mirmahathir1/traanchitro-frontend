@@ -16,13 +16,13 @@
             <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
 
-        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="black" left style="width: 300px">
-            {{ snackbarText }}
-            <div>
-                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>
-                <v-btn color="white" text @click="snackbar = false">Close</v-btn>
-            </div>
-        </v-snackbar>
+<!--        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="black" left style="width: 300px">-->
+<!--            {{ snackbarText }}-->
+<!--            <div>-->
+<!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
+<!--                <v-btn color="white" text @click="snackbar = false">Close</v-btn>-->
+<!--            </div>-->
+<!--        </v-snackbar>-->
 
         <RightFilter></RightFilter>
 
@@ -115,10 +115,10 @@
                 localStorage.setItem('stopDragZoomNotifier','false');
             },
             refreshClicked() {
-                console.log('Refresh Clicked');
+                //console.log('Refresh Clicked');
 
                 let bounds = this.map.getBounds();
-                console.log('Map bounds:', bounds);
+                //console.log('Map bounds:', bounds);
 
                 let params = {
                     bounds: {
@@ -133,14 +133,18 @@
                     },
                     filter: this.$store.getters.getFilters
                 };
-
                 let headers = {
-                    TOKEN: localStorage.getItem('x-auth'),
+                    'x-auth': localStorage.getItem('x-auth'),
                 };
-                console.log('params: ',params,", headers: ",headers);
+                console.log('params: ',params);
+
+                if(headers["x-auth"]){
+                    console.log("USER IS AUTHORIZED");
+                }else{
+                    console.log("USER IS NOT AUTHORIZED");
+                }
 
                 this.reloadLoaderFlag=true;
-
                 axios.get('/api/pins',
                     {
                         headers: headers,

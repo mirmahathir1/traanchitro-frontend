@@ -22,7 +22,7 @@
             </v-simple-table>
         </v-card-text>
 
-        <div class="text-center pb-2">
+        <div class="text-center pb-2" v-if="activity.supplyDate">
             <v-btn rounded class="yellow darken-1" small light @click="seeMoreClicked"
                    :loading="seeMoreLoadingFlag">
                 <template v-if="!seeMoreFlag">
@@ -78,15 +78,16 @@
                 seeMoreFlag: false,
                 seeMoreLoadingFlag: false,
                 reliefs: [],
-
                 formattedAddress: null,
-
                 date:null,
             }
         },
         mounted(){
             console.log('Activity loaded in SelectedActivity component, ',this.activity);
-            axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
+            let lat = this.activity.location.coordinates[1];
+            let lng = this.activity.location.coordinates[0];
+
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
             .then(response=>{
                 console.log('Received formatted address: ',response.data.results[0].formatted_address);
                 this.formattedAddress = response.data.results[0].formatted_address

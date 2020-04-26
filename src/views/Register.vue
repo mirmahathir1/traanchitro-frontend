@@ -172,8 +172,12 @@
                 };
 
                 console.log('data: ', data);
-                //console.log('headers: ', headers);
 
+                if(headers["x-auth"]){
+                    console.log("USER IS AUTHORIZED");
+                }else{
+                    console.log("USER IS NOT AUTHORIZED");
+                }
 
                 this.requestCompleted = false;
                 this.registerLoaderFlag = true;

@@ -103,6 +103,7 @@
         },
         mounted() {
             this.openBottomDrawer(this.$route.params.position);
+
         },
         methods: {
             backButtonClicked() {
@@ -117,6 +118,7 @@
             },
 
             openBottomDrawer(positionString) {
+                this.activitySelectedFlag=false;
                 let position;
                 try {
                     position = JSON.parse(positionString);
@@ -129,7 +131,7 @@
                 //console.log(position);
                 //console.log("BottomPopup mounted");
 
-                this.bottomPopupLoadingFlag = true;
+
                 let params = {
                     filter: this.$store.getters.getFilters,
                     location: {
@@ -139,10 +141,18 @@
 
                 };
                 let headers = {
-                    TOKEN: localStorage.getItem('x-auth'),
+                    'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                console.log('params: ', params, ", headers: ", headers);
+                console.log('params: ', params);
+
+                if(headers["x-auth"]){
+                    console.log("USER IS AUTHORIZED");
+                }else{
+                    console.log("USER IS NOT AUTHORIZED");
+                }
+
+                this.bottomPopupLoadingFlag = true;
                 axios.get('/api/activities',
                     {
                         headers: headers,

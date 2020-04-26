@@ -349,8 +349,12 @@
                 };
 
                 console.log('Data: ', data);
-                //console.log('Data2: ', data2);
-                console.log('Headers: ',headers);
+
+                if(headers["x-auth"]){
+                    console.log("USER IS AUTHORIZED");
+                }else{
+                    console.log("USER IS NOT AUTHORIZED");
+                }
 
                 this.saveLoaderFlag = true;
                 axios.post('/api/activity', data, {
