@@ -136,6 +136,8 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
+                console.log('PARAMS: ',params);
+
                 if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
                 } else {
@@ -149,13 +151,14 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log('received organization names: ', res.data.orgNames);
+                        console.log("RESPONSE: ",res);
+                        //console.log('received organization names: ', res.data.orgNames);
                         this.$store.commit('setOrganizations', res.data.orgNames);
                         this.organizations = this.$store.getters.getOrganizations;
                     }).catch(e => {
-                    console.log('error');
+                    console.log("ERROR: ",e.response);
                 }).finally(() => {
-                    console.log('Organizations loaded finished');
+                    console.log('FINISH');
                     this.organizationLoaderFlag = false;
                 });
             }
@@ -174,7 +177,7 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                console.log('params: ', params);
+                console.log('PARAMS: ', params);
 
                 if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
@@ -188,36 +191,17 @@
                         params: params
                     })
                     .then((res) => {
-                        //console.log('received orgdetails: ',res);
+                        console.log("RESPONSE: ",res);
+
                         this.organization = res.data.organization;
                         this.activities = res.data.activities;
-
-                        console.log('organization: ', this.organization);
-                        console.log('activities: ', this.activities);
                     }).catch(e => {
-                    console.log(e.response);
-                    //console.log('error');
+                    console.log("ERROR: ",e.response);
                 }).finally(() => {
-                    console.log('finished');
+                    console.log('FINISH');
                     this.searchLoaderFlag = false;
                     this.detailsLoadedFlag = true;
                 });
-
-                // setTimeout(()=>{
-                //     this.reliefs=[
-                //         {item: "Rice", quantity: "100kg", description: "Imported from Lalbagh"},
-                //         {item: "Vegetables", quantity: "50kg", description: "From Vikrampur"},
-                //         {item: "Beaf", quantity: "20kg", description: "Cattle Meat"},
-                //         {item: "Chicken", quantity: "50kg", description: "Deshi"},
-                //         {item: "Carrots", quantity: "20kg", description: "Ripe"},
-                //         {item: "Potato", quantity: "100kg", description: "Old Potatoes"},
-                //         {item: "Spice", quantity: "10kg", description: "Gol morich"},
-                //     ];
-                //
-                //     this.searchLoaderFlag=false;
-                //     this.detailsLoadedFlag=true;
-                //
-                // },3000);
             }
         }
     }

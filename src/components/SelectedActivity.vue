@@ -64,21 +64,25 @@
             }
         },
         mounted(){
-            console.log('Activity loaded in SelectedActivity component, ',this.activity);
+            console.log('selected activity: ',this.activity);
             let lat = this.activity.location.coordinates[1];
             let lng = this.activity.location.coordinates[0];
 
-            axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
-            //axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key='+'AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
+            console.log('CALLING GEOCODE API');
+
+            let apiKey = process.env.VUE_APP_API_KEY;
+
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key='+apiKey)
             .then(response=>{
-                console.log('Received formatted address: ',response.data.results[0].formatted_address);
-                this.formattedAddress = response.data.results[0].formatted_address
+                console.log('RESPONSE: ',response);
+                //console.log('Received formatted address: ',response.data.results[0].formatted_address);
+                this.formattedAddress = response.data.results[0].formatted_address;
             })
             .catch(error=> {
-                console.log("error");
+                console.log("ERROR: ",error.response);
             })
             .finally(()=>{
-                console.log('request finished');
+                console.log('FINISH');
             })
         },
         methods: {

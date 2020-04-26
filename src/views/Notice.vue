@@ -16,14 +16,6 @@
     export default {
         props: ['text'],
         name: "Notice",
-        // data(){
-        //     return{
-        //         text:null,
-        //     }
-        // },
-        created() {
-
-        }
     }
 </script>
 

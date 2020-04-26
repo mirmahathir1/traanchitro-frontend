@@ -58,7 +58,8 @@
                     >
                         <v-checkbox v-model="selectedTypes" hide-details dense label="Food" value="FOOD"></v-checkbox>
                         <v-checkbox v-model="selectedTypes" hide-details dense label="PPE" value="PPE"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" hide-details dense label="Sanitizer" value="SANITIZER"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" hide-details dense label="Sanitizer"
+                                    value="SANITIZER"></v-checkbox>
                     </v-col>
                     <v-col
                             cols="12"
@@ -227,11 +228,11 @@
             LocationSelector
         },
 
-        beforeRouteEnter(to,from,next){
-            if(localStorage.getItem('x-auth')){
+        beforeRouteEnter(to, from, next) {
+            if (localStorage.getItem('x-auth')) {
                 next();
-            }else{
-                next({name: 'Notice',params:{text:"You must be signed in to add reliefs"}});
+            } else {
+                next({name: 'Notice', params: {text: "You must be signed in to add reliefs"}});
             }
         },
         methods: {
@@ -249,16 +250,20 @@
             searchClicked() {
                 console.log("Search clicked");
                 console.log('Name of location: ', this.searchedLocation);
-                this.searchLoaderFlag = true;
+
+                let apiKey=process.env.VUE_APP_API_KEY;
 
                 let newSearchAddress = this.searchedLocation + ', Bangladesh';
-                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA';
+                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key='+apiKey;
                 let processedURL = url.replace(/ /g, '%20');
-                console.log('Send data: ', processedURL);
+                //console.log('Send data: ', processedURL);
+                console.log("CALLING GEOCODE API");
+                this.searchLoaderFlag = true;
                 axios.get(processedURL)
                     .then(res => {
-                        console.log("The Full search result is ", res.data.results[0]);
-                        console.log(res.data.results[0].geometry.location);
+                        console.log("RESPONSE: ", res);
+                        //console.log("The Full search result is ", res.data.results[0]);
+                        //console.log(res.data.results[0].geometry.location);
                         let data = {
                             focusLocation: res.data.results[0].geometry.location,
                             locations: [],
@@ -266,7 +271,11 @@
                         };
                         eventBus.$emit('searchClicked', data);
                     })
+                    .catch((error) => {
+                        console.log("ERROR: ", error.response);
+                    })
                     .finally(() => {
+                        console.log("FINISH");
                         this.searchLoaderFlag = false;
                     });
             },
@@ -275,7 +284,7 @@
                 console.log('Save button clicked');
                 this.$v.$touch();
 
-                if(this.selectedTypes.length===0){
+                if (this.selectedTypes.length === 0) {
                     return;
                 }
 
@@ -292,25 +301,16 @@
                     contents: this.content,
                     supplyDate: this.date
                 };
-                let data2 = {
-                    typeOfRelief: ["FOOD"],
-                    location: {
-                        lat: 23,
-                        lng: 29
-                    },
-                    contents: "Hello",
-                    supplyDate: '2020-04-07'
 
-                };
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth')
                 };
 
-                console.log('Data: ', data);
+                console.log('DATA: ', data);
 
-                if(headers["x-auth"]){
+                if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
-                }else{
+                } else {
                     console.log("USER IS NOT AUTHORIZED");
                 }
 
@@ -319,30 +319,19 @@
                     headers: headers
                 })
                     .then((res) => {
-                        console.log(res.data);
+                        console.log("RESPONSE: ", res);
                         this.$router.push({name: 'Search'});
                         this.saveLoaderFlag = true;
-                    }).catch(e => {
-                    console.log('error: ', e.response);
-                }).finally(() => {
-                    console.log('finished');
-                    this.saveLoaderFlag = false;
-                });
-
-
+                    })
+                    .catch(e => {
+                        console.log('ERROR: ', e.response);
+                    })
+                    .finally(() => {
+                        console.log('FINISH');
+                        this.saveLoaderFlag = false;
+                    });
             },
-            // addToList() {
-            //     this.list.push(this.inputEntry);
-            //     this.inputEntry = {
-            //         item: null,
-            //         quantity: null,
-            //         description: null
-            //     }
-            // },
-            // removeFromList(index) {
-            //     console.log('remove from list clicked');
-            //     this.list.splice(index, 1);
-            // }
+
         }
     }
 </script>

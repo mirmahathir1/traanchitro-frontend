@@ -136,7 +136,7 @@
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
-                console.log('params: ',params);
+                console.log('PARAMS: ',params);
 
                 if(headers["x-auth"]){
                     console.log("USER IS AUTHORIZED");
@@ -151,29 +151,26 @@
                         params: params
                     })
                     .then((res)=>{
+                        console.log('RESPONSE: ',res);
                         let data = {
                             locations: res.data.locations,
                         };
-                        console.log(data);
                         this.putMarkersOnBound(data);
                     }).catch(e=>{
-                    console.log('error');
-                    console.log(e.response);
+                    console.log('ERROR: ',e.response);
                 }).finally(()=>{
-                    console.log('finished');
                     this.reloadLoaderFlag=false;
                 });
-
             },
 
             putMarkersOnBound(data){
-                console.log("array of markers: ", data.locations);
+                //console.log("array of markers: ", data.locations);
                 this.clearAllMarkers();
                 this.addNewMarkers(data.locations);
             },
 
             mapListener(data) {
-                console.log("focusPosition: ", data.focusLocation);
+                //console.log("focusPosition: ", data.focusLocation);
                 this.map.setCenter(data.focusLocation);
 
                 //fit the map according to the bound of the new area

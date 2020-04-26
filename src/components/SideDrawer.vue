@@ -69,10 +69,11 @@
         mounted() {
             //console.log("Mounted");
             if(!localStorage.getItem('x-auth')){
-                console.log('Token not found');
+                console.log('USER IS UNAUTHORIZED');
                 this.$store.commit('logout');
 
             }else{
+                console.log('USER IS AUTHORIZED');
                 this.$store.commit('login');
             }
 
@@ -82,7 +83,6 @@
         },
         methods:{
             signOut(){
-                console.log("Sign Out");
                 localStorage.removeItem('x-auth');
                 this.$store.commit('logout');
                 //this.$router.push({name: 'Home'});

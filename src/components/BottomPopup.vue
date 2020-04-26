@@ -144,7 +144,7 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                console.log('params: ', params);
+                console.log('PARAMS: ', params);
 
                 if(headers["x-auth"]){
                     console.log("USER IS AUTHORIZED");
@@ -159,18 +159,15 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log('received activities: ',res.data);
+                        console.log('RESPONSE: ',res);
                         this.activities=res.data.activities;
                     }).catch(e => {
-                        console.log(e.response);
+                        console.log('ERROR: ',e.response);
                     //console.log('error');
                 }).finally(() => {
-                    console.log('finished');
+                    console.log('FINISH');
                     this.bottomPopupLoadingFlag = false;
                 });
-
-
-
                 this.activities = [
                     {orgName: 'Biddhanondo', typeOfRelief: 'Food', location: {lat: 23.5, lng: 90.1}},
                     {orgName: 'Badhan', typeOfRelief: 'PPE', location: {lat: 25, lng: 29}},

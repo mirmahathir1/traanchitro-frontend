@@ -161,7 +161,6 @@
                     this.email = null;
                 }
 
-                console.log(this.$v);
                 let data = {
                     orgName: this.name,
                     description: this.description,
@@ -171,19 +170,18 @@
                     website: this.website
                 };
 
-                console.log('data: ', data);
-
+                console.log('DATA: ', data);
 
                 this.requestCompleted = false;
                 this.registerLoaderFlag = true;
                 axios.post('/api/register', data)
                     .then((res) => {
-                        console.log(res.data);
+                        console.log("RESPONSE: ",res);
                         this.requestCompleted = true;
                     }).catch(e => {
-                    console.log('error: ', e.response);
+                    console.log('ERROR: ', e.response);
                 }).finally(() => {
-                    console.log('finished');
+                    console.log('FINISH');
                     this.registerLoaderFlag = false;
                 });
             }

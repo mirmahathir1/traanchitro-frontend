@@ -105,6 +105,7 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
+                console.log('PARAMS: ',params);
                 if(headers["x-auth"]){
                     console.log("USER IS AUTHORIZED");
                 }else{
@@ -118,13 +119,13 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log('received organization names: ', res);
+                        console.log('RESPONSE: ', res);
                         this.$store.commit('setOrganizations', res.data.orgNames);
                         this.organizations = this.$store.getters.getOrganizations;
                     }).catch(e => {
-                    console.log('error');
+                    console.log('ERROR: ',e.response);
                 }).finally(() => {
-                    console.log('Organizations loaded finished');
+                    console.log('FINISH');
                     this.organizationLoaderFlag = false;
                 });
             }
