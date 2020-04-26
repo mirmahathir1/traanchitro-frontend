@@ -3,7 +3,7 @@
         <v-toolbar
                 dark
                 flat
-                class="primary darken-1"
+                class="primary darken-2"
         >
             <v-toolbar-title>Add Relief</v-toolbar-title>
             <v-spacer/>

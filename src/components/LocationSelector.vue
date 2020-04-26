@@ -162,7 +162,7 @@
         margin: -40px 0 0 -20px;
         /*margin: -40px 0 0 -11px*/
         /*background: url('https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi_hdpi.png');*/
-        background: url("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
+        background: url("https://maps.google.com/mapfiles/ms/icons/blue-dot.png");
         background-size: 40px 40px; /* Since I used the HiDPI marker version this compensates for the 2x size */
         /*background-size: 22px 40px;*/
         pointer-events: none; /* This disables clicks on the marker. Not fully supported by all major browsers, though */

@@ -4,7 +4,7 @@
             <v-toolbar
                     dark
                     flat
-                    class="primary darken-4"
+                    class="primary darken-2"
             >
                 <v-toolbar-title>Enlist your organization</v-toolbar-title>
                 <v-spacer/>

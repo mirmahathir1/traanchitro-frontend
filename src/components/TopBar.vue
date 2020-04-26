@@ -48,6 +48,7 @@
             return {
                 searchAddress: null,
                 searchLoaderFlag: false,
+                google: null,
             }
         },
         components: {},

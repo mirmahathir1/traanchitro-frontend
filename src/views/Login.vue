@@ -30,7 +30,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer/>
-            <v-btn class="primary lighten-2" @click="signInClicked" :loading="signInLoaderFlag">Login</v-btn>
+            <v-btn class="primary lighten-2" rounded @click="signInClicked" :loading="signInLoaderFlag">Login</v-btn>
         </v-card-actions>
     </v-card>
 </template>
