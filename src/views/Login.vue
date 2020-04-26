@@ -5,7 +5,7 @@
                 flat
                 class="primary darken-4"
         >
-            <v-toolbar-title>Login form</v-toolbar-title>
+            <v-toolbar-title>Login</v-toolbar-title>
             <v-spacer/>
         </v-toolbar>
         <v-card-text>

@@ -83,8 +83,7 @@
         },
         methods:{
             signOut(){
-                localStorage.removeItem('x-auth');
-                this.$store.commit('logout');
+
                 //this.$router.push({name: 'Home'});
             }
         }

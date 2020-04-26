@@ -13,34 +13,77 @@
             <span class="title">ত্রাণচিত্র</span>
         </v-toolbar-title>
 
-
         <v-spacer/>
-        <template v-if="$route.path.startsWith('/search')">
-            <v-row align="center" style="max-width: 650px" class="mr-1 ml-2">
-                <v-text-field
-                        :append-icon-cb="() => {}"
-                        label="Search"
-                        flat
-                        single-line
-                        solo-inverted
-                        hide-details
-                        v-model="searchAddress"
-                />
-            </v-row>
-            <v-btn large class="primary darken-2 mr-1 ml-1" dark icon @click="searchClicked"
-                   :loading="searchLoaderFlag">
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>
-            <!--        <Filters></Filters>-->
 
+        <template v-if="!isMobile()">
+            <v-toolbar-items v-for="(item,index) in items">
+                <v-btn text small :to="item.to">{{item.text}}</v-btn>
+            </v-toolbar-items>
+            <v-toolbar-items v-if="$store.getters.getLoggedIn">
+                <v-btn text small to="/logout">Sign Out</v-btn>
+            </v-toolbar-items>
+            <v-toolbar-items v-else>
+                <v-btn text small to="/login">Sign In</v-btn>
+            </v-toolbar-items>
         </template>
-        <v-app-bar-nav-icon @click="toggleDrawer"/>
+
+
+<!--        Search Bar to search Location-->
+        <template v-if="$route.path.startsWith('/search')">
+
+<!--            If the PC is a Mobile-->
+            <template v-if="isMobile()">
+                <v-row align="center" style="max-width: 650px" class="mr-1 ml-2">
+                    <v-text-field
+                            :append-icon-cb="() => {}"
+                            label="Search"
+                            flat
+                            single-line
+                            solo-inverted
+                            hide-details
+                            v-model="searchAddress"
+                    />
+                </v-row>
+
+                <v-btn large class="primary darken-2 mr-1 ml-1" dark icon @click="searchClicked"
+                       :loading="searchLoaderFlag">
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+            </template>
+
+<!--            If the device is a PC-->
+            <v-toolbar
+                    v-else
+                    light
+                    dense
+                    floating
+                    style="position: fixed; top: 10vh; left: 40vw; width: 20vw"
+
+            >
+                <v-text-field
+                        hide-details
+                        prepend-icon="mdi-search"
+                        single-line
+                        v-model="searchAddress"
+                        placeholder="Search..."
+                ></v-text-field>
+                <v-btn icon @click="searchClicked" :loading="searchLoaderFlag">
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+            </v-toolbar>
+        </template>
+
+
+        <v-app-bar-nav-icon v-if="isMobile()" @click="toggleDrawer"/>
+
+
     </v-app-bar>
 </template>
 
 <script>
     import {eventBus} from "../main";
     import axios from "axios";
+    import GoogleMapsApiLoader from "google-maps-api-loader";
 
     export default {
         name: "TopBar",
@@ -49,9 +92,48 @@
                 searchAddress: null,
                 searchLoaderFlag: false,
                 google: null,
+                geocoder: null,
+                apiKey: process.env.VUE_APP_API_KEY,
+
+                items: [
+                    {icon: 'mdi-home', text: 'Home', to: '/'},
+                    {icon: 'mdi-magnify', text: 'Search Relief', to: '/search'},
+                    {icon: 'mdi-plus', text: 'Add Relief', to: '/add'},
+                    {icon: 'mdi-contacts', text: 'Organizations', to: '/orgs'},
+                    // { icon: 'mdi-login', text: 'Log In',to:'/login' },
+                    {icon: 'mdi-pencil', text: 'Register', to: '/reg'},
+                    {icon: 'mdi-information', text: 'About us', to: '/about'},
+                    {icon: 'mdi-help-circle', text: 'How to use this site', to: '/howto'}
+                ],
             }
         },
         components: {},
+        async mounted() {
+            // const googleMapApi = await GoogleMapsApiLoader({
+            //     apiKey: this.apiKey
+            // });
+            //
+            // this.google = googleMapApi;
+            //
+            // this.geocoder= new this.google.maps.Geocoder();
+            //
+            // console.log("REQUESTING TO GEOCODE API");
+            // this.geocoder.geocode({'address': 'Kalabagan, Bangladesh'}, function(results, status) {
+            //     if (status === 'OK') {
+            //         console.log("RESPONSE: ",results);
+            //         // let data = {
+            //         //     focusLocation: res.data.results[0].geometry.location,
+            //         //     bounds: res.data.results[0].geometry.bounds,
+            //         // };
+            //         let data={
+            //
+            //         }
+            //
+            //     } else {
+            //         alert('Geocode was not successful for the following reason: ' + status);
+            //     }
+            // });
+        },
         methods: {
             isMobile() {
                 let check = false;
@@ -102,7 +184,7 @@
                         eventBus.$emit('resetAndShow', data);
                     })
                     .catch((error) => {
-                        console.log("ERROR: ",error.response);
+                        console.log("ERROR: ", error.response);
                     })
                     .finally(() => {
                         console.log("FINISH");

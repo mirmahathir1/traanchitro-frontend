@@ -16,15 +16,19 @@
             <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
 
-<!--        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="black" left style="width: 300px">-->
-<!--            {{ snackbarText }}-->
-<!--            <div>-->
-<!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
-<!--                <v-btn color="white" text @click="snackbar = false">Close</v-btn>-->
-<!--            </div>-->
-<!--        </v-snackbar>-->
+        <!--        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="black" left style="width: 300px">-->
+        <!--            {{ snackbarText }}-->
+        <!--            <div>-->
+        <!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
+        <!--                <v-btn color="white" text @click="snackbar = false">Close</v-btn>-->
+        <!--            </div>-->
+        <!--        </v-snackbar>-->
 
         <RightFilter></RightFilter>
+
+
+
+
 
     </div>
 </template>
@@ -38,7 +42,7 @@
 
     export default {
         components: {
-          RightFilter,
+            RightFilter,
 
         },
         data() {
@@ -80,20 +84,20 @@
             eventBus.$on('resetAndShow', (data) => {
                 this.mapListener(data);
             });
-            eventBus.$on('reloadMap',()=>{
+            eventBus.$on('reloadMap', () => {
                 this.refreshClicked();
             })
         },
 
         methods: {
-            addButtonClicked(){
+            addButtonClicked() {
                 //console.log('Map center: ',this.map.getCenter());
                 //console.log('Map bounds: ',this.map.getBounds());
                 let bounds = this.map.getBounds();
                 let newReliefLocation = {
-                    focusLocation:{
-                        lat:this.map.getCenter().lat(),
-                        lng:this.map.getCenter().lng()
+                    focusLocation: {
+                        lat: this.map.getCenter().lat(),
+                        lng: this.map.getCenter().lng()
                     },
                     northeast: {
                         lat: bounds.Ya.j,
@@ -104,7 +108,7 @@
                         lng: bounds.Ua.i
                     }
                 };
-                this.$store.commit('setNewReliefLocation',newReliefLocation);
+                this.$store.commit('setNewReliefLocation', newReliefLocation);
                 //console.log('Set newReliefLocation in Map.vue: ',this.$store.getters.getNewReliefLocation);
                 this.$router.push({name: 'Add'});
             },
@@ -112,7 +116,7 @@
             stopDragZoomNotifier() {
                 this.$store.commit('stopDragZoomNotifier');
                 this.snackbar = false;
-                localStorage.setItem('stopDragZoomNotifier','false');
+                localStorage.setItem('stopDragZoomNotifier', 'false');
             },
             refreshClicked() {
                 //console.log('Refresh Clicked');
@@ -136,34 +140,34 @@
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
-                console.log('PARAMS: ',params);
+                console.log('PARAMS: ', params);
 
-                if(headers["x-auth"]){
+                if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
-                }else{
+                } else {
                     console.log("USER IS NOT AUTHORIZED");
                 }
 
-                this.reloadLoaderFlag=true;
+                this.reloadLoaderFlag = true;
                 axios.get('/api/pins',
                     {
                         headers: headers,
                         params: params
                     })
-                    .then((res)=>{
-                        console.log('RESPONSE: ',res);
+                    .then((res) => {
+                        console.log('RESPONSE: ', res);
                         let data = {
                             locations: res.data.locations,
                         };
                         this.putMarkersOnBound(data);
-                    }).catch(e=>{
-                    console.log('ERROR: ',e.response);
-                }).finally(()=>{
-                    this.reloadLoaderFlag=false;
+                    }).catch(e => {
+                    console.log('ERROR: ', e.response);
+                }).finally(() => {
+                    this.reloadLoaderFlag = false;
                 });
             },
 
-            putMarkersOnBound(data){
+            putMarkersOnBound(data) {
                 //console.log("array of markers: ", data.locations);
                 this.clearAllMarkers();
                 this.addNewMarkers(data.locations);
@@ -265,6 +269,7 @@
         width: 100%;
         height: 90vh;
     }
+
     #map {
         position: relative;
     }

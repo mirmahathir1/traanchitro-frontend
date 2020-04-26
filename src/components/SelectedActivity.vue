@@ -36,14 +36,16 @@
 
         <v-card class="ma-2" v-if="seeMoreFlag">
             <v-card-text class="title">Supplied: </v-card-text>
-            <v-card-text class="subtitle-2">
-                {{date}}
+            <v-card-text class="subtitle-2" v-if="activity.supplyDate">
+                {{new Date(activity.supplyDate).toDateString()}}
             </v-card-text>
+            <template v-if="activity.contents">
             <v-card-text class="title">Description: </v-card-text>
             <v-card-text class="subtitle-2"
             >
                 {{activity.contents}}
             </v-card-text>
+            </template>
         </v-card>
     </div>
 </template>

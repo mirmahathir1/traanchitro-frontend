@@ -21,6 +21,9 @@
                             hide-no-data
                             hide-details
                             :label="organizationLoaderFlag?'Loading Names of organizations...':'Type name of organization:' "
+                            @input="$v.selectedOrganization.$touch()"
+                            @blur="$v.selectedOrganization.$touch()"
+                            :error-messages="selectedOrganizationErrors"
                     ></v-autocomplete>
                     <v-btn text class="primary mx-auto mt-3" dark rounded :loading="searchLoaderFlag"
                            :disabled="organizationLoaderFlag" @click="searchClicked">Search
@@ -35,14 +38,14 @@
                 outlined
                 :elevation="2"
                 style="width: 90vw"
-                v-if="detailsLoadedFlag"
+                v-if="organization"
         >
-            <v-list-item three-line class="text-center">
+            <v-list-item three-line class="text-center" v-if="organization.orgName">
                 <v-list-item-content>
                     <v-list-item-title class="headline mb-1">{{organization.orgName}}</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
-            <v-card-text>
+            <v-card-text v-if="organization.description">
                 {{organization.description}}
             </v-card-text>
 
@@ -52,20 +55,22 @@
                 <v-btn class="blue-grey" dark>Facebook</v-btn>
             </v-card-actions>
 
-            <v-card-text>
-                Phone: {{organization.contact.phone}}
-            </v-card-text>
-            <v-card-text>
-                Email: {{organization.contact.email}}
-            </v-card-text>
-            <v-card-text>
-                Website: {{organization.contact.website}}
-            </v-card-text>
-            <v-card-text>
-                Facebook: {{organization.contact.facebook}}
-            </v-card-text>
+            <template v-if="organization.contact">
+                <v-card-text v-if="organization.contact.phone">
+                    Phone: {{organization.contact.phone}}
+                </v-card-text>
+                <v-card-text v-if="organization.contact.email">
+                    Email: {{organization.contact.email}}
+                </v-card-text>
+                <v-card-text v-if="organization.contact.website">
+                    Website: {{organization.contact.website}}
+                </v-card-text>
+                <v-card-text v-if="organization.contact.facebook">
+                    Facebook: {{organization.contact.facebook}}
+                </v-card-text>
+            </template>
 
-            <template v-if="$store.getters.getLoggedIn">
+            <template v-if="activities.length!==0">
                 <v-card-title>Relief Records:</v-card-title>
                 <v-expansion-panels
                         :accordion="false"
@@ -83,16 +88,20 @@
                             v-for="(activity,index) in activities"
                             :key="index"
                     >
-                        <v-expansion-panel-header>
+                        <v-expansion-panel-header v-if="activity.typeOfRelief">
                             <!--                        <p>Location: Uttara, Dhaka</p>-->
                             <p>Relief Type: <span v-for="(type,index) in activity.typeOfRelief"
                                                   :key="index">{{type}} </span></p>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content class="pt-3">
-                            <p><b>Supply Date:</b></p>
-                            <p> {{new Date(activity.supplyDate).toDateString()}}</p>
-                            <p><b>Contents:</b></p>
-                            <p>{{activity.contents}}</p>
+                            <template v-if="activity.supplyDate">
+                                <p><b>Supply Date:</b></p>
+                                <p> {{new Date(activity.supplyDate).toDateString()}}</p>
+                            </template>
+                            <template v-if="activity.contents">
+                                <p><b>Contents:</b></p>
+                                <p>{{activity.contents}}</p>
+                            </template>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>
@@ -102,11 +111,16 @@
 </template>
 
 <script>
-
+    import {required} from 'vuelidate/lib/validators';
     import axios from "axios";
 
     export default {
         name: "Organization",
+
+        validations: {
+            selectedOrganization: {required},
+        },
+
         data: () => {
             return {
                 detailsLoadedFlag: false,
@@ -124,7 +138,14 @@
             }
         },
         components: {},
-
+        computed: {
+            selectedOrganizationErrors() {
+                const errors = [];
+                if (!this.$v.selectedOrganization.$dirty) return errors;
+                !this.$v.selectedOrganization.required && errors.push('Organization name is required.');
+                return errors
+            }
+        },
         created() {
             this.organizations = this.$store.getters.getOrganizations;
             //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
@@ -136,7 +157,7 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                console.log('PARAMS: ',params);
+                console.log('PARAMS: ', params);
 
                 if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
@@ -151,12 +172,12 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log("RESPONSE: ",res);
+                        console.log("RESPONSE: ", res);
                         //console.log('received organization names: ', res.data.orgNames);
                         this.$store.commit('setOrganizations', res.data.orgNames);
                         this.organizations = this.$store.getters.getOrganizations;
                     }).catch(e => {
-                    console.log("ERROR: ",e.response);
+                    console.log("ERROR: ", e.response);
                 }).finally(() => {
                     console.log('FINISH');
                     this.organizationLoaderFlag = false;
@@ -165,6 +186,13 @@
         },
         methods: {
             searchClicked() {
+                this.$v.$touch();
+                if (this.$v.$anyError) {
+                    return;
+                }
+                this.organization = null;
+                this.activities = [];
+
                 console.log('selected organization: ', this.selectedOrganization);
                 this.searchLoaderFlag = true;
                 this.detailsLoadedFlag = false;
@@ -191,12 +219,12 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log("RESPONSE: ",res);
+                        console.log("RESPONSE: ", res);
 
                         this.organization = res.data.organization;
                         this.activities = res.data.activities;
                     }).catch(e => {
-                    console.log("ERROR: ",e.response);
+                    console.log("ERROR: ", e.response);
                 }).finally(() => {
                     console.log('FINISH');
                     this.searchLoaderFlag = false;

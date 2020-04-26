@@ -12,7 +12,11 @@
 
 <script>
     export default {
-        name: "Logout"
+        name: "Logout",
+        created() {
+            localStorage.removeItem('x-auth');
+            this.$store.commit('logout');
+        }
     }
 </script>
 
