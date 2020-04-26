@@ -32,19 +32,31 @@
                             @blur="$v.description.$touch()"
                             :error-messages="descriptionErrors"
                     />
+                    <v-row>
+                        <v-col cols="2">
+                            <v-text-field
+                                    color="primary"
+                                    name="phone"
+                                    type="text"
+                                    value="+880"
+                                    disabled
+                            />
+                        </v-col>
+                        <v-col cols="10">
+                            <v-text-field
+                                    color="primary"
+                                    label="Contact No. (11 digits)"
+                                    name="phone"
+                                    type="text"
+                                    v-model="phone"
+                                    required
+                                    @input="$v.phone.$touch()"
+                                    @blur="$v.phone.$touch()"
+                                    :error-messages="phoneErrors"
+                            />
+                        </v-col>
+                    </v-row>
 
-                    <v-text-field
-                            color="primary"
-                            label="Contact No. (11 digits)"
-                            name="phone"
-                            type="text"
-                            v-model="phone"
-                            required
-
-                            @input="$v.phone.$touch()"
-                            @blur="$v.phone.$touch()"
-                            :error-messages="phoneErrors"
-                    />
                     <v-text-field
                             v-model="email"
                             label="E-mail"
@@ -90,7 +102,9 @@
         name: "Register",
         validations: {
             name: {required},
-            phone: {required, numeric, maxLength: maxLength(11)},
+            phone: {required, numeric,lengthCheck:(value)=>{
+                return value.length === 11;
+                }},
             description: {required, minLength: minLength(10)}
         },
         computed: {
@@ -105,7 +119,7 @@
                 if (!this.$v.phone.$dirty) return errors;
                 !this.$v.phone.required && errors.push('Phone number is required.');
                 !this.$v.phone.numeric && errors.push('Phone number should be numeric.');
-                !this.$v.phone.maxLength && errors.push('Phone number should be of max 11 digits');
+                !this.$v.phone.lengthCheck && errors.push('Phone number should be 11 digits.');
                 return errors
             },
             descriptionErrors() {
@@ -124,7 +138,7 @@
 
                 name: null,
                 description: null,
-                phone: null,
+                phone: '',
                 email: null,
                 facebook: null,
                 website: null,
