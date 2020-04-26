@@ -35,9 +35,15 @@
 <style>
   .backimage{
     background-image: url("assets/landing.jpg");
+    /*
     background-position: center;
     background-repeat:repeat;
     height: 100%;
-    /*background-size:100% 100%;*/
+    */
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+
   }
 </style>
