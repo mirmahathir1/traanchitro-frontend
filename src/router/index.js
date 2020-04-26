@@ -61,12 +61,19 @@ Vue.use(VueRouter);
     {
       path: '*',
       name: 'NotFound',
-      component: ()=> import('../views/NotFound.vue')
+      props:{text:"Page Not found"},
+      component: ()=> import('../views/Notice.vue')
     },
     {
       path: '/logout',
-      name: '/LogOut',
+      name: 'LogOut',
       component: ()=> import('../views/Logout')
+    },
+    {
+      path: '/notice',
+      name: 'Notice',
+      props: true,
+      component: ()=> import('../views/Notice')
     }
 ];
 

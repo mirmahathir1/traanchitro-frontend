@@ -276,6 +276,14 @@
         components: {
             LocationSelector
         },
+
+        beforeRouteEnter(to,from,next){
+            if(localStorage.getItem('x-auth')){
+                next();
+            }else{
+                next({name: 'Notice',params:{text:"You must be signed in to add reliefs"}});
+            }
+        },
         methods: {
             setLocation(location) {
                 //console.log('Set location called in Add.vue: ');
