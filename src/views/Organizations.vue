@@ -143,7 +143,7 @@
                 let params = {};
 
                 let headers = {
-                    TOKEN: this.$store.getters.getToken,
+                    TOKEN: localStorage.getItem('x-auth'),
                 };
                 this.organizationLoaderFlag=true;
                 axios.get('/api/orgs',
@@ -174,7 +174,7 @@
                     orgName: this.selectedOrganization,
                 };
                 let headers = {
-                    TOKEN: this.$store.getters.getToken,
+                    TOKEN: localStorage.getItem('x-auth'),
                 };
                 console.log('params: ', params, ", headers: ", headers);
                 axios.get('/api/orgdetails',

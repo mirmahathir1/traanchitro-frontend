@@ -65,25 +65,21 @@
                     console.log(res.data);
                     this.$store.commit('setToken',res.data.token);
                     this.$router.push({name:'Search'});
+                    localStorage.setItem('x-auth',res.data.token);
+                    this.$store.commit('login');
                 }).catch(e=>{
                     console.log('error');
                     console.log(e.response);
                 }).finally(()=>{
                     console.log('finished');
                     this.signInLoaderFlag=false;
-                })
+                });
+
+
+
 
                 //turjo
                 //biri001
-
-                // axios.post('/test2',{address: '33/3, Azimpur road, Dhaka'})
-                // .then((res)=>{
-                //     console.log('main data: ',res.data,', res:',res,', res.headers:',res.headers);
-                // }).catch(e=>{
-                //     console.log('error');
-                // }).finally(()=>{
-                //     console.log('finished');
-                // })
             }
         }
     }

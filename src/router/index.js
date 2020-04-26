@@ -62,6 +62,11 @@ Vue.use(VueRouter);
       path: '*',
       name: 'NotFound',
       component: ()=> import('../views/NotFound.vue')
+    },
+    {
+      path: '/logout',
+      name: '/LogOut',
+      component: ()=> import('../views/Logout')
     }
 ];
 

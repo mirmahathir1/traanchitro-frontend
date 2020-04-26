@@ -13,11 +13,11 @@
                 <v-form>
                     <v-text-field
                             v-model="name"
-                            :error-messages="nameErrors"
                             label="Organization Name"
                             required
                             @input="$v.name.$touch()"
                             @blur="$v.name.$touch()"
+                            :error-messages="nameErrors"
                     ></v-text-field>
 
                     <v-textarea

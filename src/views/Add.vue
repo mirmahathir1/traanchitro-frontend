@@ -18,26 +18,6 @@
                             sm="12"
                             lg="3"
                     >
-                        Pick type of relief:
-                    </v-col>
-                    <v-col
-                            cols="12"
-                            sm="12"
-                            lg="9"
-                    >
-                        <v-checkbox v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
-                    </v-col>
-                </v-row>
-            </v-list-item>
-            <v-list-item>
-                <v-row no-gutters>
-                    <v-col
-                            cols="12"
-                            sm="12"
-                            lg="3"
-                    >
                         Search location and drop pin:
                         <v-text-field
                                 color="primary lighten-1"
@@ -68,6 +48,39 @@
                             sm="12"
                             lg="3"
                     >
+                        Pick type of relief (At least one):
+                        <v-card-text v-if="selectedTypes.length===0" class="red--text">Select at least one</v-card-text>
+                    </v-col>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                            lg="4"
+                    >
+                        <v-checkbox v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
+                    </v-col>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                            lg="4"
+                    >
+                        <v-checkbox v-model="selectedTypes" dense label="Mask" value="MASK"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" dense label="Glove" value="GLOVE"></v-checkbox>
+                    </v-col>
+
+
+                </v-row>
+            </v-list-item>
+
+
+            <v-list-item>
+                <v-row no-gutters>
+                    <v-col
+                            cols="12"
+                            sm="12"
+                            lg="3"
+                    >
                         Pick Date:
                     </v-col>
                     <v-col
@@ -90,13 +103,20 @@
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-on="on"
+                                        @input="$v.date.$touch()"
+                                        @blur="$v.date.$touch()"
+                                        :error-messages="dateErrors"
                                 ></v-text-field>
                             </template>
-                            <v-date-picker color="primary" v-model="date">
+                            <v-date-picker
+                                    color="primary"
+                                    v-model="date"
+                            >
                                 <v-spacer></v-spacer>
                                 <v-btn text color="primary" @click="()=>{menu2=false;date=null;}">Reset</v-btn>
                                 <v-btn text color="primary" @click="menu2 = false">Done</v-btn>
                             </v-date-picker>
+
                         </v-menu>
                     </v-col>
                 </v-row>
@@ -203,9 +223,22 @@
     import LocationSelector from "../components/LocationSelector";
     import axios from "axios";
     import {eventBus} from "../main";
+    import {maxLength, minLength, numeric, required} from 'vuelidate/lib/validators';
 
     export default {
         name: "Add",
+        validations: {
+            date: {required},
+        },
+        computed: {
+            dateErrors() {
+                const errors = [];
+                if (!this.$v.date.$dirty) return errors;
+                !this.$v.date.required && errors.push('Date is required.');
+                return errors
+            },
+        },
+
         data: () => {
             return {
                 //loader flags
@@ -282,13 +315,26 @@
 
             saveClicked() {
                 console.log('Save button clicked');
-                console.log('Received location from LocationSelector: ', this.location);
-                console.log('Types of relief selected: ', this.selectedTypes);
-                console.log('Selected date: ', this.date);
-                //console.log('list of items', this.list);
-                console.log('Content: ', this.content);
+                this.$v.$touch();
+
+                if(this.selectedTypes.length===0){
+                    return;
+                }
+
+                if (this.$v.$anyError) {
+                    return;
+                }
 
                 let data = {
+                    typeOfRelief: this.selectedTypes,
+                    location: {
+                        lat: this.location.lat,
+                        lng: this.location.lng,
+                    },
+                    contents: this.content,
+                    supplyDate: this.date
+                };
+                let data2 = {
                     typeOfRelief: ["FOOD"],
                     location: {
                         lat: 23,
@@ -299,10 +345,11 @@
 
                 };
                 let headers = {
-                    'x-auth': this.$store.getters.getToken
+                    'x-auth': localStorage.getItem('x-auth')
                 };
 
-                console.log('Data: ',data);
+                console.log('Data: ', data);
+                //console.log('Data2: ', data2);
                 console.log('Headers: ',headers);
 
                 this.saveLoaderFlag = true;
@@ -311,6 +358,7 @@
                 })
                     .then((res) => {
                         console.log(res.data);
+                        this.$router.push({name: 'Search'});
                         this.saveLoaderFlag = true;
                     }).catch(e => {
                     console.log('error: ', e.response);
@@ -318,8 +366,6 @@
                     console.log('finished');
                     this.saveLoaderFlag = false;
                 });
-
-
 
 
             },

@@ -135,7 +135,7 @@
                 };
 
                 let headers = {
-                    TOKEN: this.$store.getters.getToken,
+                    TOKEN: localStorage.getItem('x-auth'),
                 };
                 console.log('params: ',params,", headers: ",headers);
 

@@ -7,7 +7,7 @@
                     <tbody>
                     <tr>
                         <td>Location:</td>
-                        <td>149, Abed Dhali Road, Lake Circus, Kalabagan, Dhaka - 1205</td>
+                        <td>{{formattedAddress}}</td>
                     </tr>
                     <tr>
                         <td>Relief Type:</td>
@@ -79,11 +79,24 @@
                 seeMoreLoadingFlag: false,
                 reliefs: [],
 
+                formattedAddress: null,
+
                 date:null,
             }
         },
         mounted(){
             console.log('Activity loaded in SelectedActivity component, ',this.activity);
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBdudQyn0ECon1ggxM-i3t4xhbQTVYAgLA')
+            .then(response=>{
+                console.log('Received formatted address: ',response.data.results[0].formatted_address);
+                this.formattedAddress = response.data.results[0].formatted_address
+            })
+            .catch(error=> {
+                console.log("error");
+            })
+            .finally(()=>{
+                console.log('request finished');
+            })
         },
         methods: {
             seeMoreClicked() {

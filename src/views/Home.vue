@@ -1,31 +1,29 @@
 <template>
-  <div class="text-center" style="text-align: center;">
+    <div class="text-center" style="text-align: center;">
         <h1>
-        <img :src="require('../assets/Logo-Black.png')"
-               style="width: 150px;height: 150px"
-             class="mt-9"
-        >
+            <img :src="require('../assets/Logo-Black.png')"
+                 style="width: 150px;height: 150px"
+                 class="mt-9"
+            >
         </h1>
         <h1>Tran-Chitro</h1>
         <p>A Website for COVID-19 Relief Distribution and Management</p>
         <v-btn rounded class="primary" style="top: 5vh" to="/search">
-          Explore
+            Explore
         </v-btn>
-  </div>
+    </div>
 </template>
 
 <script>
 
 
-export default {
-  name: 'Home',
-  components: {
+    export default {
+        name: 'Home',
+        components: {},
+        mounted() {
 
-  },
-  mounted() {
-
-  }
-}
+        }
+    }
 </script>
 
 <style>

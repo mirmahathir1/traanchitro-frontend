@@ -10,6 +10,7 @@ export default new Vuex.Store({
 
     //token for authorized access
     token:null,
+    loggedIn: false,
 
     //filters used in Map.vue
     filters : {
@@ -39,6 +40,13 @@ export default new Vuex.Store({
     }),
     setNewReliefLocation:((state, newReliefLocation)=>{
       state.newReliefLocation = newReliefLocation;
+    }),
+
+    logout:((state)=>{
+      state.loggedIn=false;
+    }),
+    login: ((state)=>{
+      state.loggedIn=true;
     })
   },
   actions: {
@@ -46,6 +54,9 @@ export default new Vuex.Store({
   modules: {
   },
   getters: {
+    getLoggedIn: state=>{
+      return state.loggedIn;
+    },
     getDragZoomNotifier: state => {
       return state.dragZoomNotifier;
     },
