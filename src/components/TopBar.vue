@@ -57,8 +57,7 @@
                     light
                     dense
                     floating
-                    style="position: fixed; top: 10vh; left: 40vw; width: 20vw"
-
+                    style="position: fixed; top: 10vh; left: 40%; width: 20%"
             >
                 <v-text-field
                         hide-details

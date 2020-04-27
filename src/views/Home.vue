@@ -6,7 +6,7 @@
                  class="mt-9"
             >
         </h1>
-        <h1>Tran-Chitro</h1>
+        <h1>ত্রাণচিত্র</h1>
         <p>A Website for COVID-19 Relief Distribution and Management</p>
         <v-btn rounded class="primary" style="top: 5vh" to="/search">
             Explore
