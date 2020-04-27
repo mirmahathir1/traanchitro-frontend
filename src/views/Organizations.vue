@@ -89,9 +89,8 @@
                             :key="index"
                     >
                         <v-expansion-panel-header v-if="activity.typeOfRelief">
-                            <!--                        <p>Location: Uttara, Dhaka</p>-->
                             <p>Relief Type: <span v-for="(type,index) in activity.typeOfRelief"
-                                                  :key="index">{{type}} </span></p>
+                                                  :key="index">{{type}}, </span></p>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content class="pt-3">
                             <template v-if="activity.supplyDate">

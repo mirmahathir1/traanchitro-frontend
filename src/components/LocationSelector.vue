@@ -5,9 +5,8 @@
                 ref="googleMap"
                 id="map"
         ></div>
-        <template v-if="Boolean(this.google) && Boolean(this.map)">
+        <template v-if="Boolean(this.map)">
             <slot
-                    :google="google"
                     :map="map"
             >
             </slot>
@@ -27,6 +26,7 @@
 
                 google: null,
                 map: null,
+                maps:null,
 
                 mapConfig: {
                     center: {lat: 23.6850, lng: 90.3563},
@@ -43,17 +43,32 @@
         },
 
         async mounted() {
-            const googleMapApi = await GoogleMapsApiLoader({
-                apiKey: this.apiKey,
-            });
-            this.google = googleMapApi;
-            this.initializeMap();
+            let interval= setInterval(()=>{
+                if(this.$store.getters.getMaps){
+                    this.maps = this.$store.getters.getMaps;
+                    this.initializeMap();
 
-            eventBus.$on('searchClicked', (data) => {
-                this.searchClicked(data);
-            });
+                    eventBus.$on('searchClicked', (data) => {
+                        this.searchClicked(data);
+                    });
 
-            this.checkNewReliefLocation();
+                    this.checkNewReliefLocation();
+                    clearInterval(interval);
+                }
+            },100);
+
+
+            // const googleMapApi = await GoogleMapsApiLoader({
+            //     apiKey: this.apiKey,
+            // });
+            // this.google = googleMapApi;
+            // this.initializeMap();
+            //
+            // eventBus.$on('searchClicked', (data) => {
+            //     this.searchClicked(data);
+            // });
+            //
+            // this.checkNewReliefLocation();
 
         },
 
@@ -64,9 +79,9 @@
                   //console.log('newReliefLocation received in LocationSelector.vue: ',newReliefLocation);
                   this.map.setCenter(newReliefLocation.focusLocation);
 
-                  let northeastlatlng = new this.google.maps.LatLng(newReliefLocation.northeast, newReliefLocation.northeast.lng);
-                  let southwestlatlng = new this.google.maps.LatLng(newReliefLocation.southwest.lat, newReliefLocation.southwest.lng);
-                  var bounds = new this.google.maps.LatLngBounds();
+                  let northeastlatlng = new this.maps.LatLng(newReliefLocation.northeast, newReliefLocation.northeast.lng);
+                  let southwestlatlng = new this.maps.LatLng(newReliefLocation.southwest.lat, newReliefLocation.southwest.lng);
+                  var bounds = new this.maps.LatLngBounds();
                   bounds.extend(northeastlatlng);
                   bounds.extend(southwestlatlng);
                   this.map.fitBounds(bounds)
@@ -83,9 +98,9 @@
 
                 //fit the map according to the bound of the new area
                 if (data.bounds != undefined) {
-                    let northeastlatlng = new this.google.maps.LatLng(data.bounds.northeast.lat, data.bounds.northeast.lng);
-                    let southwestlatlng = new this.google.maps.LatLng(data.bounds.southwest.lat, data.bounds.southwest.lng);
-                    var bounds = new this.google.maps.LatLngBounds();
+                    let northeastlatlng = new this.maps.LatLng(data.bounds.northeast.lat, data.bounds.northeast.lng);
+                    let southwestlatlng = new this.maps.LatLng(data.bounds.southwest.lat, data.bounds.southwest.lng);
+                    var bounds = new this.maps.LatLngBounds();
                     bounds.extend(northeastlatlng);
                     bounds.extend(southwestlatlng);
                     this.map.fitBounds(bounds);
@@ -129,7 +144,7 @@
             },
             initializeMap() {
                 const mapContainer = this.$refs.googleMap;
-                this.map = new this.google.maps.Map(mapContainer, this.mapConfig);
+                this.map = new this.maps.Map(mapContainer, this.mapConfig);
 
 
                 this.map.addListener('bounds_changed', this.mapBoundsChanged);

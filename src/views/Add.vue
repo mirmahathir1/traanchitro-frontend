@@ -174,7 +174,7 @@
     import LocationSelector from "../components/LocationSelector";
     import axios from "axios";
     import {eventBus} from "../main";
-    import {maxLength, minLength, numeric, required} from 'vuelidate/lib/validators';
+    import {required} from 'vuelidate/lib/validators';
 
     export default {
         name: "Add",
@@ -214,13 +214,8 @@
                 //content text box
                 content: null,
 
-                // list: [],
-                // inputEntry: {
-                //     item: 'Rice',
-                //     quantity: 2,
-                //     description: 'Chikon chal'
-                // }
-                // date: new Date().toISOString().substr(0, 10),
+                maps: null,
+                apiKey: process.env.VUE_APP_API_KEY,
 
             }
         },
@@ -235,6 +230,17 @@
                 next({name: 'Notice', params: {text: "You must be signed in to add reliefs"}});
             }
         },
+
+        async mounted() {
+            let interval= setInterval(()=>{
+                if(this.$store.getters.getMaps){
+                    this.maps = this.$store.getters.getMaps;
+
+                    clearInterval(interval);
+                }
+            },100);
+        },
+
         methods: {
             setLocation(location) {
                 //console.log('Set location called in Add.vue: ');
@@ -248,25 +254,64 @@
             },
 
             searchClicked() {
-                console.log("Search clicked");
                 console.log('Name of location: ', this.searchedLocation);
 
-                let apiKey=process.env.VUE_APP_API_KEY;
-
                 let newSearchAddress = this.searchedLocation + ', Bangladesh';
+
+                //this.callGeoCodeAPI(newSearchAddress);
+                this.callMapjsAPI(newSearchAddress);
+            },
+            callMapjsAPI(newSearchAddress) {
+                let self = this;
+                console.log("CALLING MAPSJAVASCRIPT API");
+                this.searchLoaderFlag = true;
+                let geocoder = new this.maps.Geocoder();
+
+                geocoder.geocode({'address': newSearchAddress}, function (results, status) {
+                    console.log("FINISH");
+                    self.searchLoaderFlag = false;
+                    if (status === 'OK') {
+                        console.log("RESPONSE: ", results);
+                        let bounds = undefined;
+                        if (results[0].geometry.bounds) {
+                            bounds = {
+                                northeast: {
+                                    lat: results[0].geometry.bounds.Ya.j,
+                                    lng: results[0].geometry.bounds.Ua.j,
+                                },
+                                southwest: {
+                                    lat: results[0].geometry.bounds.Ya.i,
+                                    lng: results[0].geometry.bounds.Ua.i
+                                }
+                            }
+                        }
+                        let focusLocation = results[0].geometry.location;
+                        let data = {
+                            focusLocation: {
+                                lat: focusLocation.lat(),
+                                lng: focusLocation.lng(),
+                            },
+                            bounds: bounds
+                        };
+                        eventBus.$emit('searchClicked', data);
+
+                    } else {
+                        console.log('ERROR: ' + status);
+                    }
+                });
+
+            },
+            callGeoCodeAPI(newSearchAddress){
+                let apiKey=process.env.VUE_APP_API_KEY;
                 let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key='+apiKey;
                 let processedURL = url.replace(/ /g, '%20');
-                //console.log('Send data: ', processedURL);
                 console.log("CALLING GEOCODE API");
                 this.searchLoaderFlag = true;
                 axios.get(processedURL)
                     .then(res => {
                         console.log("RESPONSE: ", res);
-                        //console.log("The Full search result is ", res.data.results[0]);
-                        //console.log(res.data.results[0].geometry.location);
                         let data = {
                             focusLocation: res.data.results[0].geometry.location,
-                            locations: [],
                             bounds: res.data.results[0].geometry.bounds,
                         };
                         eventBus.$emit('searchClicked', data);
@@ -279,9 +324,7 @@
                         this.searchLoaderFlag = false;
                     });
             },
-
             saveClicked() {
-                console.log('Save button clicked');
                 this.$v.$touch();
 
                 if (this.selectedTypes.length === 0) {

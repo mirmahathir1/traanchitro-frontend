@@ -113,7 +113,6 @@
 
             selectActivity(index) {
                 this.selectedActivity = this.activities[index];
-                console.log('Selected Activity in BottomPopup component', this.selectedActivity);
                 this.activitySelectedFlag = true;
             },
 
@@ -177,9 +176,7 @@
             },
 
             closeClicked() {
-                console.log('close clicked');
                 this.sheet = !this.sheet;
-
             },
         },
 

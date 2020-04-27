@@ -28,10 +28,10 @@
         </template>
 
 
-<!--        Search Bar to search Location-->
+        <!--        Search Bar to search Location-->
         <template v-if="$route.path.startsWith('/search')">
 
-<!--            If the PC is a Mobile-->
+            <!--            If the PC is a Mobile-->
             <template v-if="isMobile()">
                 <v-row align="center" style="max-width: 650px" class="mr-1 ml-2">
                     <v-text-field
@@ -51,7 +51,7 @@
                 </v-btn>
             </template>
 
-<!--            If the device is a PC-->
+            <!--            If the device is a PC-->
             <v-toolbar
                     v-else
                     light
@@ -90,8 +90,8 @@
             return {
                 searchAddress: null,
                 searchLoaderFlag: false,
-                google: null,
-                geocoder: null,
+                maps: null,
+
                 apiKey: process.env.VUE_APP_API_KEY,
 
                 items: [
@@ -108,30 +108,16 @@
         },
         components: {},
         async mounted() {
-            // const googleMapApi = await GoogleMapsApiLoader({
-            //     apiKey: this.apiKey
-            // });
-            //
-            // this.google = googleMapApi;
-            //
-            // this.geocoder= new this.google.maps.Geocoder();
-            //
-            // console.log("REQUESTING TO GEOCODE API");
-            // this.geocoder.geocode({'address': 'Kalabagan, Bangladesh'}, function(results, status) {
-            //     if (status === 'OK') {
-            //         console.log("RESPONSE: ",results);
-            //         // let data = {
-            //         //     focusLocation: res.data.results[0].geometry.location,
-            //         //     bounds: res.data.results[0].geometry.bounds,
-            //         // };
-            //         let data={
-            //
-            //         }
-            //
-            //     } else {
-            //         alert('Geocode was not successful for the following reason: ' + status);
-            //     }
-            // });
+            const googleMapApi = await GoogleMapsApiLoader({
+                apiKey: this.apiKey
+            });
+            this.$store.commit('setMaps',googleMapApi.maps);
+            console.log("GOOGLE MAP API INCLUDED: ",this.$store.getters.getMaps);
+            this.maps=this.$store.getters.getMaps;
+
+            if(localStorage.getItem('x-auth')){
+                this.$store.commit('login');
+            }
         },
         methods: {
             isMobile() {
@@ -155,14 +141,13 @@
                     return;
                 }
 
-                let sendData = {
-                    text: this.searchAddress
-                };
-
                 this.searchLoaderFlag = true;
-
                 let newSearchAddress = this.searchAddress + ', Bangladesh';
+                this.callMapjsAPI(newSearchAddress);
+                //this.callGeoCodeAPI(newSearchAddress);
+            },
 
+            callGeoCodeAPI(newSearchAddress) {
                 let apiKey = process.env.VUE_APP_API_KEY;
 
                 let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key=' + apiKey;
@@ -180,7 +165,9 @@
                             focusLocation: res.data.results[0].geometry.location,
                             bounds: res.data.results[0].geometry.bounds,
                         };
+                        console.log("Data emitted to map: ", data);
                         eventBus.$emit('resetAndShow', data);
+
                     })
                     .catch((error) => {
                         console.log("ERROR: ", error.response);
@@ -189,6 +176,46 @@
                         console.log("FINISH");
                         this.searchLoaderFlag = false;
                     });
+            },
+            callMapjsAPI(newSearchAddress) {
+                let self = this;
+                console.log("REQUESTING TO GEOCODE API");
+
+                let geocoder = new this.maps.Geocoder();
+                geocoder.geocode({'address': newSearchAddress}, function (results, status) {
+                    console.log("FINISH");
+                    self.searchLoaderFlag = false;
+
+                    if (status === 'OK') {
+                        console.log("RESPONSE: ", results);
+                        let bounds = undefined;
+                        if (results[0].geometry.bounds) {
+                            bounds = {
+                                northeast: {
+                                    lat: results[0].geometry.bounds.Ya.j,
+                                    lng: results[0].geometry.bounds.Ua.j,
+                                },
+                                southwest: {
+                                    lat: results[0].geometry.bounds.Ya.i,
+                                    lng: results[0].geometry.bounds.Ua.i
+                                }
+                            }
+                        }
+                        let focusLocation = results[0].geometry.location;
+                        let data = {
+                            focusLocation: {
+                                lat: focusLocation.lat(),
+                                lng: focusLocation.lng(),
+                            },
+                            bounds: bounds
+                        };
+                        eventBus.$emit('resetAndShow', data);
+
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+
             }
         }
     }

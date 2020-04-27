@@ -24,6 +24,11 @@ export default new Vuex.Store({
 
     //Forwarded map information from Map.vue to LocationSelector.vue
     newReliefLocation: null,
+
+    //api objects
+    maps: null,
+
+
   },
   mutations: {
     stopDragZoomNotifier:((state) => {
@@ -47,6 +52,10 @@ export default new Vuex.Store({
     }),
     login: ((state)=>{
       state.loggedIn=true;
+    }),
+
+    setMaps: ((state, maps)=>{
+      state.maps = maps;
     })
   },
   actions: {
@@ -71,6 +80,9 @@ export default new Vuex.Store({
     },
     getNewReliefLocation: state=>{
       return state.newReliefLocation;
+    },
+    getMaps: state => {
+      return state.maps;
     }
   }
 })

@@ -35,7 +35,7 @@
         data(){
             return{
                 //snackbar: true,
-                snackbarText: "Please press reload to show pins",
+                snackbarText: "Press reload button (bottom right) to show pins",
             }
         },
         methods:{

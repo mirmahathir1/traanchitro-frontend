@@ -1,9 +1,8 @@
 <template>
     <div>
         <div class="google-map" ref="googleMap" id="map"></div>
-        <template v-if="Boolean(this.google) && Boolean(this.map)">
+        <template v-if="Boolean(this.map)">
             <slot
-                    :google="google"
                     :map="map"
             />
         </template>
@@ -16,18 +15,16 @@
             <v-icon @click="refreshClicked()">mdi-reload</v-icon>
         </v-btn>
 
-        <!--        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="black" left style="width: 300px">-->
-        <!--            {{ snackbarText }}-->
-        <!--            <div>-->
-        <!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
-        <!--                <v-btn color="white" text @click="snackbar = false">Close</v-btn>-->
-        <!--            </div>-->
-        <!--        </v-snackbar>-->
+        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="primary darken-2" left
+                    style="width: 300px">
+            {{ snackbarText }}
+            <div>
+                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>
+                <v-btn color="white" text @click="snackbar = false">Close</v-btn>
+            </div>
+        </v-snackbar>
 
         <RightFilter></RightFilter>
-
-
-
 
 
     </div>
@@ -51,15 +48,15 @@
 
                 sheet: false,
                 snackbar: true,
-                snackbarText: "Please press reload to show pins",
+                snackbarText: "Press reload button (bottom right) to show pins",
 
-                google: null,
                 map: null,
+                maps: null,
                 markers: [],
 
                 mapConfig: {
                     center: {lat: 23.6850, lng: 90.3563},
-                    zoom: 9,
+                    zoom: 7,
                     options: {
                         gestureHandling: 'greedy'
                     },
@@ -74,25 +71,39 @@
         },
 
         async mounted() {
-            const googleMapApi = await GoogleMapsApiLoader({
-                apiKey: this.apiKey
-            });
+            let interval = setInterval(() => {
+                if (this.$store.getters.getMaps) {
+                    this.maps = this.$store.getters.getMaps;
 
-            this.google = googleMapApi;
-            this.initializeMap();
+                    this.initializeMap();
+                    eventBus.$on('resetAndShow', (data) => {
+                        this.mapListener(data);
+                    });
+                    eventBus.$on('reloadMap', () => {
+                        this.refreshClicked();
+                    });
+                    clearInterval(interval);
+                }
+            }, 100);
 
-            eventBus.$on('resetAndShow', (data) => {
-                this.mapListener(data);
-            });
-            eventBus.$on('reloadMap', () => {
-                this.refreshClicked();
-            })
+            // const googleMapApi = await GoogleMapsApiLoader({
+            //     apiKey: this.apiKey
+            // });
+            //
+            // this.google = googleMapApi;
+            //
+            // this.initializeMap();
+            //
+            // eventBus.$on('resetAndShow', (data) => {
+            //     this.mapListener(data);
+            // });
+            // eventBus.$on('reloadMap', () => {
+            //     this.refreshClicked();
+            // })
         },
 
         methods: {
             addButtonClicked() {
-                //console.log('Map center: ',this.map.getCenter());
-                //console.log('Map bounds: ',this.map.getBounds());
                 let bounds = this.map.getBounds();
                 let newReliefLocation = {
                     focusLocation: {
@@ -109,7 +120,6 @@
                     }
                 };
                 this.$store.commit('setNewReliefLocation', newReliefLocation);
-                //console.log('Set newReliefLocation in Map.vue: ',this.$store.getters.getNewReliefLocation);
                 this.$router.push({name: 'Add'});
             },
 
@@ -119,10 +129,7 @@
                 localStorage.setItem('stopDragZoomNotifier', 'false');
             },
             refreshClicked() {
-                //console.log('Refresh Clicked');
-
                 let bounds = this.map.getBounds();
-                //console.log('Map bounds:', bounds);
 
                 let params = {
                     bounds: {
@@ -163,25 +170,25 @@
                     }).catch(e => {
                     console.log('ERROR: ', e.response);
                 }).finally(() => {
+                    console.log("FINISH");
                     this.reloadLoaderFlag = false;
                 });
             },
 
             putMarkersOnBound(data) {
-                //console.log("array of markers: ", data.locations);
+
                 this.clearAllMarkers();
                 this.addNewMarkers(data.locations);
             },
 
             mapListener(data) {
-                //console.log("focusPosition: ", data.focusLocation);
                 this.map.setCenter(data.focusLocation);
 
                 //fit the map according to the bound of the new area
                 if (data.bounds != undefined) {
-                    let northeastlatlng = new this.google.maps.LatLng(data.bounds.northeast.lat, data.bounds.northeast.lng);
-                    let southwestlatlng = new this.google.maps.LatLng(data.bounds.southwest.lat, data.bounds.southwest.lng);
-                    var bounds = new this.google.maps.LatLngBounds();
+                    let northeastlatlng = new this.maps.LatLng(data.bounds.northeast.lat, data.bounds.northeast.lng);
+                    let southwestlatlng = new this.maps.LatLng(data.bounds.southwest.lat, data.bounds.southwest.lng);
+                    var bounds = new this.maps.LatLngBounds();
                     bounds.extend(northeastlatlng);
                     bounds.extend(southwestlatlng);
                     this.map.fitBounds(bounds);
@@ -201,22 +208,21 @@
             addNewMarkers(locations) {
 
                 locations.forEach((location) => {
-                    let marker = new this.google.maps.Marker({
+                    let marker = new this.maps.Marker({
                         position: {
                             lat: location.lat,
                             lng: location.lng
                         },
                         map: this.map,
-                        animation: this.google.maps.Animation.DROP
+                        animation: this.maps.Animation.DROP
                     });
                     this.markers.push(marker);
                     marker.addListener('click', this.seeMarkerDetails);
-                    console.log(location);
                 });
             },
 
             seeMarkerDetails(position) {
-                console.log(position.latLng.lat(), position.latLng.lng());
+                console.log("Selected marker: ", position.latLng.lat(), position.latLng.lng());
                 let selectedLocation = {
                     lat: position.latLng.lat(),
                     lng: position.latLng.lng()
@@ -255,7 +261,7 @@
 
             initializeMap() {
                 const mapContainer = this.$refs.googleMap;
-                this.map = new this.google.maps.Map(mapContainer, this.mapConfig);
+                this.map = new this.maps.Map(mapContainer, this.mapConfig);
                 //this.map.addListener('click', this.mapClicked);
                 this.map.addListener('dragend', this.mapDragEnded);
                 this.map.addListener('zoom_changed', this.mapZoomChanged);
