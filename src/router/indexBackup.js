@@ -2,16 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import BottomPopup from "../components/BottomPopup";
-import Home from "../views/Home";
-import Search from "../views/Search";
-import Add from "../views/Add";
-import Organizations from "../views/Organizations";
-import Login from "../views/Login";
-import Register from "../views/Register";
-import About from "../views/About";
-import HowTo from "../views/HowTo";
-import Logout from "../views/Logout";
-import Notice from "../views/Notice";
+
 
 Vue.use(VueRouter);
 
@@ -19,12 +10,12 @@ Vue.use(VueRouter);
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: ()=> import('../views/Home.vue')
     },
     {
       path: '/search',
       name: 'Search',
-      component: Search,
+      component: ()=> import('../views/Search.vue'),
       children: [
         {
           path: 'details/:position',
@@ -36,22 +27,22 @@ Vue.use(VueRouter);
     {
       path: '/add',
       name: 'Add',
-      component:Add
+      component:()=> import('../views/Add.vue')
     },
     {
       path: '/orgs',
       name: 'Organizations',
-      component:Organizations
+      component:()=> import('../views/Organizations.vue')
     },
     {
       path: '/login',
       name: 'LogIn',
-      component:Login
+      component:()=> import('../views/Login.vue')
     },
     {
       path: '/reg',
       name: 'Register',
-      component:Register
+      component:()=> import('../views/Register.vue')
     },
 
     {
@@ -60,29 +51,29 @@ Vue.use(VueRouter);
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: About
+      component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
     },
     {
       path: '/howto',
       name: 'HowTo',
-      component: HowTo
+      component: ()=> import('../views/HowTo.vue')
     },
     {
       path: '*',
       name: 'NotFound',
       props:{text:"Page Not found"},
-      component: Notice
+      component: ()=> import('../views/Notice.vue')
     },
     {
       path: '/logout',
       name: 'LogOut',
-      component: Logout
+      component: ()=> import('../views/Logout')
     },
     {
       path: '/notice',
       name: 'Notice',
       props: true,
-      component: Notice
+      component: ()=> import('../views/Notice')
     }
 ];
 
