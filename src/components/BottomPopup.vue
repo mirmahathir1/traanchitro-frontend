@@ -1,7 +1,7 @@
 <template>
     <div class="text-center">
         <v-bottom-sheet v-model="sheet" inset hide-overlay>
-            <v-sheet style="height: fit-content">
+            <v-card style="height: fit-content" shaped>
                 <v-card v-if="bottomPopupLoadingFlag"
                         class="mx-auto"
                         outlined
@@ -9,7 +9,7 @@
                     <div class="text-center ma-5">
                         <v-progress-circular
                                 :size="70"
-                                :width="7"
+                                :width="7"developer
                                 color="light-blue"
                                 indeterminate
                         ></v-progress-circular>
@@ -57,7 +57,7 @@
                         <SelectedActivity :activity="selectedActivity"></SelectedActivity>
                     </template>
                 </v-card>
-            </v-sheet>
+            </v-card>
         </v-bottom-sheet>
     </div>
 </template>

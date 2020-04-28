@@ -17,7 +17,7 @@
         <v-spacer/>
 
         <template v-if="!isMobile()">
-            <v-toolbar-items v-for="(item,index) in items">
+            <v-toolbar-items v-for="(item,index) in items" :key="index">
                 <v-btn text small :to="item.to">{{item.text}}</v-btn>
             </v-toolbar-items>
             <v-toolbar-items v-if="$store.getters.getLoggedIn">
