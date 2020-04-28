@@ -7,12 +7,12 @@
             />
         </template>
 
-        <v-btn absolute dark fab top right color="light-blue" style="top: 70vh;right: 5vw">
-            <v-icon @click="addButtonClicked()">mdi-plus</v-icon>
+        <v-btn absolute dark fab top right color="light-blue" style="top: 70vh;right: 5vw" @click="addButtonClicked()">
+            <v-icon>mdi-plus</v-icon>
         </v-btn>
 
-        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag">
-            <v-icon @click="refreshClicked()">mdi-reload</v-icon>
+        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag" @click="refreshClicked()">
+            <v-icon>mdi-reload</v-icon>
         </v-btn>
 
         <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="primary darken-2" left

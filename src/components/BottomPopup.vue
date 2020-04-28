@@ -1,7 +1,7 @@
 <template>
     <div class="text-center">
         <v-bottom-sheet v-model="sheet" inset hide-overlay>
-            <v-card style="height: fit-content" shaped>
+            <v-card style="height: fit-content">
                 <v-card v-if="bottomPopupLoadingFlag"
                         class="mx-auto"
                         outlined
