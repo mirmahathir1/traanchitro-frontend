@@ -103,7 +103,7 @@
                     // { icon: 'mdi-login', text: 'Log In',to:'/login' },
                     {icon: 'mdi-pencil', text: 'Register', to: '/reg'},
                     {icon: 'mdi-information', text: 'About us', to: '/about'},
-                    {icon: 'mdi-help-circle', text: 'How to use this site', to: '/howto'}
+                    {icon: 'mdi-help-circle', text: 'Help', to: '/howto'}
                 ],
 
 
