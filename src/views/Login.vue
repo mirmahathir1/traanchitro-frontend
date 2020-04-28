@@ -27,6 +27,7 @@
                         v-model="password"
                 />
             </v-form>
+            <p class="red--text">{{errorMessage}}</p>
         </v-card-text>
         <v-card-actions>
             <v-spacer/>
@@ -46,10 +47,18 @@
                 password: null,
 
                 signInLoaderFlag: false,
+
+                errorMessage: null
             }
         },
         methods: {
             signInClicked() {
+                this.errorMessage=null;
+
+                if(this.password===null) {
+                    this.password="";
+                }
+
                 let data = {
                     username: this.username,
                     password: this.password
@@ -71,6 +80,10 @@
                     })
                     .catch(e => {
                         console.log('ERROR: ', e.response);
+                        if(e.response.data && e.response.data.message){
+                            this.errorMessage = e.response.data.message;
+                        }
+
                     })
                     .finally(() => {
                         console.log('FINISH');

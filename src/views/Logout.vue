@@ -1,19 +1,24 @@
 <template>
-    <v-card class="mx-auto elevation-12" max-width="500" style="top: 20vh">
-        <v-list>
-            <v-list-item>
-                <v-list-item-title>
-                    You have been logged out
-                </v-list-item-title>
-            </v-list-item>
-        </v-list>
-    </v-card>
+    <Notice text="You have been logged out"></Notice>
+<!--    <v-card class="mx-auto elevation-12" max-width="500" style="top: 20vh">-->
+<!--        <v-list>-->
+<!--            <v-list-item>-->
+<!--                <v-list-item-title>-->
+<!--                    You have been logged out-->
+<!--                </v-list-item-title>-->
+<!--            </v-list-item>-->
+<!--        </v-list>-->
+<!--    </v-card>-->
 </template>
 
 <script>
     import axios from 'axios';
+    import Notice from "./Notice";
     export default {
         name: "Logout",
+        components:{
+          Notice
+        },
         created() {
             let data = {};
 
@@ -44,8 +49,6 @@
                     localStorage.removeItem('x-auth');
                     this.$store.commit('logout');
                 });
-
-
         }
     }
 </script>

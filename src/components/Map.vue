@@ -19,7 +19,7 @@
                     style="width: 300px">
             {{ snackbarText }}
             <div>
-                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>
+<!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
                 <v-btn color="white" text @click="snackbar = false">Close</v-btn>
             </div>
         </v-snackbar>
@@ -251,12 +251,12 @@
             mapDragEnded() {
                 //console.log("Map dragged and bounds changed");
                 //console.log(this.map.getBounds());
-                this.snackbar = true;
+                //this.snackbar = true;
             },
             mapZoomChanged() {
                 // console.log("Zoom changed");
                 // console.log(this.map.getBounds());
-                this.snackbar = true;
+                //this.snackbar = true;
             },
 
             initializeMap() {

@@ -49,13 +49,15 @@
                 {{organization.description}}
             </v-card-text>
 
-            <v-card-actions>
-                <v-btn class="blue-grey" dark>Donate</v-btn>
-                <v-btn class="blue-grey" dark>Website</v-btn>
-                <v-btn class="blue-grey" dark>Facebook</v-btn>
-            </v-card-actions>
+
 
             <template v-if="organization.contact">
+                <v-card-actions>
+                    <v-btn class="blue-grey" dark @click="linkClicked(organization.contact.facebook)">Donate</v-btn>
+                    <v-btn class="blue-grey" dark @click="linkClicked(organization.contact.website)">Website</v-btn>
+                    <v-btn class="blue-grey" dark @click="linkClicked(organization.contact.facebook)">Facebook</v-btn>
+                </v-card-actions>
+
                 <v-card-text v-if="organization.contact.phone">
                     Phone: {{organization.contact.phone}}
                 </v-card-text>
@@ -184,6 +186,13 @@
             }
         },
         methods: {
+            linkClicked(link){
+                if (!/^https?:\/\//i.test(link)) {
+                    link = 'http://' + link;
+                }
+
+                window.open(link);
+            },
             searchClicked() {
                 this.$v.$touch();
                 if (this.$v.$anyError) {

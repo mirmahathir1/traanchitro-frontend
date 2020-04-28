@@ -6,6 +6,7 @@
             dark
     >
 
+        <v-app-bar-nav-icon v-if="isMobile()" @click="toggleDrawer"/>
 
         <v-img :src="require('../assets/Logo-White.png')" max-width="30" max-height="30" class="mr-2"></v-img>
 
@@ -73,7 +74,7 @@
         </template>
 
 
-        <v-app-bar-nav-icon v-if="isMobile()" @click="toggleDrawer"/>
+
 
 
     </v-app-bar>
@@ -104,6 +105,8 @@
                     {icon: 'mdi-information', text: 'About us', to: '/about'},
                     {icon: 'mdi-help-circle', text: 'How to use this site', to: '/howto'}
                 ],
+
+
             }
         },
         components: {},

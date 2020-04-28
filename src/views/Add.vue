@@ -363,7 +363,7 @@
                 })
                     .then((res) => {
                         console.log("RESPONSE: ", res);
-                        this.$router.push({name: 'Search'});
+                        this.$router.push({name: 'Notice',params:{text:'Relief added successfully in database.'}});
                         this.saveLoaderFlag = true;
                     })
                     .catch(e => {
