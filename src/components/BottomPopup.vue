@@ -9,7 +9,7 @@
                     <div class="text-center ma-5">
                         <v-progress-circular
                                 :size="70"
-                                :width="7"developer
+                                :width="7" developer
                                 color="light-blue"
                                 indeterminate
                         ></v-progress-circular>
@@ -33,7 +33,7 @@
                     <v-card-text v-if="!activitySelectedFlag">
                         <v-card-text class="text-center">
                             <b>List of Relief Activities in this Location</b>
-                            <p>(click on any for details)</p>
+                            <p>(click on any activity for details)</p>
                         </v-card-text>
 
                         <v-simple-table>
@@ -44,8 +44,9 @@
                                     <th>Type of Relief</th>
                                 </tr>
                                 <tr v-for="(activity,index) in activities" :key="index" @click="selectActivity(index)">
-                                    <td>Activity {{index}}</td>
-                                    <td><span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}}, </span></td>
+                                    <td>Activity {{index+1}}</td>
+                                    <td><span v-for="(type,index) in activity.typeOfRelief"
+                                              :key="index">{{type}}, </span></td>
                                 </tr>
                                 </tbody>
                             </template>
@@ -53,7 +54,12 @@
                     </v-card-text>
 
                     <template v-else>
-                        <v-btn icon class="light-blue lighten-4 ml-5" @click="backButtonClicked"><</v-btn>
+                        <!--                        <v-btn icon class="light-blue lighten-4 ml-5" @click="backButtonClicked"><</v-btn>-->
+                        <v-card-text>
+                            <v-btn icon class="grey lighten-2" @click="backButtonClicked">
+                                <v-icon>mdi-chevron-left</v-icon>
+                            </v-btn>
+                        </v-card-text>
                         <SelectedActivity :activity="selectedActivity"></SelectedActivity>
                     </template>
                 </v-card>
@@ -117,7 +123,7 @@
             },
 
             openBottomDrawer(positionString) {
-                this.activitySelectedFlag=false;
+                this.activitySelectedFlag = false;
                 let position;
                 try {
                     position = JSON.parse(positionString);
@@ -145,9 +151,9 @@
 
                 console.log('PARAMS: ', params);
 
-                if(headers["x-auth"]){
+                if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
-                }else{
+                } else {
                     console.log("USER IS NOT AUTHORIZED");
                 }
 
@@ -158,10 +164,10 @@
                         params: params
                     })
                     .then((res) => {
-                        console.log('RESPONSE: ',res);
-                        this.activities=res.data.activities;
+                        console.log('RESPONSE: ', res);
+                        this.activities = res.data.activities;
                     }).catch(e => {
-                        console.log('ERROR: ',e.response);
+                    console.log('ERROR: ', e.response);
                     //console.log('error');
                 }).finally(() => {
                     console.log('FINISH');
