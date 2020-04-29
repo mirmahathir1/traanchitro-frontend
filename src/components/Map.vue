@@ -18,7 +18,7 @@
 <!--        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag" @click="refreshClicked()">-->
 <!--            <v-icon>mdi-reload</v-icon>-->
 <!--        </v-btn>-->
-        <v-btn absolute dark fab bottom small right color="light-blue" style="bottom: 7vh" :loading="reloadLoaderFlag" @click="refreshClicked()">
+        <v-btn absolute dark fab bottom small right fixed color="light-blue" style="bottom: 7vh" :loading="reloadLoaderFlag" @click="refreshClicked()">
             <v-icon>mdi-reload</v-icon>
         </v-btn>
 
