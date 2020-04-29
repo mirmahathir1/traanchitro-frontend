@@ -4,33 +4,23 @@
         <template v-if="Boolean(this.map)">
             <slot
                     :map="map"
-            >
-                <v-btn absolute dark fab bottom right fixed color="light-blue" style="bottom: 15%" @click="addButtonClicked()">
-                    <v-icon>mdi-plus</v-icon>
-                </v-btn>
-
-                <v-btn absolute dark fab bottom right color="light-blue" style="bottom: 5%" :loading="reloadLoaderFlag" @click="refreshClicked()">
-                    <v-icon>mdi-reload</v-icon>
-                </v-btn>
-            </slot>
-
-
+            />
         </template>
 
 <!--        <v-btn absolute dark fab top right color="light-blue" style="top: 70vh;right: 5vw" @click="addButtonClicked()">-->
 <!--            <v-icon>mdi-plus</v-icon>-->
 <!--        </v-btn>-->
 
-<!--        <v-btn absolute dark fab bottom right fixed color="light-blue" style="bottom: 15vh" @click="addButtonClicked()">-->
-<!--            <v-icon>mdi-plus</v-icon>-->
-<!--        </v-btn>-->
+        <v-btn absolute dark fab bottom small right fixed color="light-blue" style="bottom: 15vh" @click="addButtonClicked()">
+            <v-icon>mdi-plus</v-icon>
+        </v-btn>
 
 <!--        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag" @click="refreshClicked()">-->
 <!--            <v-icon>mdi-reload</v-icon>-->
 <!--        </v-btn>-->
-<!--        <v-btn absolute dark fab bottom right color="light-blue" style="bottom: 5vh" :loading="reloadLoaderFlag" @click="refreshClicked()">-->
-<!--            <v-icon>mdi-reload</v-icon>-->
-<!--        </v-btn>-->
+        <v-btn absolute dark fab bottom small right color="light-blue" style="bottom: 7vh" :loading="reloadLoaderFlag" @click="refreshClicked()">
+            <v-icon>mdi-reload</v-icon>
+        </v-btn>
 
         <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="primary darken-2" left
                     style="width: 300px">
