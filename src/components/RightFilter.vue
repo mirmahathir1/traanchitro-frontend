@@ -53,7 +53,7 @@
                                 ></v-radio>
                                 <v-radio
                                         :label="'Scheduled Delivery'"
-                                        :value="'FUTURE'"
+                                        :value="'SCHEDULED'"
                                 ></v-radio>
                             </v-radio-group>
                         </template>

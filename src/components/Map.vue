@@ -11,7 +11,7 @@
 <!--            <v-icon>mdi-plus</v-icon>-->
 <!--        </v-btn>-->
 
-        <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 11vh" @click="addButtonClicked()">
+        <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 10vh" @click="addButtonClicked()">
             <v-icon>mdi-plus</v-icon>
         </v-btn>
 
