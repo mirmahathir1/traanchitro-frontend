@@ -4,7 +4,6 @@
             clipped-left
             color="primary"
             dark
-            absolute
     >
 
         <v-app-bar-nav-icon v-if="isMobile()" @click="toggleDrawer"/>
