@@ -4,7 +4,6 @@
             clipped-left
             color="primary"
             dark
-            dense
             elevation="5"
     >
 
