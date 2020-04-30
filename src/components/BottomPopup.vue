@@ -1,10 +1,11 @@
 <template>
     <div class="text-center">
-        <v-bottom-sheet v-model="sheet" inset hide-overlay>
-            <v-card style="height: fit-content">
+        <v-bottom-sheet v-model="sheet" inset hide-overlay class="blue">
+            <v-card style="height: fit-content" color="#001727" >
                 <v-card v-if="bottomPopupLoadingFlag"
                         class="mx-auto"
                         outlined
+                        color="#001727"
                 >
                     <div class="text-center ma-5">
                         <v-progress-circular
@@ -19,25 +20,28 @@
                 <v-card v-else
                         class="mx-auto"
                         outlined
+                        color="#001727"
                 >
                     <div class="text-right">
                         <v-btn
                                 class="ma-2"
                                 text
-                                color="error"
+                                color="teal accent-3"
+
                                 @click="closeClicked"
                         >close
                         </v-btn>
                     </div>
 
-                    <v-card-text v-if="!activitySelectedFlag">
+                    <v-card-text v-if="!activitySelectedFlag" class="teal--text text--accent-1">
+<!--                        88f9d4-->
                         <v-card-text class="text-center">
                             <b>List of Relief Activities in this Location</b>
                             <p>(click on any activity for details)</p>
                         </v-card-text>
 
-                        <v-simple-table>
-                            <template v-slot:default>
+                        <v-simple-table class="black teal--text text--accent-1" dark>
+
                                 <tbody>
                                 <tr>
                                     <th>Acitivities</th>
@@ -49,14 +53,14 @@
                                               :key="index">{{type}}, </span></td>
                                 </tr>
                                 </tbody>
-                            </template>
+
                         </v-simple-table>
                     </v-card-text>
 
                     <template v-else>
                         <!--                        <v-btn icon class="light-blue lighten-4 ml-5" @click="backButtonClicked"><</v-btn>-->
                         <v-card-text>
-                            <v-btn icon class="grey lighten-2" @click="backButtonClicked">
+                            <v-btn icon class="teal accent-1" @click="backButtonClicked">
                                 <v-icon>mdi-chevron-left</v-icon>
                             </v-btn>
                         </v-card-text>

@@ -10,9 +10,11 @@ Vue.use(Vuelidate);
 
 //axios.defaults.baseURL="https://stormy-lake-20015.herokuapp.com";
 //axios.defaults.baseURL="https://protean-smile-275412.el.r.appspot.com";
-axios.defaults.baseURL="https://www.traanchitro.com";
-
 //axios.defaults.baseURL="http://localhost:5000";
+
+axios.defaults.baseURL="https://www.traanchitro.com";
+//axios.defaults.baseURL="https://beta-test-v2-dot-protean-smile-275412.el.r.appspot.com";
+
 
 Vue.config.productionTip = false;
 

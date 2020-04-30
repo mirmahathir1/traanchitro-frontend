@@ -1,29 +1,29 @@
 <template>
-    <div>
-        <v-list-item-title class="text-center">Organization: {{activity.orgName}}</v-list-item-title>
+    <div class="teal--text text--accent-1">
+        <v-list-item-title class="text-center white--text">Organization: {{activity.orgName}}</v-list-item-title>
         <v-card-text>
-            <v-simple-table>
+            <v-simple-table class="black teal--text text--accent-1" dark>
                 <template v-slot:default>
                     <tbody>
                     <tr>
-                        <td>Location:</td>
+                        <td class="white--text">Location:</td>
                         <td>{{formattedAddress}}</td>
                     </tr>
                     <tr>
-                        <td>Relief Type:</td>
+                        <td class="white--text">Relief Type:</td>
                         <td><span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}}, </span></td>
                     </tr>
-<!--                    <tr>-->
-<!--                        <td>Location:</td>-->
-<!--                        <td>{{activity.location}}</td>-->
-<!--                    </tr>-->
+                    <!--                    <tr>-->
+                    <!--                        <td>Location:</td>-->
+                    <!--                        <td>{{activity.location}}</td>-->
+                    <!--                    </tr>-->
                     </tbody>
                 </template>
             </v-simple-table>
         </v-card-text>
 
         <div class="text-center pb-2" v-if="activity.supplyDate">
-            <v-btn rounded class="yellow darken-1" small light @click="seeMoreClicked"
+            <v-btn rounded class="white" small light @click="seeMoreClicked"
                    :loading="seeMoreLoadingFlag">
                 <template v-if="!seeMoreFlag">
                     See More
@@ -34,18 +34,20 @@
             </v-btn>
         </div>
 
-        <v-card class="ma-2" v-if="seeMoreFlag">
-            <v-card-text class="title">Supplied: </v-card-text>
-            <v-card-text class="subtitle-2" v-if="activity.supplyDate">
+        <v-card class="ma-2" v-if="seeMoreFlag" style="overflow-y: scroll; height: 200px" color="black">
+
+            <v-card-text class="title white--text">Supplied:</v-card-text>
+            <v-card-text class="subtitle-2 teal--text text--accent-1" v-if="activity.supplyDate">
                 {{new Date(activity.supplyDate).toDateString()}}
             </v-card-text>
             <template v-if="activity.contents">
-            <v-card-text class="title">Description: </v-card-text>
-            <v-card-text class="subtitle-2"
-            >
-                {{activity.contents}}
-            </v-card-text>
+                    <v-card-text class="title white--text">Description:</v-card-text>
+                    <v-card-text class="subtitle-2 teal--text text--accent-1"
+                    >
+                        {{activity.contents}}
+                    </v-card-text>
             </template>
+
         </v-card>
     </div>
 </template>
@@ -62,16 +64,16 @@
                 seeMoreLoadingFlag: false,
                 reliefs: [],
                 formattedAddress: null,
-                date:null,
+                date: null,
 
-                maps:null,
+                maps: null,
             }
         },
-        async mounted(){
-            console.log('selected activity: ',this.activity);
+        async mounted() {
+            console.log('selected activity: ', this.activity);
 
-            let interval= setInterval(()=>{
-                if(this.$store.getters.getMaps){
+            let interval = setInterval(() => {
+                if (this.$store.getters.getMaps) {
                     this.maps = this.$store.getters.getMaps;
 
                     //this.callGeoCodeAPI();
@@ -79,14 +81,12 @@
 
                     clearInterval(interval);
                 }
-            },100);
-
-
+            }, 100);
 
 
         },
         methods: {
-            callMapjsAPI(){
+            callMapjsAPI() {
                 console.log("CALLING MAPSJAVASCRIPT API");
                 let geocoder = new this.maps.Geocoder();
                 var latlng = {
@@ -94,10 +94,10 @@
                     lng: this.activity.location.coordinates[0]
                 };
 
-                let self=this;
-                geocoder.geocode({'location': latlng}, function(results, status) {
-                    console.log("STATUS: ",status);
-                    console.log("RESPONSE: ",results);
+                let self = this;
+                geocoder.geocode({'location': latlng}, function (results, status) {
+                    console.log("STATUS: ", status);
+                    console.log("RESPONSE: ", results);
                     if (status === 'OK') {
                         if (results[0]) {
                             self.formattedAddress = results[0].formatted_address;
@@ -111,7 +111,7 @@
 
 
             },
-            callGeoCodeAPI(){
+            callGeoCodeAPI() {
                 let lat = this.activity.location.coordinates[1];
                 let lng = this.activity.location.coordinates[0];
 
@@ -119,16 +119,16 @@
 
                 let apiKey = process.env.VUE_APP_API_KEY;
 
-                axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key='+apiKey)
-                    .then(response=>{
-                        console.log('RESPONSE: ',response);
+                axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + apiKey)
+                    .then(response => {
+                        console.log('RESPONSE: ', response);
                         //console.log('Received formatted address: ',response.data.results[0].formatted_address);
                         this.formattedAddress = response.data.results[0].formatted_address;
                     })
-                    .catch(error=> {
-                        console.log("ERROR: ",error.response);
+                    .catch(error => {
+                        console.log("ERROR: ", error.response);
                     })
-                    .finally(()=>{
+                    .finally(() => {
                         console.log('FINISH');
                     })
             },
@@ -138,7 +138,7 @@
                     this.seeMoreFlag = false;
                 } else {
                     this.seeMoreFlag = false;
-                    this.date=new Date(this.activity.supplyDate).toDateString();
+                    this.date = new Date(this.activity.supplyDate).toDateString();
                     this.seeMoreFlag = true;
                 }
             }
