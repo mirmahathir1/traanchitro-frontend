@@ -1,22 +1,22 @@
 <template>
     <div class="teal--text text--accent-1">
-        <v-list-item-title class="text-center white--text">Organization: {{activity.orgName}}</v-list-item-title>
+        <v-list-item-title class="text-center white--text">Organization: <b>{{activity.orgName}}</b></v-list-item-title>
         <v-card-text>
-            <v-simple-table class="black teal--text text--accent-1" dark>
+            <v-simple-table class="primary darken-3 white--text" dark>
                 <template v-slot:default>
                     <tbody>
                     <tr>
-                        <td class="white--text">Location:</td>
-                        <td>{{formattedAddress}}</td>
+                        <td class="teal--text text--accent-1">Location:</td>
+                        <td class="white--text">{{formattedAddress}}</td>
                     </tr>
                     <tr>
-                        <td class="white--text">Relief Type:</td>
-                        <td><span v-for="(type,index) in activity.typeOfRelief" :key="index">{{type}}, </span></td>
+                        <td class="teal--text text--accent-1">Relief Type:</td>
+                        <td class="white--text">
+                            <span v-for="(type,index) in activity.typeOfRelief" :key="index">
+                                {{type}}<span v-if="index!==activity.typeOfRelief.length-1">,</span>
+                            </span>
+                        </td>
                     </tr>
-                    <!--                    <tr>-->
-                    <!--                        <td>Location:</td>-->
-                    <!--                        <td>{{activity.location}}</td>-->
-                    <!--                    </tr>-->
                     </tbody>
                 </template>
             </v-simple-table>
@@ -34,18 +34,18 @@
             </v-btn>
         </div>
 
-        <v-card class="ma-2" v-if="seeMoreFlag" style="overflow-y: scroll; height: 200px" color="black">
+        <v-card class="ma-2 pa-4" v-if="seeMoreFlag" style="overflow-y: scroll; height: 200px" color="primary darken-3">
 
-            <v-card-text class="title white--text">Supplied:</v-card-text>
-            <v-card-text class="subtitle-2 teal--text text--accent-1" v-if="activity.supplyDate">
+            <p class="title teal--text text--accent-1">Date of Supply:</p>
+            <p class="subtitle-2 white--text" v-if="activity.supplyDate">
                 {{new Date(activity.supplyDate).toDateString()}}
-            </v-card-text>
+            </p>
             <template v-if="activity.contents">
-                    <v-card-text class="title white--text">Description:</v-card-text>
-                    <v-card-text class="subtitle-2 teal--text text--accent-1"
+                    <p class="title teal--text text--accent-1">Description:</p>
+                    <p class="subtitle-2 white--text"
                     >
                         {{activity.contents}}
-                    </v-card-text>
+                    </p>
             </template>
 
         </v-card>

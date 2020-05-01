@@ -34,43 +34,70 @@
         </v-card>
 
         <v-card
-                class="mx-auto white pa-4 mt-5"
+                class="mx-auto white pa-4 mt-5 white--text"
                 outlined
                 :elevation="2"
-                style="width: 90vw"
+
+                max-width="900"
                 v-if="organization"
+                color="primary darken-1"
         >
             <v-list-item three-line class="text-center" v-if="organization.orgName">
                 <v-list-item-content>
-                    <v-list-item-title class="headline mb-1">{{organization.orgName}}</v-list-item-title>
+                    <v-list-item-title class="headline mb-1 white--text"><b>{{organization.orgName}}</b></v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
-            <v-card-text v-if="organization.description">
-                {{organization.description}}
-            </v-card-text>
+
+            <v-row no-gutters>
+                <v-col
+                        cols="12"
+                        sm="12"
+                        lg="6"
+                >
+                    <v-card-text class="white--text" v-if="organization.description">
+                        {{organization.description}}
+                    </v-card-text>
+                    <template v-if="organization.contact">
+                        <v-card-actions>
+                            <v-btn class="white" rounded @click="linkClicked(organization.contact.facebook)">Donate
+                            </v-btn>
+                            <v-btn class="white" rounded @click="linkClicked(organization.contact.website)">Website
+                            </v-btn>
+                            <v-btn class="white" rounded @click="linkClicked(organization.contact.facebook)">Facebook
+                            </v-btn>
+                        </v-card-actions>
+                    </template>
+                </v-col>
 
 
+                <v-col
+                        cols="12"
+                        sm="12"
+                        lg="6">
+                    <template v-if="organization.contact">
+                        <div class="ma-4">
+                            <p v-if="organization.contact.phone" class="white--text">
+                                <b class="teal--text text--accent-1">Phone: </b>
+                                <span>{{organization.contact.phone}}</span>
+                            </p>
+                            <p v-if="organization.contact.email" class="white--text">
+                                <b class="teal--text text--accent-1">Email: </b>
+                                <span>{{organization.contact.email}}</span>
+                            </p>
+                            <p v-if="organization.contact.website" class="white--text">
+                                <b class="teal--text text--accent-1">Website: </b>
+                                <span>{{organization.contact.website}}</span>
+                            </p>
+                            <p v-if="organization.contact.facebook" class="white--text">
+                                <b class="teal--text text--accent-1">Facebook: </b>
+                                <span>{{organization.contact.facebook}}</span>
+                            </p>
+                        </div>
+                    </template>
+                </v-col>
 
-            <template v-if="organization.contact">
-                <v-card-actions>
-                    <v-btn class="blue-grey" dark @click="linkClicked(organization.contact.facebook)">Donate</v-btn>
-                    <v-btn class="blue-grey" dark @click="linkClicked(organization.contact.website)">Website</v-btn>
-                    <v-btn class="blue-grey" dark @click="linkClicked(organization.contact.facebook)">Facebook</v-btn>
-                </v-card-actions>
+            </v-row>
 
-                <v-card-text v-if="organization.contact.phone">
-                    Phone: {{organization.contact.phone}}
-                </v-card-text>
-                <v-card-text v-if="organization.contact.email">
-                    Email: {{organization.contact.email}}
-                </v-card-text>
-                <v-card-text v-if="organization.contact.website">
-                    Website: {{organization.contact.website}}
-                </v-card-text>
-                <v-card-text v-if="organization.contact.facebook">
-                    Facebook: {{organization.contact.facebook}}
-                </v-card-text>
-            </template>
 
             <template v-if="activities.length!==0">
                 <v-card-title>Relief Records:</v-card-title>
@@ -85,23 +112,32 @@
                         :flat="false"
                         :hover="false"
                         :tile="false"
+                        class="primary darken-1"
+                        dark
                 >
                     <v-expansion-panel
                             v-for="(activity,index) in activities"
                             :key="index"
+                            class="primary darken-2"
                     >
                         <v-expansion-panel-header v-if="activity.typeOfRelief">
-                            <p>Relief Type: <span v-for="(type,index) in activity.typeOfRelief"
-                                                  :key="index">{{type}}, </span></p>
+                            <p>
+                                <b class="teal--text text--accent-1">
+                                    Relief Type:
+                                </b>
+                                <span class="white--text" v-for="(type,index) in activity.typeOfRelief" :key="index">
+                                    {{type}}<span v-if="index!==activity.typeOfRelief.length-1">,</span>
+                                </span>
+                            </p>
                         </v-expansion-panel-header>
-                        <v-expansion-panel-content class="pt-3">
+                        <v-expansion-panel-content class="pt-3 primary darken-2">
                             <template v-if="activity.supplyDate">
-                                <p><b>Supply Date:</b></p>
-                                <p> {{new Date(activity.supplyDate).toDateString()}}</p>
+                                <p class="teal--text text--accent-1"><b>Supply Date:</b></p>
+                                <p class="white--text"> {{new Date(activity.supplyDate).toDateString()}}</p>
                             </template>
                             <template v-if="activity.contents">
-                                <p><b>Contents:</b></p>
-                                <p>{{activity.contents}}</p>
+                                <p class="teal--text text--accent-1"><b>Contents:</b></p>
+                                <p class="white--text">{{activity.contents}}</p>
                             </template>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
@@ -186,7 +222,7 @@
             }
         },
         methods: {
-            linkClicked(link){
+            linkClicked(link) {
                 if (!/^https?:\/\//i.test(link)) {
                     link = 'http://' + link;
                 }

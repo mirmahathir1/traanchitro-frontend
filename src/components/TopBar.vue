@@ -9,11 +9,13 @@
 
         <v-app-bar-nav-icon v-if="isMobile()" @click="toggleDrawer"/>
 
-        <v-img :src="require('../assets/Logo-White.png')" max-width="30" max-height="30" class="mr-2"></v-img>
 
-        <v-toolbar-title class="align-center" v-if="!isMobile() || !$route.path.startsWith('/search')">
+        <v-img @click="goHome" :src="require('../assets/Logo-White.png')" max-width="30" max-height="30" class="mr-2"></v-img>
+
+        <v-toolbar-title @click="goHome" class="align-center" v-if="!isMobile() || !$route.path.startsWith('/search')">
             <span class="title">ত্রাণচিত্র</span>
         </v-toolbar-title>
+
 
         <v-spacer/>
 
@@ -44,6 +46,7 @@
                             solo-inverted
                             hide-details
                             v-model="searchAddress"
+                            v-on:keyup.enter="searchClicked"
                     />
                 </v-row>
 
@@ -67,6 +70,7 @@
                         single-line
                         v-model="searchAddress"
                         placeholder="Search..."
+                        v-on:keyup.enter="searchClicked"
                 ></v-text-field>
                 <v-btn icon @click="searchClicked" :loading="searchLoaderFlag">
                     <v-icon>mdi-magnify</v-icon>
@@ -124,6 +128,11 @@
             }
         },
         methods: {
+            goHome(){
+              if(this.$route.path!=='/'){
+                  this.$router.push('/');
+              }
+            },
             isMobile() {
                 let check = false;
                 (function (a) {

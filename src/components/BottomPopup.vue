@@ -1,17 +1,17 @@
 <template>
     <div class="text-center">
-        <v-bottom-sheet v-model="sheet" inset hide-overlay class="blue">
-            <v-card style="height: fit-content" color="#001727" >
+        <v-bottom-sheet v-model="sheet" inset hide-overlay class="primary">
+            <v-card style="height: fit-content" color="primary darken-1" >
                 <v-card v-if="bottomPopupLoadingFlag"
                         class="mx-auto"
                         outlined
-                        color="#001727"
+                        color="primary darken-1"
                 >
                     <div class="text-center ma-5">
                         <v-progress-circular
                                 :size="70"
                                 :width="7" developer
-                                color="light-blue"
+                                color="black"
                                 indeterminate
                         ></v-progress-circular>
                     </div>
@@ -20,37 +20,39 @@
                 <v-card v-else
                         class="mx-auto"
                         outlined
-                        color="#001727"
+                        color="primary darken-1"
                 >
                     <div class="text-right">
                         <v-btn
                                 class="ma-2"
                                 text
-                                color="teal accent-3"
+                                color="white"
 
                                 @click="closeClicked"
                         >close
                         </v-btn>
                     </div>
 
-                    <v-card-text v-if="!activitySelectedFlag" class="teal--text text--accent-1">
+                    <v-card-text v-if="!activitySelectedFlag" class="white--text">
 <!--                        88f9d4-->
                         <v-card-text class="text-center">
                             <b>List of Relief Activities in this Location</b>
                             <p>(click on any activity for details)</p>
                         </v-card-text>
 
-                        <v-simple-table class="black teal--text text--accent-1" dark>
-
+                        <v-simple-table class="primary darken-3 white--text" dark>
                                 <tbody>
-                                <tr>
+                                <tr class="primary darken-1">
                                     <th>Acitivities</th>
                                     <th>Type of Relief</th>
                                 </tr>
                                 <tr v-for="(activity,index) in activities" :key="index" @click="selectActivity(index)">
                                     <td>Activity {{index+1}}</td>
-                                    <td><span v-for="(type,index) in activity.typeOfRelief"
-                                              :key="index">{{type}}, </span></td>
+                                    <td>
+                                        <span v-for="(type,index) in activity.typeOfRelief" :key="index">
+                                            {{type}}<span v-if="index!==activity.typeOfRelief.length-1">,</span>
+                                        </span>
+                                    </td>
                                 </tr>
                                 </tbody>
 

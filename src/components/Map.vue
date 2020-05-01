@@ -23,7 +23,7 @@
         </v-btn>
 
         <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="primary darken-2" left
-                    style="width: 300px">
+                    style="width: 280px">
             {{ snackbarText }}
             <div>
 <!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
