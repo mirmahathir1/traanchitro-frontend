@@ -83,10 +83,11 @@
             </v-card-actions>
         </v-card>
 
-        <v-card class="mx-auto elevation-12" max-width="500" style="top: 10vh" v-else>
-            <v-card-text>
-                {{notificationText}}
-            </v-card-text>
+        <v-card class="mx-auto elevation-12 pa-5" max-width="500" style="top: 10vh" v-else>
+            <p class="ma-5">
+                রেজিস্ট্রেশন করার জন্য ধন্যবাদ।<br>
+                ত্রাণচিত্রের পক্ষ থেকে আপনাদের সাথে শীঘ্রই ফোনে বা মেইলে যোগাযোগ করে ইউজারনেম আর পাসওয়ার্ড দিয়ে দেওয়া হবে।
+            </p>
             <v-card-actions>
                 <v-btn class="primary lighten-2" block @click="registerClicked" to="/">Go to maps</v-btn>
             </v-card-actions>
