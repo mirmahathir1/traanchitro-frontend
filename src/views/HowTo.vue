@@ -3,7 +3,7 @@
     <v-card class="mx-auto elevation-12" max-width="700">
 
         <v-list>
-            <v-list-item-title class="headline mb-1 mx-auto ml-6">Help</v-list-item-title>
+            <v-list-item-title class="headline mb-1 mx-auto ml-6"><h3>Help</h3></v-list-item-title>
             <v-divider></v-divider>
 
             <v-list-item class="ma-5">
@@ -28,7 +28,7 @@
                 </ul>
             </v-list-item>
             <v-divider></v-divider>
-            <v-card-title><p><u> কোনো নির্দিষ্ট স্থানে এখন পর্যন্ত পরিচালিত ত্রাণ কর্মসূচীগুলা সম্পর্কে জানতে চাইলেঃ </u></p></v-card-title>
+            <v-list-item class="ma-5"><h3><u> কোনো নির্দিষ্ট স্থানে এখন পর্যন্ত পরিচালিত ত্রাণ কর্মসূচীগুলা সম্পর্কে জানতে চাইলেঃ </u></h3></v-list-item>
             <v-list-item class="ma-5">
 
                 SEARCH RELIEF অপশনটিতে ক্লিক করলে একটি ছোট window আসবে, যেখানে নির্দিষ্ট
@@ -46,7 +46,8 @@
             </v-list-item>
 
             <v-divider></v-divider>
-            <v-card-title><p><u> কোনো নির্দিষ্ট Organization কি কি ত্রাণ কর্মসূচী ইতিমধ্যে করেছে সে সম্পর্কে জানতে চাইলেঃ </u></p></v-card-title>
+
+            <v-list-item class="ma-5"><h3><u> কোনো নির্দিষ্ট Organization কি কি ত্রাণ কর্মসূচী ইতিমধ্যে করেছে সে সম্পর্কে জানতে চাইলেঃ </u></h3></v-list-item>
             <v-list-item class="ma-5">
 
                 ORGANIZATION অপশনটিতে ক্লিক করলে একটি ছোট window আসবে, যেখানে নির্দিষ্ট
@@ -60,7 +61,7 @@
             </v-list-item>
 
             <v-divider></v-divider>
-            <v-card-title><u> কোনো Organization কিভাবে Register করবে আর তাদের ত্রাণ কার্যক্রমগুলোকে অন্তর্ভুক্ত করতে পারবেঃ </u></v-card-title>
+            <v-list-item class="ma-5"><h3><u> কোনো Organization কিভাবে Register করবে আর তাদের ত্রাণ কার্যক্রমগুলোকে অন্তর্ভুক্ত করতে পারবেঃ </u></h3></v-list-item>
             <v-list-item class="ma-5">
 
                 REGISTER অপশনে ক্লিক করার পর একটি window আসবে যেখানে Organization এর নাম,
