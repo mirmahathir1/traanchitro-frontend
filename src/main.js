@@ -5,6 +5,7 @@ import router from './router'
 import axios from 'axios';
 import store from './store'
 import Vuelidate from "vuelidate";
+//import './registerServiceWorker'
 
 Vue.use(Vuelidate);
 

@@ -12,7 +12,9 @@ app.use(cors());
 
 const path = require('path');
 const history = require('connect-history-api-fallback');
-const staticFileMiddleware = express.static(path.join(__dirname+'/dist'));
+const staticFileMiddleware = express.static(path.join(__dirname+'/dist'),{
+    etag: false
+});
 app.use(staticFileMiddleware);
 app.use(history());
 app.use(staticFileMiddleware);

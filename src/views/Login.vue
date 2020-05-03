@@ -79,7 +79,7 @@
                         this.$store.commit('login');
                     })
                     .catch(e => {
-                        console.log('ERROR: ', e.response);
+                        console.log('ERROR: ', e.response.data);
                         if(e.response.data && e.response.data.message){
                             this.errorMessage = e.response.data.message;
                         }

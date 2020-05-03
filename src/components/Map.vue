@@ -256,7 +256,7 @@
             },
 
             mapDragEnded() {
-                //console.log("Map dragged and bounds changed");
+                console.log("Map drag ended");
                 //console.log(this.map.getBounds());
                 //this.snackbar = true;
             },
