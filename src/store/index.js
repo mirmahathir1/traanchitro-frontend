@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //a flag to control the notification in Map.vue
-    dragZoomNotifier: true,
+    snackbar: true,
 
     //token for authorized access
     token:null,
@@ -31,8 +31,8 @@ export default new Vuex.Store({
 
   },
   mutations: {
-    stopDragZoomNotifier:((state) => {
-      state.dragZoomNotifier=false;
+    stopSnackbar:((state) => {
+      state.snackbar=false;
     }),
     setToken:((state, token)=>{
       state.token = token;
@@ -66,8 +66,8 @@ export default new Vuex.Store({
     getLoggedIn: state=>{
       return state.loggedIn;
     },
-    getDragZoomNotifier: state => {
-      return state.dragZoomNotifier;
+    getSnackbar: state => {
+      return state.snackbar;
     },
     getToken: state =>{
       return state.token;

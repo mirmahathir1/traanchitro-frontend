@@ -44,7 +44,8 @@
         >
             <v-list-item three-line class="text-center" v-if="organization.orgName">
                 <v-list-item-content>
-                    <v-list-item-title class="headline mb-1 white--text"><b>{{organization.orgName}}</b></v-list-item-title>
+                    <v-list-item-title class="headline mb-1 white--text"><b>{{organization.orgName}}</b>
+                    </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
 
@@ -76,10 +77,18 @@
                         lg="6">
                     <template v-if="organization.contact">
                         <div class="ma-4">
-                            <p v-if="organization.contact.phone" class="white--text">
-                                <b class="teal--text text--accent-1">Phone: </b>
-                                <span>{{organization.contact.phone}}</span>
+                            <!--                            <p v-if="organization.contact.phone" class="white&#45;&#45;text">-->
+                            <!--                                <b class="teal&#45;&#45;text text&#45;&#45;accent-1">Phone: </b>-->
+                            <!--                                <br>-->
+                            <!--                                <span>{{organization.contact.phone}}</span>-->
+                            <!--                            </p>-->
+                            <p v-if="organization.contact.phones" class="white--text">
+                                <b class="teal--text text--accent-1">Phones: </b>
+                                <span v-for="(phone,index) in organization.contact.phones" :key="index">{{phone}}
+                                <span v-if="index!==organization.contact.phones.length-1">, </span>
+                                </span>
                             </p>
+
                             <p v-if="organization.contact.email" class="white--text">
                                 <b class="teal--text text--accent-1">Email: </b>
                                 <span>{{organization.contact.email}}</span>
@@ -219,6 +228,12 @@
                     console.log('FINISH');
                     this.organizationLoaderFlag = false;
                 });
+            }
+
+            if(this.$route.params) {
+                console.log("passed organization name: ", this.$route.params.orgName);
+                this.selectedOrganization=this.$route.params.orgName;
+                this.searchClicked();
             }
         },
         methods: {

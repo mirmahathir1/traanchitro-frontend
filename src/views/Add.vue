@@ -53,22 +53,21 @@
                     </v-col>
                     <v-col
                             cols="12"
-                            sm="6"
-                            lg="4"
+                            sm="12"
+                            lg="9"
                     >
-                        <v-checkbox v-model="selectedTypes" hide-details dense label="Food" value="FOOD"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" hide-details dense label="PPE" value="PPE"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" hide-details dense label="Sanitizer"
-                                    value="SANITIZER"></v-checkbox>
+                        <v-checkbox v-model="selectedTypes" v-for="(type,index) in CONSTANTS.typeOfRelief" :key="index" hide-details dense :label="type.type" :value="type.value"></v-checkbox>
+<!--                        <v-checkbox v-model="selectedTypes" hide-details dense label="Medical Supply" value="MEDICAL_SUPPLY"></v-checkbox>-->
+<!--                        <v-checkbox v-model="selectedTypes" hide-details dense label="Disinfection" value="SANITIZER"></v-checkbox>-->
                     </v-col>
-                    <v-col
-                            cols="12"
-                            sm="6"
-                            lg="4"
-                    >
-                        <v-checkbox v-model="selectedTypes" hide-details dense label="Mask" value="MASK"></v-checkbox>
-                        <v-checkbox v-model="selectedTypes" hide-details dense label="Glove" value="GLOVE"></v-checkbox>
-                    </v-col>
+<!--                    <v-col-->
+<!--                            cols="12"-->
+<!--                            sm="6"-->
+<!--                            lg="4"-->
+<!--                    >-->
+<!--                        <v-checkbox v-model="selectedTypes" hide-details dense label="Mask" value="MASK"></v-checkbox>-->
+<!--                        <v-checkbox v-model="selectedTypes" hide-details dense label="Glove" value="GLOVE"></v-checkbox>-->
+<!--                    </v-col>-->
 
 
                 </v-row>
@@ -175,6 +174,7 @@
     import axios from "axios";
     import {eventBus} from "../main";
     import {required} from 'vuelidate/lib/validators';
+    import {CONSTANTS} from '../constants';
 
     export default {
         name: "Add",
@@ -192,6 +192,7 @@
 
         data: () => {
             return {
+                CONSTANTS,
                 //loader flags
                 saveLoaderFlag: false,
                 saveCompleteFlag: false,
@@ -325,16 +326,6 @@
                     });
             },
             saveClicked() {
-                this.$v.$touch();
-
-                if (this.selectedTypes.length === 0) {
-                    return;
-                }
-
-                if (this.$v.$anyError) {
-                    return;
-                }
-
                 let data = {
                     typeOfRelief: this.selectedTypes,
                     location: {
@@ -345,11 +336,25 @@
                     supplyDate: this.date
                 };
 
+                console.log('DATA: ', data);
+
+                this.$v.$touch();
+
+                if (this.selectedTypes.length === 0 || this.location.lat===undefined) {
+                    return;
+                }
+
+                if (this.$v.$anyError) {
+                    return;
+                }
+
+
+
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth')
                 };
 
-                console.log('DATA: ', data);
+
 
                 if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");

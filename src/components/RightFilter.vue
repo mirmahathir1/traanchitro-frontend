@@ -15,48 +15,23 @@
             <v-container>
                 <v-row no-gutters>
                     <v-col
-                            :cols="4"
-                    >
-                        <p>Type of Relief:</p>
-                        <v-checkbox hide-details v-model="selectedTypes" dense label="Food" value="FOOD"></v-checkbox>
-                        <v-checkbox hide-details v-model="selectedTypes" dense label="PPE" value="PPE"></v-checkbox>
-                        <v-checkbox hide-details v-model="selectedTypes" dense label="Sanitizer" value="SANITIZER"></v-checkbox>
-                        <v-checkbox hide-details v-model="selectedTypes" dense label="Mask" value="MASK"></v-checkbox>
-                        <v-checkbox hide-details v-model="selectedTypes" dense label="Glove" value="GLOVE"></v-checkbox>
-
-
-                    </v-col>
-                    <v-col
-                            :cols="8"
+                            :cols="7"
                     >
                         <p>Filter by Organization:</p>
-                        <v-autocomplete
-                                v-model="selectedOrganization"
-                                :items="organizations"
-                                :search-input.sync="select"
-                                :loading="organizationLoaderFlag"
-                                :disabled="organizationLoaderFlag"
-                                cache-items
-                                flat
-                                hide-no-data
-                                hide-details
-                                :label="organizationLoaderFlag?'Loading Names of organizations...':'Type name of organization:' "
-                                class="mb-3"
-                        ></v-autocomplete>
-
-                        <p>Schedule:</p>
+                        <v-autocomplete v-model="selectedOrganization" :items="organizations" :search-input.sync="select" :loading="organizationLoaderFlag" :disabled="organizationLoaderFlag" cache-items flat hide-no-data hide-details :label="organizationLoaderFlag?'Loading Names of organizations...':'Name of organization:' " class="mb-3"></v-autocomplete>
                         <template v-if="$store.getters.getLoggedIn">
+                            <p>Schedule:</p>
                             <v-radio-group v-model="schedule">
-                                <v-radio
-                                        :label="'Past Delivery'"
-                                        :value="'PAST'"
-                                ></v-radio>
-                                <v-radio
-                                        :label="'Scheduled Delivery'"
-                                        :value="'SCHEDULED'"
-                                ></v-radio>
+                                <v-radio :label="'Past Delivery'" :value="'PAST'"></v-radio>
+                                <v-radio :label="'Scheduled Delivery'" :value="'SCHEDULED'"></v-radio>
                             </v-radio-group>
                         </template>
+                    </v-col>
+                    <v-col
+                            :cols="5"
+                    >
+                        <p>Type of Relief:</p>
+                        <v-checkbox hide-details v-model="selectedTypes" dense v-for="(type,index) in CONSTANTS.typeOfRelief" :key="index" :label="type.type" :value="type.value"></v-checkbox>
                     </v-col>
                 </v-row>
             </v-container>
@@ -74,11 +49,13 @@
 <script>
     import {eventBus} from "../main";
     import axios from "axios";
-
+    import {CONSTANTS} from '../constants';
     export default {
         name: "RightFilter",
         data: () => {
             return {
+                CONSTANTS,
+
                 enabled: false,
 
                 menu: false,

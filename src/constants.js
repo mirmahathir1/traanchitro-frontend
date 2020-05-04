@@ -1,13 +1,13 @@
-export const CONSTANTS={
-    schedule:{
+export const CONSTANTS = {
+    schedule: {
         PAST: 'PAST',
         FUTURE: 'FUTURE'
     },
-    typeOfRelief:{
-        FOOD: 'FOOD',
-        PPE: 'PPE',
-        SANITIZER: 'SANITIZER',
-        MASK: 'MASK',
-        GLOVE: 'GLOVE'
-    }
+
+    typeOfRelief: [
+        {type: "Food", value: "FOOD"},
+        {type: "Medical Supply", value: "MEDICAL_SUPPLY"},
+        {type: "Disinfection", value: "DISINFECTION"},
+        {type: "Cash", value: "CASH"}
+    ],
 };

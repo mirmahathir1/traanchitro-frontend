@@ -7,27 +7,19 @@
             />
         </template>
 
-<!--        <v-btn absolute dark fab top right color="light-blue" style="top: 70vh;right: 5vw" @click="addButtonClicked()">-->
-<!--            <v-icon>mdi-plus</v-icon>-->
-<!--        </v-btn>-->
-
         <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 10vh" @click="addButtonClicked()">
             <v-icon>mdi-plus</v-icon>
         </v-btn>
 
-<!--        <v-btn absolute dark fab top right color="light-blue" style="top: 80vh;right: 5vw" :loading="reloadLoaderFlag" @click="refreshClicked()">-->
-<!--            <v-icon>mdi-reload</v-icon>-->
-<!--        </v-btn>-->
         <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 3vh" :loading="reloadLoaderFlag" @click="refreshClicked()">
             <v-icon>mdi-reload</v-icon>
         </v-btn>
 
-        <v-snackbar v-model="snackbar" v-if="$store.getters.getDragZoomNotifier" vertical color="primary darken-2" left
+        <v-snackbar v-model="snackbar" v-if="$store.getters.getSnackbar" vertical color="primary darken-2" left
                     style="width: 280px">
             {{ snackbarText }}
             <div>
-<!--                <v-btn color="white" text @click="stopDragZoomNotifier">Don't show again</v-btn>-->
-                <v-btn color="white" text @click="snackbar = false">Close</v-btn>
+                <v-btn color="white" text @click="stopSnackbar">Close</v-btn>
             </div>
         </v-snackbar>
 
@@ -38,7 +30,6 @@
 </template>
 
 <script>
-    import GoogleMapsApiLoader from "google-maps-api-loader";
     import {eventBus} from "../main";
     import axios from 'axios';
     import RightFilter from "./RightFilter";
@@ -72,6 +63,10 @@
 
                 currentPosition: null,
                 apiKey: process.env.VUE_APP_API_KEY,
+
+                //real time data loading maps
+                mapDragged: false,
+                mapBusy: false,
 
 
             };
@@ -130,10 +125,9 @@
                 this.$router.push({name: 'Add'});
             },
 
-            stopDragZoomNotifier() {
-                this.$store.commit('stopDragZoomNotifier');
+            stopSnackbar() {
+                this.$store.commit('stopSnackbar');
                 this.snackbar = false;
-                localStorage.setItem('stopDragZoomNotifier', 'false');
             },
             refreshClicked() {
                 let bounds = this.map.getBounds();

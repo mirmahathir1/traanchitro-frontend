@@ -1,6 +1,10 @@
 <template>
     <div class="teal--text text--accent-1">
-        <v-list-item-title class="text-center white--text">Organization: <b>{{activity.orgName}}</b></v-list-item-title>
+        <v-list-item-title class="text-center white--text">
+            Organization: <b>{{activity.orgName}}</b>
+            <br>
+            <v-btn rounded class="white" x-small @click="goToOrganization">Go To Organization</v-btn>
+        </v-list-item-title>
         <v-card-text>
             <v-simple-table class="primary darken-3 white--text" dark>
                 <template v-slot:default>
@@ -86,6 +90,11 @@
 
         },
         methods: {
+            goToOrganization(){
+                console.log("Go to organization clicked");
+              this.$router.push({name: "Organizations", params:{orgName: this.activity.orgName}})
+            },
+
             callMapjsAPI() {
                 console.log("CALLING MAPSJAVASCRIPT API");
                 let geocoder = new this.maps.Geocoder();
