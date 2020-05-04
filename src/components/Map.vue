@@ -7,11 +7,13 @@
             />
         </template>
 
-        <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 10vh" @click="addButtonClicked()">
+        <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 10vh"
+               @click="addButtonClicked()">
             <v-icon>mdi-plus</v-icon>
         </v-btn>
 
-        <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 3vh" :loading="reloadLoaderFlag" @click="refreshClicked()">
+        <v-btn absolute dark fab bottom small right fixed color="primary darken-2" style="bottom: 3vh"
+               :loading="reloadLoaderFlag" @click="refreshClicked()">
             <v-icon>mdi-reload</v-icon>
         </v-btn>
 
@@ -65,7 +67,7 @@
                 apiKey: process.env.VUE_APP_API_KEY,
 
                 //real time data loading maps
-                mapDragged: false,
+                mapDragDetected: false,
                 mapBusy: false,
 
 
@@ -88,6 +90,9 @@
                 }
             }, 100);
 
+            //setInterval(this.mapLiveReloadHandler, 1000);
+
+
             // const googleMapApi = await GoogleMapsApiLoader({
             //     apiKey: this.apiKey
             // });
@@ -105,6 +110,69 @@
         },
 
         methods: {
+            mapLiveReloadHandler() {
+                if (this.mapDragDetected && !this.mapBusy) {
+                    this.mapBusy = true;
+
+
+
+                    let bounds = this.map.getBounds();
+
+                    let params = {
+                        bounds: {
+                            northeast: {
+                                lat: bounds.Ya.j,
+                                lng: bounds.Ua.j,
+                            },
+                            southwest: {
+                                lat: bounds.Ya.i,
+                                lng: bounds.Ua.i
+                            }
+                        },
+                        filter: this.$store.getters.getFilters
+                    };
+                    let headers = {
+                        'x-auth': localStorage.getItem('x-auth'),
+                    };
+                    console.log('PARAMS: ', params);
+
+                    if (headers["x-auth"]) {
+                        console.log("USER IS AUTHORIZED");
+                    } else {
+                        console.log("USER IS NOT AUTHORIZED");
+                    }
+
+                    this.reloadLoaderFlag = true;
+                    axios.get('/api/pins',
+                        {
+                            headers: headers,
+                            params: params
+                        })
+                        .then((res) => {
+                            console.log('RESPONSE: ', res);
+                            this.addNewMarkers(res.data.locations);
+                        }).catch(e => {
+                        console.log('ERROR: ', e.response);
+                    }).finally(() => {
+                        console.log("FINISH");
+                        this.reloadLoaderFlag = false;
+                        this.mapBusy = false;
+                        this.mapDragDetected = false;
+                    });
+
+
+
+
+                    // setTimeout(() => {
+                    //     console.log("Map live reload initiate");
+                    //     this.mapBusy = false;
+                    //     this.mapDragDetected = false;
+                    // }, 1000);
+                }
+
+            },
+
+
             addButtonClicked() {
                 let bounds = this.map.getBounds();
                 let newReliefLocation = {
@@ -177,7 +245,6 @@
             },
 
             putMarkersOnBound(data) {
-
                 this.clearAllMarkers();
                 this.addNewMarkers(data.locations);
             },
@@ -207,8 +274,27 @@
             },
 
             addNewMarkers(locations) {
+                let newLocations = [];
 
                 locations.forEach((location) => {
+                    let alreadyExists=false;
+
+                    for(let i = 0 ; i < this.markers.length; i++){
+                        if (this.markers[i].position.lat() === location.lat || this.markers[i].position.lng() === location.lng) {
+                            alreadyExists=true;
+                            break;
+                        }
+                    }
+
+                    if(!alreadyExists){
+                        newLocations.push(location);
+                    }
+                });
+
+                console.log("new markers added to map: ", newLocations.length);
+
+                newLocations.forEach((location) => {
+                    //locations.forEach((location) => {
                     let marker = new this.maps.Marker({
                         position: {
                             lat: location.lat,
@@ -219,6 +305,7 @@
                     });
                     this.markers.push(marker);
                     marker.addListener('click', this.seeMarkerDetails);
+                    //console.log("New marker added: ",marker.position.lat(),marker.position.lng());
                 });
             },
 
@@ -250,14 +337,12 @@
             },
 
             mapDragEnded() {
-                console.log("Map drag ended");
-                //console.log(this.map.getBounds());
-                //this.snackbar = true;
+                console.log("Map dragend detected");
+                this.mapDragDetected = true;
             },
             mapZoomChanged() {
-                // console.log("Zoom changed");
-                // console.log(this.map.getBounds());
-                //this.snackbar = true;
+                console.log("Map zoom detected");
+                this.mapDragDetected = true;
             },
 
             initializeMap() {
