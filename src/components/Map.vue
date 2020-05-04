@@ -35,7 +35,8 @@
     import {eventBus} from "../main";
     import axios from 'axios';
     import RightFilter from "./RightFilter";
-
+    import MarkerClusterer from "@google/markerclusterer";
+    import {} from 'node-js-marker-clusterer'
 
     export default {
         components: {
@@ -52,6 +53,7 @@
 
                 map: null,
                 maps: null,
+                markerCluster: null,
                 markers: [],
 
                 mapConfig: {
@@ -115,7 +117,6 @@
                     this.mapBusy = true;
 
 
-
                     let bounds = this.map.getBounds();
 
                     let params = {
@@ -159,8 +160,6 @@
                         this.mapBusy = false;
                         this.mapDragDetected = false;
                     });
-
-
 
 
                     // setTimeout(() => {
@@ -238,6 +237,7 @@
                         this.putMarkersOnBound(data);
                     }).catch(e => {
                     console.log('ERROR: ', e.response);
+                    console.log(e);
                 }).finally(() => {
                     console.log("FINISH");
                     this.reloadLoaderFlag = false;
@@ -277,16 +277,16 @@
                 let newLocations = [];
 
                 locations.forEach((location) => {
-                    let alreadyExists=false;
+                    let alreadyExists = false;
 
-                    for(let i = 0 ; i < this.markers.length; i++){
+                    for (let i = 0; i < this.markers.length; i++) {
                         if (this.markers[i].position.lat() === location.lat || this.markers[i].position.lng() === location.lng) {
-                            alreadyExists=true;
+                            alreadyExists = true;
                             break;
                         }
                     }
 
-                    if(!alreadyExists){
+                    if (!alreadyExists) {
                         newLocations.push(location);
                     }
                 });
@@ -307,6 +307,16 @@
                     marker.addListener('click', this.seeMarkerDetails);
                     //console.log("New marker added: ",marker.position.lat(),marker.position.lng());
                 });
+
+
+                //var MarkerClusterer = require('node-js-marker-clusterer');
+                if(this.markerCluster)
+                {
+                    this.markerCluster.clearMarkers();
+                }
+                this.markerCluster = new MarkerClusterer(this.map, this.markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+                //var markerCluster = new MarkerClusterer.MarkerClusterer(this.map, this.markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
             },
 
             seeMarkerDetails(position) {
