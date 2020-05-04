@@ -60,11 +60,11 @@
                     </v-card-text>
                     <template v-if="organization.contact">
                         <v-card-actions>
-                            <v-btn class="white" rounded @click="linkClicked(organization.contact.facebook)">Donate
+                            <v-btn v-if="organization.contact.donate" class="white" rounded @click="linkClicked(organization.contact.donate)">Donate
                             </v-btn>
-                            <v-btn class="white" rounded @click="linkClicked(organization.contact.website)">Website
+                            <v-btn v-if="organization.contact.website" class="white" rounded @click="linkClicked(organization.contact.website)">Website
                             </v-btn>
-                            <v-btn class="white" rounded @click="linkClicked(organization.contact.facebook)">Facebook
+                            <v-btn v-if="organization.contact.facebook" class="white" rounded @click="linkClicked(organization.contact.facebook)">Facebook
                             </v-btn>
                         </v-card-actions>
                     </template>

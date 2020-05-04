@@ -308,15 +308,9 @@
                     //console.log("New marker added: ",marker.position.lat(),marker.position.lng());
                 });
 
-
-                //var MarkerClusterer = require('node-js-marker-clusterer');
-                if(this.markerCluster)
-                {
-                    this.markerCluster.clearMarkers();
-                }
+                //MARKER CLUSTERING
+                if(this.markerCluster) {this.markerCluster.clearMarkers();}
                 this.markerCluster = new MarkerClusterer(this.map, this.markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-
-                //var markerCluster = new MarkerClusterer.MarkerClusterer(this.map, this.markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
             },
 
             seeMarkerDetails(position) {
