@@ -5,4 +5,5 @@ npm run build
 git add .
 git commit -am "$message"
 git push origin master
-git push heroku master
+#git push heroku master
+firebase deploy
