@@ -5,7 +5,10 @@ import router from './router'
 import axios from 'axios';
 import store from './store'
 import Vuelidate from "vuelidate";
-//import './registerServiceWorker'
+import MyMixins from './mixins/index';
+
+
+Vue.mixin(MyMixins);
 
 Vue.use(Vuelidate);
 

@@ -18,7 +18,13 @@
                             :cols="7"
                     >
                         <p>Filter by Organization:</p>
-                        <v-autocomplete v-model="selectedOrganization" :items="organizations" :search-input.sync="select" :loading="organizationLoaderFlag" :disabled="organizationLoaderFlag" cache-items flat hide-no-data hide-details :label="organizationLoaderFlag?'Loading Names of organizations...':'Name of organization:' " class="mb-3"></v-autocomplete>
+                        <v-autocomplete v-model="selectedOrganization" :items="organizations"
+                                        :search-input.sync="select" :loading="organizationLoaderFlag"
+                                        :disabled="organizationLoaderFlag" cache-items flat hide-no-data hide-details
+                                        :label="organizationLoaderFlag?'Loading Names of organizations...':'Name of organization:' "
+                                        class="mb-3"></v-autocomplete>
+                        <p class="red--text ml-5">{{errorText}}</p>
+
                         <template v-if="$store.getters.getLoggedIn">
                             <p>Schedule:</p>
                             <v-radio-group v-model="schedule">
@@ -31,12 +37,14 @@
                             :cols="5"
                     >
                         <p>Type of Relief:</p>
-                        <v-checkbox hide-details v-model="selectedTypes" dense v-for="(type,index) in CONSTANTS.typeOfRelief" :key="index" :label="type.type" :value="type.value"></v-checkbox>
+                        <v-checkbox hide-details v-model="selectedTypes" dense
+                                    v-for="(type,index) in CONSTANTS.typeOfRelief" :key="index" :label="type.type"
+                                    :value="type.value"></v-checkbox>
                     </v-col>
                 </v-row>
             </v-container>
-
             <v-divider></v-divider>
+
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="resetFilter()">Reset Filter</v-btn>
@@ -50,6 +58,7 @@
     import {eventBus} from "../main";
     import axios from "axios";
     import {CONSTANTS} from '../constants';
+
     export default {
         name: "RightFilter",
         data: () => {
@@ -69,43 +78,40 @@
                 filterSearchLoadingFlag: false,
 
                 organizationLoaderFlag: false,
+
+                errorText: null,
             }
         },
         created() {
             this.organizations = this.$store.getters.getOrganizations;
-            //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
 
-            if (this.organizations.length === 0) {
-                let params = {};
-
-                let headers = {
-                    'x-auth': localStorage.getItem('x-auth'),
-                };
-
-                console.log('PARAMS: ',params);
-                if(headers["x-auth"]){
-                    console.log("USER IS AUTHORIZED");
-                }else{
-                    console.log("USER IS NOT AUTHORIZED");
-                }
-
-                this.organizationLoaderFlag = true;
-                axios.get('/api/orgs',
-                    {
-                        headers: headers,
-                        params: params
-                    })
-                    .then((res) => {
-                        console.log('RESPONSE: ', res);
-                        this.$store.commit('setOrganizations', res.data.orgNames);
-                        this.organizations = this.$store.getters.getOrganizations;
-                    }).catch(e => {
-                    console.log('ERROR: ',e.response);
-                }).finally(() => {
-                    console.log('FINISH');
-                    this.organizationLoaderFlag = false;
-                });
+            if (this.organizations.length !== 0) {
+                return;
             }
+
+            this.organizationLoaderFlag = true;
+
+            let params = {};
+            let headers = {
+                'x-auth': localStorage.getItem('x-auth'),
+            };
+            let url = '/api/orgs';
+
+            this.$apiRequestLog(url, params, headers);
+
+            axios.get(url, {
+                headers: headers,
+                params: params
+            }).then((res) => {
+                console.log('RESPONSE: ', res);
+                this.$store.commit('setOrganizations', res.data.orgNames);
+                this.organizations = this.$store.getters.getOrganizations;
+            }).catch(e => {
+                this.errorText = this.$errorMessage(e);
+            }).finally(() => {
+                console.log('FINISH');
+                this.organizationLoaderFlag = false;
+            });
         },
         methods: {
             resetFilter() {

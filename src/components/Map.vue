@@ -19,7 +19,7 @@
 
         <v-snackbar v-model="snackbar" v-if="$store.getters.getSnackbar" vertical color="primary darken-2" left
                     style="width: 280px">
-            {{ snackbarText }}
+            পিন দেখতে রিলোড বাটন (নিচে ডান কোণায়) চাপুন
             <div>
                 <v-btn color="white" text @click="stopSnackbar">Close</v-btn>
             </div>
@@ -49,7 +49,6 @@
 
                 sheet: false,
                 snackbar: true,
-                snackbarText: "Press reload button (bottom right) to show pins",
 
                 map: null,
                 maps: null,
@@ -94,84 +93,9 @@
 
             //setInterval(this.mapLiveReloadHandler, 1000);
 
-
-            // const googleMapApi = await GoogleMapsApiLoader({
-            //     apiKey: this.apiKey
-            // });
-            //
-            // this.google = googleMapApi;
-            //
-            // this.initializeMap();
-            //
-            // eventBus.$on('resetAndShow', (data) => {
-            //     this.mapListener(data);
-            // });
-            // eventBus.$on('reloadMap', () => {
-            //     this.refreshClicked();
-            // })
         },
 
         methods: {
-            mapLiveReloadHandler() {
-                if (this.mapDragDetected && !this.mapBusy) {
-                    this.mapBusy = true;
-
-
-                    let bounds = this.map.getBounds();
-
-                    let params = {
-                        bounds: {
-                            northeast: {
-                                lat: bounds.Ya.j,
-                                lng: bounds.Ua.j,
-                            },
-                            southwest: {
-                                lat: bounds.Ya.i,
-                                lng: bounds.Ua.i
-                            }
-                        },
-                        filter: this.$store.getters.getFilters
-                    };
-                    let headers = {
-                        'x-auth': localStorage.getItem('x-auth'),
-                    };
-                    console.log('PARAMS: ', params);
-
-                    if (headers["x-auth"]) {
-                        console.log("USER IS AUTHORIZED");
-                    } else {
-                        console.log("USER IS NOT AUTHORIZED");
-                    }
-
-                    this.reloadLoaderFlag = true;
-                    axios.get('/api/pins',
-                        {
-                            headers: headers,
-                            params: params
-                        })
-                        .then((res) => {
-                            console.log('RESPONSE: ', res);
-                            this.addNewMarkers(res.data.locations);
-                        }).catch(e => {
-                        console.log('ERROR: ', e.response);
-                    }).finally(() => {
-                        console.log("FINISH");
-                        this.reloadLoaderFlag = false;
-                        this.mapBusy = false;
-                        this.mapDragDetected = false;
-                    });
-
-
-                    // setTimeout(() => {
-                    //     console.log("Map live reload initiate");
-                    //     this.mapBusy = false;
-                    //     this.mapDragDetected = false;
-                    // }, 1000);
-                }
-
-            },
-
-
             addButtonClicked() {
                 let bounds = this.map.getBounds();
                 let newReliefLocation = {
@@ -215,7 +139,8 @@
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
-                console.log('PARAMS: ', params);
+
+                console.log("PARAMS: ", params);
 
                 if (headers["x-auth"]) {
                     console.log("USER IS AUTHORIZED");
@@ -274,27 +199,26 @@
             },
 
             addNewMarkers(locations) {
-                let newLocations = [];
+                // let newLocations = [];
+                //
+                // locations.forEach((location) => {
+                //     let alreadyExists = false;
+                //
+                //     for (let i = 0; i < this.markers.length; i++) {
+                //         if (this.markers[i].position.lat() === location.lat || this.markers[i].position.lng() === location.lng) {
+                //             alreadyExists = true;
+                //             break;
+                //         }
+                //     }
+                //
+                //     if (!alreadyExists) {
+                //         newLocations.push(location);
+                //     }
+                // });
+                //
+                // console.log("new markers added to map: ", newLocations.length);
 
                 locations.forEach((location) => {
-                    let alreadyExists = false;
-
-                    for (let i = 0; i < this.markers.length; i++) {
-                        if (this.markers[i].position.lat() === location.lat || this.markers[i].position.lng() === location.lng) {
-                            alreadyExists = true;
-                            break;
-                        }
-                    }
-
-                    if (!alreadyExists) {
-                        newLocations.push(location);
-                    }
-                });
-
-                console.log("new markers added to map: ", newLocations.length);
-
-                newLocations.forEach((location) => {
-                    //locations.forEach((location) => {
                     let marker = new this.maps.Marker({
                         position: {
                             lat: location.lat,
@@ -305,11 +229,12 @@
                     });
                     this.markers.push(marker);
                     marker.addListener('click', this.seeMarkerDetails);
-                    //console.log("New marker added: ",marker.position.lat(),marker.position.lng());
                 });
 
                 //MARKER CLUSTERING
-                if(this.markerCluster) {this.markerCluster.clearMarkers();}
+                if (this.markerCluster) {
+                    this.markerCluster.clearMarkers();
+                }
                 this.markerCluster = new MarkerClusterer(this.map, this.markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
             },
 
@@ -323,13 +248,9 @@
 
                 let newPath = '/search/details/' + JSON.stringify(selectedLocation);
 
-                //console.log(encodeURI(newPath));
-
                 if (this.$route.path !== newPath) {
                     this.$router.push(newPath);
                 }
-
-
             },
 
             mapClicked(position) {
@@ -341,11 +262,11 @@
             },
 
             mapDragEnded() {
-                console.log("Map dragend detected");
+                //console.log("Map dragend detected");
                 this.mapDragDetected = true;
             },
             mapZoomChanged() {
-                console.log("Map zoom detected");
+                //console.log("Map zoom detected");
                 this.mapDragDetected = true;
             },
 
@@ -355,7 +276,57 @@
                 //this.map.addListener('click', this.mapClicked);
                 this.map.addListener('dragend', this.mapDragEnded);
                 this.map.addListener('zoom_changed', this.mapZoomChanged);
-            }
+            },
+            //      mapLiveReloadHandler() {
+            //     if (this.mapDragDetected && !this.mapBusy) {
+            //         this.mapBusy = true;
+            //
+            //
+            //         let bounds = this.map.getBounds();
+            //
+            //         let params = {
+            //             bounds: {
+            //                 northeast: {
+            //                     lat: bounds.Ya.j,
+            //                     lng: bounds.Ua.j,
+            //                 },
+            //                 southwest: {
+            //                     lat: bounds.Ya.i,
+            //                     lng: bounds.Ua.i
+            //                 }
+            //             },
+            //             filter: this.$store.getters.getFilters
+            //         };
+            //         let headers = {
+            //             'x-auth': localStorage.getItem('x-auth'),
+            //         };
+            //         console.log('PARAMS: ', params);
+            //
+            //         if (headers["x-auth"]) {
+            //             console.log("USER IS AUTHORIZED");
+            //         } else {
+            //             console.log("USER IS NOT AUTHORIZED");
+            //         }
+            //
+            //         this.reloadLoaderFlag = true;
+            //         axios.get('/api/pins',
+            //             {
+            //                 headers: headers,
+            //                 params: params
+            //             })
+            //             .then((res) => {
+            //                 console.log('RESPONSE: ', res);
+            //                 this.addNewMarkers(res.data.locations);
+            //             }).catch(e => {
+            //             console.log('ERROR: ', e.response);
+            //         }).finally(() => {
+            //             console.log("FINISH");
+            //             this.reloadLoaderFlag = false;
+            //             this.mapBusy = false;
+            //             this.mapDragDetected = false;
+            //         });
+            //     }
+            // },
         }
     };
 </script>

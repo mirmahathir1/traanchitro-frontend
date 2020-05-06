@@ -58,7 +58,6 @@
                     { icon: 'mdi-magnify', text: 'Search Relief',to:'/search' },
                     { icon: 'mdi-plus', text: 'Add Relief',to:'/add' },
                     { icon: 'mdi-contacts', text: 'Organizations',to:'/orgs' },
-                    // { icon: 'mdi-login', text: 'Log In',to:'/login' },
                     { icon: 'mdi-pencil', text: 'Register',to:'/reg' },
                     { icon: 'mdi-information', text: 'About us',to:'/about'},
                     { icon: 'mdi-help-circle', text: 'Help',to:'/howto'}
@@ -69,11 +68,8 @@
         mounted() {
             //console.log("Mounted");
             if(!localStorage.getItem('x-auth')){
-                console.log('USER IS UNAUTHORIZED');
                 this.$store.commit('logout');
-
             }else{
-                console.log('USER IS AUTHORIZED');
                 this.$store.commit('login');
             }
 

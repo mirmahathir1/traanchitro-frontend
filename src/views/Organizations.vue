@@ -28,7 +28,7 @@
                     <v-btn text class="primary mx-auto mt-3" dark rounded :loading="searchLoaderFlag"
                            :disabled="organizationLoaderFlag" @click="searchClicked">Search
                     </v-btn>
-
+                    <p class="red--text mt-2">{{errorText}}</p>
                 </v-list-item-content>
             </v-list-item>
         </v-card>
@@ -180,7 +180,9 @@
                 reliefs: [],
 
                 organization: null,
-                activities: []
+                activities: [],
+
+                errorText: null,
             }
         },
         components: {},
@@ -193,6 +195,8 @@
             }
         },
         created() {
+            this.errorText=null;
+
             this.organizations = this.$store.getters.getOrganizations;
             //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
 
@@ -219,11 +223,20 @@
                     })
                     .then((res) => {
                         console.log("RESPONSE: ", res);
-                        //console.log('received organization names: ', res.data.orgNames);
                         this.$store.commit('setOrganizations', res.data.orgNames);
+
                         this.organizations = this.$store.getters.getOrganizations;
                     }).catch(e => {
-                    console.log("ERROR: ", e.response);
+                        this.errorText = this.$errorMessage(e);
+                        // console.log("ERROR: ",e);
+                        // console.log("ERROR.RESPONSE: ", e.response);
+                        //
+                        // if(e.response && e.response.data && e.response.data.message){
+                        //     this.errorText=e.response.data.message;
+                        // }else{
+                        //     this.errorText="Network error";
+                        // }
+
                 }).finally(() => {
                     console.log('FINISH');
                     this.organizationLoaderFlag = false;
@@ -245,6 +258,8 @@
                 window.open(link);
             },
             searchClicked() {
+                this.errorText=null;
+
                 this.$v.$touch();
                 if (this.$v.$anyError) {
                     return;
@@ -279,11 +294,18 @@
                     })
                     .then((res) => {
                         console.log("RESPONSE: ", res);
-
                         this.organization = res.data.organization;
                         this.activities = res.data.activities;
                     }).catch(e => {
-                    console.log("ERROR: ", e.response);
+                        this.errorText=this.$errorMessage(e);
+                    // console.log("ERROR: ",e);
+                    // console.log("ERROR.RESPONSE: ", e.response);
+                    //
+                    // if(e.response && e.response.data && e.response.data.message){
+                    //     this.errorText=e.response.data.message;
+                    // }else{
+                    //     this.errorText="Network error";
+                    // }
                 }).finally(() => {
                     console.log('FINISH');
                     this.searchLoaderFlag = false;

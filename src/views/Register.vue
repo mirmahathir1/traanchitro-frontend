@@ -77,6 +77,7 @@
                     />
                 </v-form>
             </v-card-text>
+            <p class="red--text pl-5">{{registerError}}</p>
             <v-card-actions>
                 <v-spacer/>
                 <v-btn class="primary" light @click="registerClicked" :loading="registerLoaderFlag">Register</v-btn>
@@ -86,7 +87,8 @@
         <v-card class="mx-auto elevation-12 pa-5" max-width="500" style="top: 10vh" v-else>
             <p class="ma-5">
                 রেজিস্ট্রেশন করার জন্য ধন্যবাদ।<br>
-                ত্রাণচিত্রের পক্ষ থেকে আপনাদের সাথে শীঘ্রই ফোনে বা মেইলে যোগাযোগ করে ইউজারনেম আর পাসওয়ার্ড দিয়ে দেওয়া হবে।
+                ত্রাণচিত্রের পক্ষ থেকে আপনাদের সাথে শীঘ্রই ফোনে বা মেইলে যোগাযোগ করে ইউজারনেম আর পাসওয়ার্ড দিয়ে দেওয়া
+                হবে।
             </p>
             <v-card-actions>
                 <v-btn class="primary lighten-2" block @click="registerClicked" to="/">Go to maps</v-btn>
@@ -103,9 +105,11 @@
         name: "Register",
         validations: {
             name: {required},
-            phone: {required, numeric,lengthCheck:(value)=>{
-                return value.length === 11;
-                }},
+            phone: {
+                required, numeric, lengthCheck: (value) => {
+                    return value.length === 11;
+                }
+            },
             description: {required, minLength: minLength(10)}
         },
         computed: {
@@ -143,10 +147,14 @@
                 email: null,
                 facebook: null,
                 website: null,
+
+                registerError: null,
             }
         },
         methods: {
             registerClicked() {
+                this.registerError = null;
+
                 this.$v.$touch();
                 if (this.$v.$anyError) {
                     return;
@@ -165,7 +173,7 @@
                 let data = {
                     orgName: this.name,
                     description: this.description,
-                    phone: '+88' + this.phone,
+                    phones: ['+88' + this.phone],
                     email: this.email,
                     facebook: this.facebook,
                     website: this.website
@@ -177,10 +185,17 @@
                 this.registerLoaderFlag = true;
                 axios.post('/api/register', data)
                     .then((res) => {
-                        console.log("RESPONSE: ",res);
+                        console.log("RESPONSE: ", res);
                         this.requestCompleted = true;
                     }).catch(e => {
-                    console.log('ERROR: ', e.response);
+                        this.registerError = this.$errorMessage(e);
+                    // console.log('ERROR: ', e);
+                    // console.log('ERROR.RESPONSE: ', e.response);
+                    // if (e.response && e.response.data && e.response.data.message) {
+                    //     this.registerError = e.response.data.message;
+                    // } else {
+                    //     this.registerError = "ERROR"
+                    // }
                 }).finally(() => {
                     console.log('FINISH');
                     this.registerLoaderFlag = false;
