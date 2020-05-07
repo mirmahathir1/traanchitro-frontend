@@ -57,7 +57,6 @@
 </template>
 
 <script>
-    import axios from "axios";
 
     export default {
         name: "SelectedActivity",
@@ -74,7 +73,7 @@
             }
         },
         async mounted() {
-            console.log('selected activity: ', this.activity);
+            //console.log('selected activity: ', this.activity);
 
             let interval = setInterval(() => {
                 if (this.$store.getters.getMaps) {
@@ -91,12 +90,12 @@
         },
         methods: {
             goToOrganization(){
-                console.log("Go to organization clicked");
+                //console.log("Go to organization clicked");
               this.$router.push({name: "Organizations", params:{orgName: this.activity.orgName}})
             },
 
             callMapjsAPI() {
-                console.log("CALLING MAPSJAVASCRIPT API");
+                console.log("%cCALLING MAPSJAVASCRIPT API",'color:#1799B5');
                 let geocoder = new this.maps.Geocoder();
                 var latlng = {
                     lat: this.activity.location.coordinates[1],
@@ -120,27 +119,27 @@
 
 
             },
-            callGeoCodeAPI() {
-                let lat = this.activity.location.coordinates[1];
-                let lng = this.activity.location.coordinates[0];
-
-                console.log('CALLING GEOCODE API');
-
-                let apiKey = process.env.VUE_APP_API_KEY;
-
-                axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + apiKey)
-                    .then(response => {
-                        console.log('RESPONSE: ', response);
-                        //console.log('Received formatted address: ',response.data.results[0].formatted_address);
-                        this.formattedAddress = response.data.results[0].formatted_address;
-                    })
-                    .catch(error => {
-                        console.log("ERROR: ", error.response);
-                    })
-                    .finally(() => {
-                        console.log('FINISH');
-                    })
-            },
+            // callGeoCodeAPI() {
+            //     let lat = this.activity.location.coordinates[1];
+            //     let lng = this.activity.location.coordinates[0];
+            //
+            //     console.log('CALLING GEOCODE API');
+            //
+            //     let apiKey = process.env.VUE_APP_API_KEY;
+            //
+            //     axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + apiKey)
+            //         .then(response => {
+            //             console.log('RESPONSE: ', response);
+            //             //console.log('Received formatted address: ',response.data.results[0].formatted_address);
+            //             this.formattedAddress = response.data.results[0].formatted_address;
+            //         })
+            //         .catch(error => {
+            //             console.log("ERROR: ", error.response);
+            //         })
+            //         .finally(() => {
+            //             console.log('FINISH');
+            //         })
+            // },
 
             seeMoreClicked() {
                 if (this.seeMoreFlag) {

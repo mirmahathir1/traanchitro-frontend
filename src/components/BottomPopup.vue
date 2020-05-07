@@ -115,12 +115,10 @@
         },
         mounted() {
             this.openBottomDrawer(this.$route.params.position);
-
         },
         methods: {
             backButtonClicked() {
                 this.activitySelectedFlag = false;
-
             },
 
             selectActivity(index) {
@@ -130,6 +128,7 @@
 
             openBottomDrawer(positionString) {
                 this.activitySelectedFlag = false;
+
                 let position;
                 try {
                     position = JSON.parse(positionString);
@@ -143,28 +142,23 @@
                 //console.log("BottomPopup mounted");
 
 
+                this.bottomPopupLoadingFlag = true;
+
                 let params = {
                     filter: this.$store.getters.getFilters,
                     location: {
                         lat: position.lat,
                         lng: position.lng
                     }
-
                 };
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
+                let url = '/api/activities';
 
-                console.log('PARAMS: ', params);
+                this.$apiRequestLog(url,params,headers);
 
-                if (headers["x-auth"]) {
-                    console.log("USER IS AUTHORIZED");
-                } else {
-                    console.log("USER IS NOT AUTHORIZED");
-                }
-
-                this.bottomPopupLoadingFlag = true;
-                axios.get('/api/activities',
+                axios.get(url,
                     {
                         headers: headers,
                         params: params
@@ -173,18 +167,13 @@
                         console.log('RESPONSE: ', res);
                         this.activities = res.data.activities;
                     }).catch(e => {
-                    console.log('ERROR: ', e.response);
-                    //console.log('error');
+                        this.$errorMessage(e);
+                    //console.log('ERROR: ', e.response);
+
                 }).finally(() => {
                     console.log('FINISH');
                     this.bottomPopupLoadingFlag = false;
                 });
-                this.activities = [
-                    {orgName: 'Biddhanondo', typeOfRelief: 'Food', location: {lat: 23.5, lng: 90.1}},
-                    {orgName: 'Badhan', typeOfRelief: 'PPE', location: {lat: 25, lng: 29}},
-                    {orgName: 'WHO', typeOfRelief: 'Sanitizer', location: {lat: 30, lng: 29}}
-                ];
-
             },
 
             closeClicked() {

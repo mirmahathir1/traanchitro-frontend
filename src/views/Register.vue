@@ -170,6 +170,9 @@
                     this.email = null;
                 }
 
+                this.requestCompleted = false;
+                this.registerLoaderFlag = true;
+
                 let data = {
                     orgName: this.name,
                     description: this.description,
@@ -178,12 +181,12 @@
                     facebook: this.facebook,
                     website: this.website
                 };
+                let headers = {};
+                let url = '/api/register';
 
-                console.log('DATA: ', data);
+                this.$apiRequestLog(url,data,headers);
 
-                this.requestCompleted = false;
-                this.registerLoaderFlag = true;
-                axios.post('/api/register', data)
+                axios.post(url, data)
                     .then((res) => {
                         console.log("RESPONSE: ", res);
                         this.requestCompleted = true;

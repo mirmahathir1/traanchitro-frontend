@@ -59,30 +59,36 @@
                     this.password="";
                 }
 
+                this.signInLoaderFlag = true;
+
                 let data = {
                     username: this.username,
                     password: this.password
                 };
+                let headers = {
 
-                console.log("LOGIN REQUEST SENT");
+                };
+                let url = '/api/login';
 
-                this.signInLoaderFlag = true;
-                axios.post('/api/login', data)
+                this.$apiRequestLog(url,data,headers);
+
+                axios.post(url, data)
                     .then((res) => {
                         if (res.data.token) {
                             console.log('TOKEN RECEIVED');
                         }
-                        //console.log(res.data);
                         this.$store.commit('setToken', res.data.token);
                         this.$router.push({name: 'Search'});
                         localStorage.setItem('x-auth', res.data.token);
                         this.$store.commit('login');
                     })
                     .catch(e => {
-                        console.log('ERROR: ', e.response.data);
-                        if(e.response.data && e.response.data.message){
-                            this.errorMessage = e.response.data.message;
-                        }
+                        this.errorMessage = this.$errorMessage(e);
+
+                        // console.log('ERROR: ', e.response.data);
+                        // if(e.response.data && e.response.data.message){
+                        //     this.errorMessage = e.response.data.message;
+                        // }
 
                     })
                     .finally(() => {

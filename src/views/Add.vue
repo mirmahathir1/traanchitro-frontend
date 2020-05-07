@@ -264,7 +264,7 @@
             },
             callMapjsAPI(newSearchAddress) {
                 let self = this;
-                console.log("CALLING MAPSJAVASCRIPT API");
+                console.log("%cCALLING MAPSJAVASCRIPT API",'color:#1799B5');
                 this.searchLoaderFlag = true;
                 let geocoder = new this.maps.Geocoder();
 
@@ -302,30 +302,45 @@
                 });
 
             },
-            callGeoCodeAPI(newSearchAddress){
-                let apiKey=process.env.VUE_APP_API_KEY;
-                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key='+apiKey;
-                let processedURL = url.replace(/ /g, '%20');
-                console.log("CALLING GEOCODE API");
-                this.searchLoaderFlag = true;
-                axios.get(processedURL)
-                    .then(res => {
-                        console.log("RESPONSE: ", res);
-                        let data = {
-                            focusLocation: res.data.results[0].geometry.location,
-                            bounds: res.data.results[0].geometry.bounds,
-                        };
-                        eventBus.$emit('searchClicked', data);
-                    })
-                    .catch((error) => {
-                        console.log("ERROR: ", error.response);
-                    })
-                    .finally(() => {
-                        console.log("FINISH");
-                        this.searchLoaderFlag = false;
-                    });
-            },
+            // callGeoCodeAPI(newSearchAddress){
+            //     let apiKey=process.env.VUE_APP_API_KEY;
+            //     let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key='+apiKey;
+            //     let processedURL = url.replace(/ /g, '%20');
+            //     console.log("CALLING GEOCODE API");
+            //     this.searchLoaderFlag = true;
+            //     axios.get(processedURL)
+            //         .then(res => {
+            //             console.log("RESPONSE: ", res);
+            //             let data = {
+            //                 focusLocation: res.data.results[0].geometry.location,
+            //                 bounds: res.data.results[0].geometry.bounds,
+            //             };
+            //             eventBus.$emit('searchClicked', data);
+            //         })
+            //         .catch((error) => {
+            //             console.log("ERROR: ", error.response);
+            //         })
+            //         .finally(() => {
+            //             console.log("FINISH");
+            //             this.searchLoaderFlag = false;
+            //         });
+            // },
             saveClicked() {
+
+
+                this.$v.$touch();
+
+                if (this.selectedTypes.length === 0 || this.location.lat===undefined) {
+                    console.log("Enter a location and type");
+                    return;
+                }
+
+                if (this.$v.$anyError) {
+                    return;
+                }
+
+                this.saveLoaderFlag = true;
+
                 let data = {
                     typeOfRelief: this.selectedTypes,
                     location: {
@@ -336,34 +351,23 @@
                     supplyDate: this.date
                 };
 
-                console.log('DATA: ', data);
-
-                this.$v.$touch();
-
-                if (this.selectedTypes.length === 0 || this.location.lat===undefined) {
-                    return;
-                }
-
-                if (this.$v.$anyError) {
-                    return;
-                }
-
-
-
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth')
                 };
 
+                let url = '/api/activity';
 
+                this.$apiRequestLog(url,data,headers);
+                // console.log('DATA: ', data);
+                //
+                // if (headers["x-auth"]) {
+                //     console.log("USER IS AUTHORIZED");
+                // } else {
+                //     console.log("USER IS NOT AUTHORIZED");
+                // }
+                //
 
-                if (headers["x-auth"]) {
-                    console.log("USER IS AUTHORIZED");
-                } else {
-                    console.log("USER IS NOT AUTHORIZED");
-                }
-
-                this.saveLoaderFlag = true;
-                axios.post('/api/activity', data, {
+                axios.post(url, data, {
                     headers: headers
                 })
                     .then((res) => {
@@ -372,7 +376,7 @@
                         this.saveLoaderFlag = true;
                     })
                     .catch(e => {
-                        console.log('ERROR: ', e.response);
+                        this.$errorMessage(e);
                     })
                     .finally(() => {
                         console.log('FINISH');

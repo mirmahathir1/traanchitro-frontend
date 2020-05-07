@@ -19,7 +19,7 @@
                 </v-list-item>
             </template>
 
-            <v-list-item @click="signOut" to="/logout" v-if="$store.getters.getLoggedIn">
+            <v-list-item to="/logout" v-if="$store.getters.getLoggedIn">
                 <v-list-item-action>
                     <v-icon>mdi-logout</v-icon>
                 </v-list-item-action>
@@ -66,7 +66,6 @@
         },
 
         mounted() {
-            //console.log("Mounted");
             if(!localStorage.getItem('x-auth')){
                 this.$store.commit('logout');
             }else{
@@ -78,10 +77,7 @@
             })
         },
         methods:{
-            signOut(){
 
-                //this.$router.push({name: 'Home'});
-            }
         }
     }
 </script>

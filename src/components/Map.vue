@@ -27,6 +27,8 @@
 
         <RightFilter></RightFilter>
 
+        <p style="position: fixed; bottom: 20vh; left: 30vw; background-color:rgba(255, 255, 255, 0.5);"
+           class="red--text pa-2">{{errorText}}</p>
 
     </div>
 </template>
@@ -71,6 +73,7 @@
                 mapDragDetected: false,
                 mapBusy: false,
 
+                errorText: null,
 
             };
         },
@@ -123,6 +126,8 @@
             refreshClicked() {
                 let bounds = this.map.getBounds();
 
+                this.errorText = null;
+
                 let params = {
                     bounds: {
                         northeast: {
@@ -139,30 +144,22 @@
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
+                let url = '/api/pins';
 
-                console.log("PARAMS: ", params);
-
-                if (headers["x-auth"]) {
-                    console.log("USER IS AUTHORIZED");
-                } else {
-                    console.log("USER IS NOT AUTHORIZED");
-                }
+                this.$apiRequestLog(url, params, headers);
 
                 this.reloadLoaderFlag = true;
-                axios.get('/api/pins',
-                    {
-                        headers: headers,
-                        params: params
-                    })
-                    .then((res) => {
-                        console.log('RESPONSE: ', res);
-                        let data = {
-                            locations: res.data.locations,
-                        };
-                        this.putMarkersOnBound(data);
-                    }).catch(e => {
-                    console.log('ERROR: ', e.response);
-                    console.log(e);
+                axios.get(url, {
+                    headers: headers,
+                    params: params
+                }).then((res) => {
+                    console.log('RESPONSE: ', res);
+                    let data = {
+                        locations: res.data.locations,
+                    };
+                    this.putMarkersOnBound(data);
+                }).catch(e => {
+                    this.errorText = this.$errorMessage(e);
                 }).finally(() => {
                     console.log("FINISH");
                     this.reloadLoaderFlag = false;
@@ -239,7 +236,7 @@
             },
 
             seeMarkerDetails(position) {
-                console.log("Selected marker: ", position.latLng.lat(), position.latLng.lng());
+                //console.log("Selected marker: ", position.latLng.lat(), position.latLng.lng());
                 let selectedLocation = {
                     lat: position.latLng.lat(),
                     lng: position.latLng.lng()

@@ -1,23 +1,24 @@
 <template>
     <Notice text="You have been logged out"></Notice>
-<!--    <v-card class="mx-auto elevation-12" max-width="500" style="top: 20vh">-->
-<!--        <v-list>-->
-<!--            <v-list-item>-->
-<!--                <v-list-item-title>-->
-<!--                    You have been logged out-->
-<!--                </v-list-item-title>-->
-<!--            </v-list-item>-->
-<!--        </v-list>-->
-<!--    </v-card>-->
+    <!--    <v-card class="mx-auto elevation-12" max-width="500" style="top: 20vh">-->
+    <!--        <v-list>-->
+    <!--            <v-list-item>-->
+    <!--                <v-list-item-title>-->
+    <!--                    You have been logged out-->
+    <!--                </v-list-item-title>-->
+    <!--            </v-list-item>-->
+    <!--        </v-list>-->
+    <!--    </v-card>-->
 </template>
 
 <script>
     import axios from 'axios';
     import Notice from "./Notice";
+
     export default {
         name: "Logout",
-        components:{
-          Notice
+        components: {
+            Notice
         },
         created() {
             let data = {};
@@ -26,29 +27,29 @@
                 'x-auth': localStorage.getItem('x-auth')
             };
 
-            console.log('DATA: ', data);
+            let url = '/api/logout';
 
-            if (headers["x-auth"]) {
-                console.log("USER IS AUTHORIZED");
-            } else {
-                console.log("USER IS NOT AUTHORIZED");
-            }
+            this.$apiRequestLog(url, data, headers);
 
-            axios.post('/api/logout', data, {
+            // console.log('DATA: ', data);
+            //
+            // if (headers["x-auth"]) {
+            //     console.log("USER IS AUTHORIZED");
+            // } else {
+            //     console.log("USER IS NOT AUTHORIZED");
+            // }
+
+            axios.post(url, data, {
                 headers: headers
-            })
-                .then((res) => {
-                    console.log("RESPONSE: ", res);
-
-                })
-                .catch(e => {
-                    console.log('ERROR: ', e.response);
-                })
-                .finally(() => {
-                    console.log('FINISH');
-                    localStorage.removeItem('x-auth');
-                    this.$store.commit('logout');
-                });
+            }).then((res) => {
+                console.log("RESPONSE: ", res);
+            }).catch(e => {
+                this.$errorMessage(e);
+            }).finally(() => {
+                console.log('FINISH');
+                localStorage.removeItem('x-auth');
+                this.$store.commit('logout');
+            });
         }
     }
 </script>

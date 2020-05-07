@@ -90,10 +90,12 @@
             }
 
             this.organizationLoaderFlag = true;
+            this.errorText=null;
 
             let params = {};
             let headers = {
                 'x-auth': localStorage.getItem('x-auth'),
+                // 'X-Forwarded-For':
             };
             let url = '/api/orgs';
 

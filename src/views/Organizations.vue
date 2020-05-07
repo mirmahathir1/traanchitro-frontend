@@ -201,22 +201,20 @@
             //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
 
             if (this.organizations.length === 0) {
+
+                this.organizationLoaderFlag = true;
+
                 let params = {};
 
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                console.log('PARAMS: ', params);
+                let url = '/api/orgs';
 
-                if (headers["x-auth"]) {
-                    console.log("USER IS AUTHORIZED");
-                } else {
-                    console.log("USER IS NOT AUTHORIZED");
-                }
+                this.$apiRequestLog(url,params,headers);
 
-                this.organizationLoaderFlag = true;
-                axios.get('/api/orgs',
+                axios.get(url,
                     {
                         headers: headers,
                         params: params
@@ -244,7 +242,7 @@
             }
 
             if(this.$route.params) {
-                console.log("passed organization name: ", this.$route.params.orgName);
+                //console.log("passed organization name: ", this.$route.params.orgName);
                 this.selectedOrganization=this.$route.params.orgName;
                 this.searchClicked();
             }
@@ -267,7 +265,8 @@
                 this.organization = null;
                 this.activities = [];
 
-                console.log('selected organization: ', this.selectedOrganization);
+                //console.log('selected organization: ', this.selectedOrganization);
+
                 this.searchLoaderFlag = true;
                 this.detailsLoadedFlag = false;
 
@@ -279,15 +278,11 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                console.log('PARAMS: ', params);
+                let url = '/api/orgdetails';
 
-                if (headers["x-auth"]) {
-                    console.log("USER IS AUTHORIZED");
-                } else {
-                    console.log("USER IS NOT AUTHORIZED");
-                }
+                this.$apiRequestLog(url,params,headers);
 
-                axios.get('/api/orgdetails',
+                axios.get(url,
                     {
                         headers: headers,
                         params: params

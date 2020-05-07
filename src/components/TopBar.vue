@@ -82,7 +82,6 @@
 
 <script>
     import {eventBus} from "../main";
-    import axios from "axios";
     import GoogleMapsApiLoader from "google-maps-api-loader";
 
     export default {
@@ -112,7 +111,7 @@
                 apiKey: this.apiKey
             });
             this.$store.commit('setMaps',googleMapApi.maps);
-            console.log("GOOGLE MAP API INCLUDED: ",this.$store.getters.getMaps);
+            console.log("%cGOOGLE MAP API INCLUDED: ",'color:#1799B5');
             this.maps=this.$store.getters.getMaps;
 
             if(localStorage.getItem('x-auth')){
@@ -152,39 +151,39 @@
                 //this.callGeoCodeAPI(newSearchAddress);
             },
 
-            callGeoCodeAPI(newSearchAddress) {
-                let apiKey = process.env.VUE_APP_API_KEY;
-
-                let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key=' + apiKey;
-
-                let processedURL = url.replace(/ /g, '%20');
-
-                console.log('CALLING GEOCODE API');
-                axios.get(processedURL)
-                    .then(res => {
-                        console.log("RESPONSE: ", res);
-                        // console.log("The Full search result is ",res.data.results[0]);
-                        // console.log(res.data.results[0].geometry.location);
-
-                        let data = {
-                            focusLocation: res.data.results[0].geometry.location,
-                            bounds: res.data.results[0].geometry.bounds,
-                        };
-                        console.log("Data emitted to map: ", data);
-                        eventBus.$emit('resetAndShow', data);
-
-                    })
-                    .catch((error) => {
-                        console.log("ERROR: ", error.response);
-                    })
-                    .finally(() => {
-                        console.log("FINISH");
-                        this.searchLoaderFlag = false;
-                    });
-            },
+            // callGeoCodeAPI(newSearchAddress) {
+            //     let apiKey = process.env.VUE_APP_API_KEY;
+            //
+            //     let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + newSearchAddress + '&key=' + apiKey;
+            //
+            //     let processedURL = url.replace(/ /g, '%20');
+            //
+            //     console.log('CALLING GEOCODE API');
+            //     axios.get(processedURL)
+            //         .then(res => {
+            //             console.log("RESPONSE: ", res);
+            //             // console.log("The Full search result is ",res.data.results[0]);
+            //             // console.log(res.data.results[0].geometry.location);
+            //
+            //             let data = {
+            //                 focusLocation: res.data.results[0].geometry.location,
+            //                 bounds: res.data.results[0].geometry.bounds,
+            //             };
+            //             console.log("Data emitted to map: ", data);
+            //             eventBus.$emit('resetAndShow', data);
+            //
+            //         })
+            //         .catch((error) => {
+            //             console.log("ERROR: ", error.response);
+            //         })
+            //         .finally(() => {
+            //             console.log("FINISH");
+            //             this.searchLoaderFlag = false;
+            //         });
+            // },
             callMapjsAPI(newSearchAddress) {
                 let self = this;
-                console.log("REQUESTING TO GEOCODE API");
+                console.log("%cCALLING MAPSJAVASCRIPT API",'color:#1799B5');
 
                 let geocoder = new this.maps.Geocoder();
                 geocoder.geocode({'address': newSearchAddress}, function (results, status) {
