@@ -12,23 +12,23 @@
                     <v-divider></v-divider>
                     <v-autocomplete
                             v-model="selectedOrganization"
-                            :loading="organizationLoaderFlag"
+                            :loading="organizationsLoader"
                             :items="organizations"
                             :search-input.sync="select"
                             cache-items
-                            :disabled="organizationLoaderFlag"
+                            :disabled="organizationsLoader"
                             flat
                             hide-no-data
                             hide-details
-                            :label="organizationLoaderFlag?'Loading Names of organizations...':'Type name of organization:' "
+                            :label="organizationsLoader?'Loading Names of organizations...':'Type name of organization:' "
                             @input="$v.selectedOrganization.$touch()"
                             @blur="$v.selectedOrganization.$touch()"
                             :error-messages="selectedOrganizationErrors"
                     ></v-autocomplete>
                     <v-btn text class="primary mx-auto mt-3" dark rounded :loading="searchLoaderFlag"
-                           :disabled="organizationLoaderFlag" @click="searchClicked">Search
+                           :disabled="organizationsLoader" @click="searchClicked">Search
                     </v-btn>
-                    <p class="red--text mt-2">{{errorText}}</p>
+                    <p class="red--text mt-2">{{organizationsError}}</p>
                 </v-list-item-content>
             </v-list-item>
         </v-card>
@@ -159,9 +159,11 @@
 <script>
     import {required} from 'vuelidate/lib/validators';
     import axios from "axios";
-
+    import {mapGetters} from "vuex";
     export default {
         name: "Organization",
+
+
 
         validations: {
             selectedOrganization: {required},
@@ -173,7 +175,7 @@
                 searchLoaderFlag: false,
                 organizationLoaderFlag: false,
 
-                organizations: [],
+                //organizations: [],
                 selectedOrganization: null,
                 select: "",
 
@@ -187,6 +189,11 @@
         },
         components: {},
         computed: {
+            ...mapGetters([
+                'organizations',
+                'organizationsLoader',
+                'organizationsError',
+            ]),
             selectedOrganizationErrors() {
                 const errors = [];
                 if (!this.$v.selectedOrganization.$dirty) return errors;
@@ -195,51 +202,7 @@
             }
         },
         created() {
-            this.errorText=null;
-
-            this.organizations = this.$store.getters.getOrganizations;
-            //console.log('amount of organizations: ',this.$store.getters.getOrganizations)
-
-            if (this.organizations.length === 0) {
-
-                this.organizationLoaderFlag = true;
-
-                let params = {};
-
-                let headers = {
-                    'x-auth': localStorage.getItem('x-auth'),
-                };
-
-                let url = '/api/orgs';
-
-                this.$apiRequestLog(url,params,headers);
-
-                axios.get(url,
-                    {
-                        headers: headers,
-                        params: params
-                    })
-                    .then((res) => {
-                        console.log("RESPONSE: ", res);
-                        this.$store.commit('setOrganizations', res.data.orgNames);
-
-                        this.organizations = this.$store.getters.getOrganizations;
-                    }).catch(e => {
-                        this.errorText = this.$errorMessage(e);
-                        // console.log("ERROR: ",e);
-                        // console.log("ERROR.RESPONSE: ", e.response);
-                        //
-                        // if(e.response && e.response.data && e.response.data.message){
-                        //     this.errorText=e.response.data.message;
-                        // }else{
-                        //     this.errorText="Network error";
-                        // }
-
-                }).finally(() => {
-                    console.log('FINISH');
-                    this.organizationLoaderFlag = false;
-                });
-            }
+            //this.$store.dispatch('fetchOrganizations');
 
             if(this.$route.params) {
                 //console.log("passed organization name: ", this.$route.params.orgName);
@@ -256,6 +219,7 @@
                 window.open(link);
             },
             searchClicked() {
+
                 this.errorText=null;
 
                 this.$v.$touch();
@@ -293,14 +257,6 @@
                         this.activities = res.data.activities;
                     }).catch(e => {
                         this.errorText=this.$errorMessage(e);
-                    // console.log("ERROR: ",e);
-                    // console.log("ERROR.RESPONSE: ", e.response);
-                    //
-                    // if(e.response && e.response.data && e.response.data.message){
-                    //     this.errorText=e.response.data.message;
-                    // }else{
-                    //     this.errorText="Network error";
-                    // }
                 }).finally(() => {
                     console.log('FINISH');
                     this.searchLoaderFlag = false;

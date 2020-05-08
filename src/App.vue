@@ -23,8 +23,8 @@
             SideDrawer,
             TopBar
         },
-        async created() {
-
+        created() {
+            this.$store.dispatch('fetchOrganizations');
         }
     }
 </script>

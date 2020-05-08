@@ -18,12 +18,15 @@
                             :cols="7"
                     >
                         <p>Filter by Organization:</p>
-                        <v-autocomplete v-model="selectedOrganization" :items="organizations"
-                                        :search-input.sync="select" :loading="organizationLoaderFlag"
-                                        :disabled="organizationLoaderFlag" cache-items flat hide-no-data hide-details
-                                        :label="organizationLoaderFlag?'Loading Names of organizations...':'Name of organization:' "
+                        <v-autocomplete v-model="selectedOrganization"
+                                        :items="organizations"
+                                        :search-input.sync="select"
+                                        :loading="organizationsLoader"
+                                        :disabled="organizationsLoader"
+                                        cache-items flat hide-no-data hide-details
+                                        :label="organizationsLoader?'Loading Names of organizations...':'Name of organization:' "
                                         class="mb-3"></v-autocomplete>
-                        <p class="red--text ml-5">{{errorText}}</p>
+                        <p class="red--text ml-5">{{organizationsError}}</p>
 
                         <template v-if="$store.getters.getLoggedIn">
                             <p>Schedule:</p>
@@ -56,11 +59,17 @@
 
 <script>
     import {eventBus} from "../main";
-    import axios from "axios";
     import {CONSTANTS} from '../constants';
-
+    import {mapGetters} from 'vuex';
     export default {
         name: "RightFilter",
+        computed:{
+            ...mapGetters([
+                'organizations',
+                'organizationsLoader',
+                'organizationsError',
+            ]),
+        },
         data: () => {
             return {
                 CONSTANTS,
@@ -74,47 +83,11 @@
                 select: null,
 
                 schedule: null,
-                organizations: [],
                 filterSearchLoadingFlag: false,
 
-                organizationLoaderFlag: false,
-
-                errorText: null,
             }
         },
-        created() {
-            this.organizations = this.$store.getters.getOrganizations;
 
-            if (this.organizations.length !== 0) {
-                return;
-            }
-
-            this.organizationLoaderFlag = true;
-            this.errorText=null;
-
-            let params = {};
-            let headers = {
-                'x-auth': localStorage.getItem('x-auth'),
-                // 'X-Forwarded-For':
-            };
-            let url = '/api/orgs';
-
-            this.$apiRequestLog(url, params, headers);
-
-            axios.get(url, {
-                headers: headers,
-                params: params
-            }).then((res) => {
-                console.log('RESPONSE: ', res);
-                this.$store.commit('setOrganizations', res.data.orgNames);
-                this.organizations = this.$store.getters.getOrganizations;
-            }).catch(e => {
-                this.errorText = this.$errorMessage(e);
-            }).finally(() => {
-                console.log('FINISH');
-                this.organizationLoaderFlag = false;
-            });
-        },
         methods: {
             resetFilter() {
                 this.selectedTypes = [];

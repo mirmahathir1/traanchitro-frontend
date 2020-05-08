@@ -37,13 +37,20 @@
     import {eventBus} from "../main";
     import axios from 'axios';
     import RightFilter from "./RightFilter";
-    import MarkerClusterer from "@google/markerclusterer";
+    //import MarkerClusterer from "@google/markerclusterer";
     import {} from 'node-js-marker-clusterer'
 
     export default {
         components: {
             RightFilter,
 
+        },
+
+        watch:{
+          '$store.getters.getMaps'(to,from){
+              if(!to)return;
+              this.initializeMap();
+          }
         },
         data() {
             return {
@@ -67,7 +74,6 @@
                 },
 
                 currentPosition: null,
-                apiKey: process.env.VUE_APP_API_KEY,
 
                 //real time data loading maps
                 mapDragDetected: false,
@@ -79,24 +85,12 @@
         },
 
         async mounted() {
-            let interval = setInterval(() => {
-                if (this.$store.getters.getMaps) {
-                    this.maps = this.$store.getters.getMaps;
-
-                    this.initializeMap();
-                    eventBus.$on('resetAndShow', (data) => {
-                        this.mapListener(data);
-                    });
-                    eventBus.$on('reloadMap', () => {
-                        this.refreshClicked();
-                    });
-                    clearInterval(interval);
-                }
-            }, 100);
-
-            //setInterval(this.mapLiveReloadHandler, 1000);
-
+            if(this.$store.getters.getMaps){
+                this.initializeMap();
+            }
         },
+
+
 
         methods: {
             addButtonClicked() {
@@ -268,11 +262,26 @@
             },
 
             initializeMap() {
+                console.log("Map initialized");
+
+                this.maps = this.$store.getters.getMaps;
                 const mapContainer = this.$refs.googleMap;
                 this.map = new this.maps.Map(mapContainer, this.mapConfig);
                 //this.map.addListener('click', this.mapClicked);
                 this.map.addListener('dragend', this.mapDragEnded);
                 this.map.addListener('zoom_changed', this.mapZoomChanged);
+
+                //if(!eventBus._events.resetAndShow) {
+                    eventBus.$on('resetAndShow', (data) => {
+                        this.mapListener(data);
+                    });
+                //}
+
+                //if(!eventBus._events.reloadMap) {
+                    eventBus.$on('reloadMap', () => {
+                        this.refreshClicked();
+                    });
+                //}
             },
             //      mapLiveReloadHandler() {
             //     if (this.mapDragDetected && !this.mapBusy) {
