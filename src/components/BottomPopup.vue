@@ -36,13 +36,13 @@
                     <v-card-text v-if="!activitySelectedFlag" class="white--text">
 <!--                        88f9d4-->
                         <v-card-text class="text-center">
-                            <b>List of Relief Activities in this Location</b>
+                            <b>{{activities.length}} Relief Activities in this Location</b>
                             <p>(click on any activity for details)</p>
                         </v-card-text>
 
-                        <v-simple-table class="primary darken-3 white--text" dark>
+                        <v-simple-table class="primary darken-3 white--text" dark style="overflow-y: scroll; height: 150px">
                                 <tbody>
-                                <tr class="primary darken-1">
+                                <tr class="primary darken-2">
                                     <th>Acitivities</th>
                                     <th>Type of Relief</th>
                                 </tr>

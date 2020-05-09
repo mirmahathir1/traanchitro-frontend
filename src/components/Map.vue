@@ -46,11 +46,11 @@
 
         },
 
-        watch:{
-          '$store.getters.getMaps'(to,from){
-              if(!to)return;
-              this.initializeMap();
-          }
+        watch: {
+            '$store.getters.getMaps'(to, from) {
+                if (!to) return;
+                this.initializeMap();
+            }
         },
         data() {
             return {
@@ -85,11 +85,10 @@
         },
 
         async mounted() {
-            if(this.$store.getters.getMaps){
+            if (this.$store.getters.getMaps) {
                 this.initializeMap();
             }
         },
-
 
 
         methods: {
@@ -166,6 +165,8 @@
             },
 
             mapListener(data) {
+
+                console.log("THIS.MAP", this.map);
                 this.map.setCenter(data.focusLocation);
 
                 //fit the map according to the bound of the new area
@@ -179,6 +180,8 @@
                 } else {
                     this.map.setZoom(17);
                 }
+
+
                 this.refreshClicked();
             },
 
@@ -253,86 +256,28 @@
             },
 
             mapDragEnded() {
-                //console.log("Map dragend detected");
                 this.mapDragDetected = true;
             },
             mapZoomChanged() {
-                //console.log("Map zoom detected");
                 this.mapDragDetected = true;
             },
 
             initializeMap() {
-                console.log("Map initialized");
+                //console.log("Map initialized");
 
                 this.maps = this.$store.getters.getMaps;
                 const mapContainer = this.$refs.googleMap;
                 this.map = new this.maps.Map(mapContainer, this.mapConfig);
-                //this.map.addListener('click', this.mapClicked);
                 this.map.addListener('dragend', this.mapDragEnded);
                 this.map.addListener('zoom_changed', this.mapZoomChanged);
 
-                //if(!eventBus._events.resetAndShow) {
-                    eventBus.$on('resetAndShow', (data) => {
-                        this.mapListener(data);
-                    });
-                //}
-
-                //if(!eventBus._events.reloadMap) {
-                    eventBus.$on('reloadMap', () => {
-                        this.refreshClicked();
-                    });
-                //}
+                eventBus.$on('resetAndShow', this.mapListener);
+                eventBus.$on('reloadMap', this.refreshClicked);
             },
-            //      mapLiveReloadHandler() {
-            //     if (this.mapDragDetected && !this.mapBusy) {
-            //         this.mapBusy = true;
-            //
-            //
-            //         let bounds = this.map.getBounds();
-            //
-            //         let params = {
-            //             bounds: {
-            //                 northeast: {
-            //                     lat: bounds.Ya.j,
-            //                     lng: bounds.Ua.j,
-            //                 },
-            //                 southwest: {
-            //                     lat: bounds.Ya.i,
-            //                     lng: bounds.Ua.i
-            //                 }
-            //             },
-            //             filter: this.$store.getters.getFilters
-            //         };
-            //         let headers = {
-            //             'x-auth': localStorage.getItem('x-auth'),
-            //         };
-            //         console.log('PARAMS: ', params);
-            //
-            //         if (headers["x-auth"]) {
-            //             console.log("USER IS AUTHORIZED");
-            //         } else {
-            //             console.log("USER IS NOT AUTHORIZED");
-            //         }
-            //
-            //         this.reloadLoaderFlag = true;
-            //         axios.get('/api/pins',
-            //             {
-            //                 headers: headers,
-            //                 params: params
-            //             })
-            //             .then((res) => {
-            //                 console.log('RESPONSE: ', res);
-            //                 this.addNewMarkers(res.data.locations);
-            //             }).catch(e => {
-            //             console.log('ERROR: ', e.response);
-            //         }).finally(() => {
-            //             console.log("FINISH");
-            //             this.reloadLoaderFlag = false;
-            //             this.mapBusy = false;
-            //             this.mapDragDetected = false;
-            //         });
-            //     }
-            // },
+        },
+        beforeDestroy() {
+            eventBus.$off('resetAndShow', this.mapListener);
+            eventBus.$off('reloadMap', this.refreshClicked);
         }
     };
 </script>
