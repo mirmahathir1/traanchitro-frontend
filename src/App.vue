@@ -12,7 +12,6 @@
     import Map from "./components/Map";
     import TopBar from "./components/TopBar";
     import SideDrawer from "./components/SideDrawer";
-    import axios from 'axios';
 
     export default {
         props: {
@@ -24,6 +23,9 @@
             TopBar
         },
         created() {
+            let version=2;
+            console.log("TRAANCHITRO FRONTEND VERSION: "+version);
+
             this.$store.dispatch('fetchOrganizations');
         }
     }
