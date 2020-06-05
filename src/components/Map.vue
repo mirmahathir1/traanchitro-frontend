@@ -19,7 +19,7 @@
 
         <v-snackbar v-model="snackbar" v-if="$store.getters.getSnackbar" vertical color="primary darken-2" left
                     style="width: 280px">
-            পিন দেখতে রিলোড বাটন (নিচে ডান কোণায়) চাপুন
+            ত্রাণ কার্যক্রম দেখার জন্য যে কোনো পিনের উপর চাপুন
             <div>
                 <v-btn color="white" text @click="stopSnackbar">Close</v-btn>
             </div>
@@ -85,9 +85,17 @@
         },
 
         async mounted() {
+
             if (this.$store.getters.getMaps) {
                 this.initializeMap();
+                this.refreshClicked();
+
             }
+        },
+
+        created() {
+
+
         },
 
 
@@ -119,19 +127,21 @@
             refreshClicked() {
                 let bounds = this.map.getBounds();
 
+                let fixedBounds = {
+                    northeast: {
+                        lat:26.63333333,
+                        lng:92.68333333
+                    },
+                    southwest: {
+                        lat:20.56666667,
+                        lng:88.01666667,
+                    }
+                }
+
                 this.errorText = null;
 
                 let params = {
-                    bounds: {
-                        northeast: {
-                            lat: bounds.Ya.j,
-                            lng: bounds.Ua.j,
-                        },
-                        southwest: {
-                            lat: bounds.Ya.i,
-                            lng: bounds.Ua.i
-                        }
-                    },
+                    bounds: fixedBounds,
                     filter: this.$store.getters.getFilters
                 };
                 let headers = {
@@ -238,7 +248,7 @@
                     lat: position.latLng.lat(),
                     lng: position.latLng.lng()
                 };
-                this.map.setCenter(selectedLocation);
+                //this.map.setCenter(selectedLocation);
 
                 let newPath = '/search/details/' + JSON.stringify(selectedLocation);
 
@@ -247,13 +257,13 @@
                 }
             },
 
-            mapClicked(position) {
-                let clickedPosition = {
-                    lat: position.latLng.lat(),
-                    lng: position.latLng.lng()
-                };
-                console.log(clickedPosition);
-            },
+            // mapClicked(position) {
+            //     let clickedPosition = {
+            //         lat: position.latLng.lat(),
+            //         lng: position.latLng.lng()
+            //     };
+            //     console.log(clickedPosition);
+            // },
 
             mapDragEnded() {
                 this.mapDragDetected = true;
@@ -273,6 +283,8 @@
 
                 eventBus.$on('resetAndShow', this.mapListener);
                 eventBus.$on('reloadMap', this.refreshClicked);
+
+                this.refreshClicked();
             },
         },
         beforeDestroy() {

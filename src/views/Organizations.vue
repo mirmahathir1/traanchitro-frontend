@@ -148,6 +148,10 @@
                                 <p class="teal--text text--accent-1"><b>Contents:</b></p>
                                 <p class="white--text">{{activity.contents}}</p>
                             </template>
+
+                            <p v-if="!activity.supplyDate && !activity.contents">
+                                Please sign in to see supply date and relief contents
+                            </p>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>

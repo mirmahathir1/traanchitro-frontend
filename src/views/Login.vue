@@ -38,7 +38,7 @@
 
 <script>
     import axios from 'axios';
-
+//nsa_admin,  tFyEQ
     export default {
         name: "Login",
         data() {

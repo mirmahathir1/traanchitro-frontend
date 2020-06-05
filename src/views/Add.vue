@@ -148,6 +148,7 @@
                     </v-col>
                 </v-row>
             </v-list-item>
+            <p class="red--text">{{errorMessage}}</p>
             <v-list-item>
                 <v-spacer></v-spacer>
                 <v-card-actions>
@@ -218,6 +219,8 @@
                 maps: null,
                 apiKey: process.env.VUE_APP_API_KEY,
 
+
+                errorMessage: ""
             }
         },
         components: {
@@ -326,7 +329,7 @@
             //         });
             // },
             saveClicked() {
-
+                this.errorMessage="";
 
                 this.$v.$touch();
 
@@ -376,7 +379,7 @@
                         this.saveLoaderFlag = true;
                     })
                     .catch(e => {
-                        this.$errorMessage(e);
+                        this.errorMessage=this.$errorMessage(e);
                     })
                     .finally(() => {
                         console.log('FINISH');

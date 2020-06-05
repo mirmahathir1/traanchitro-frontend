@@ -1,8 +1,12 @@
 <template>
     <v-card max-width="400" style="position: fixed; top:10vh; right:0px">
-        <v-btn icon v-if="!enabled" @click="enabled=true">
+        <v-btn color="primary" v-if="!enabled" @click="enabled=true">
             <v-icon>mdi-chevron-left</v-icon>
+            Filter
         </v-btn>
+
+
+
         <template v-else>
             <v-card-title>
                 <v-btn icon @click="enabled=false">

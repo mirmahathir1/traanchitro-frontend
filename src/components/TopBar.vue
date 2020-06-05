@@ -26,9 +26,14 @@
             <v-toolbar-items v-if="$store.getters.getLoggedIn">
                 <v-btn text small to="/logout">Sign Out</v-btn>
             </v-toolbar-items>
-            <v-toolbar-items v-else>
-                <v-btn text small to="/login">Sign In</v-btn>
-            </v-toolbar-items>
+            <template v-else>
+                <v-toolbar-items>
+                    <v-btn text small to="/login">Sign In</v-btn>
+                </v-toolbar-items>
+                <v-toolbar-items>
+                    <v-btn text small to="/reg">Register</v-btn>
+                </v-toolbar-items>
+            </template>
         </template>
 
 
@@ -99,7 +104,7 @@
                     {icon: 'mdi-magnify', text: 'Search Relief', to: '/search'},
                     {icon: 'mdi-plus', text: 'Add Relief', to: '/add'},
                     {icon: 'mdi-contacts', text: 'Organizations', to: '/orgs'},
-                    {icon: 'mdi-pencil', text: 'Register', to: '/reg'},
+                    //{icon: 'mdi-pencil', text: 'Register', to: '/reg'},
                     {icon: 'mdi-information', text: 'About us', to: '/about'},
                     {icon: 'mdi-help-circle', text: 'Help', to: '/howto'}
                 ],

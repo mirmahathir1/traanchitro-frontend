@@ -30,16 +30,29 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-item link to="/login" v-else>
-                <v-list-item-action>
-                    <v-icon>mdi-login</v-icon>
-                </v-list-item-action>
-                <v-list-item-content>
-                    <v-list-item-title>
-                        Sign In
-                    </v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+            <template v-else>
+                <v-list-item link to="/login">
+                    <v-list-item-action>
+                        <v-icon>mdi-login</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            Sign In
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item link to="/reg">
+                    <v-list-item-action>
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            Register
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </template>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -58,7 +71,7 @@
                     { icon: 'mdi-magnify', text: 'Search Relief',to:'/search' },
                     { icon: 'mdi-plus', text: 'Add Relief',to:'/add' },
                     { icon: 'mdi-contacts', text: 'Organizations',to:'/orgs' },
-                    { icon: 'mdi-pencil', text: 'Register',to:'/reg' },
+                    //{ icon: 'mdi-pencil', text: 'Register',to:'/reg' },
                     { icon: 'mdi-information', text: 'About us',to:'/about'},
                     { icon: 'mdi-help-circle', text: 'Help',to:'/howto'}
                 ],
