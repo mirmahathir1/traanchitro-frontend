@@ -19,7 +19,7 @@ const actions={
             'x-auth': localStorage.getItem('x-auth'),
         };
 
-        let url = '/api/orgs';
+        let url = '/orgs';
 
         //this.$apiRequestLog(url,params,headers);
 

@@ -27,7 +27,7 @@
                 'x-auth': localStorage.getItem('x-auth')
             };
 
-            let url = '/api/logout';
+            let url = '/logout';
 
             this.$apiRequestLog(url, data, headers);
 

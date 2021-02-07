@@ -68,15 +68,15 @@
                 let headers = {
 
                 };
-                let url = '/api/login';
+                let url = '/login';
 
                 this.$apiRequestLog(url,data,headers);
 
                 axios.post(url, data)
                     .then((res) => {
-                        if (res.data.token) {
-                            console.log('TOKEN RECEIVED');
-                        }
+                        console.log("Received from signin route: ",res);
+
+
                         this.$store.commit('setToken', res.data.token);
                         this.$router.push({name: 'Search'});
                         localStorage.setItem('x-auth', res.data.token);

@@ -23,9 +23,6 @@
             TopBar
         },
         created() {
-            let version=2;
-            console.log("TRAANCHITRO FRONTEND VERSION: "+version);
-
             this.$store.dispatch('fetchOrganizations');
         }
     }

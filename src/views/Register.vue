@@ -176,13 +176,16 @@
                 let data = {
                     orgName: this.name,
                     description: this.description,
-                    phones: ['+88' + this.phone],
-                    email: this.email,
-                    facebook: this.facebook,
-                    website: this.website
+                    contact:{
+                        phone: '+88' + this.phone,
+                        email: this.email,
+                        facebook: this.facebook,
+                        website: this.website
+                    },
+
                 };
                 let headers = {};
-                let url = '/api/register';
+                let url = '/register';
 
                 this.$apiRequestLog(url,data,headers);
 

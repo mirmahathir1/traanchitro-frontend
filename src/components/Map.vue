@@ -147,7 +147,7 @@
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
-                let url = '/api/pins';
+                let url = '/pins';
 
                 this.$apiRequestLog(url, params, headers);
 

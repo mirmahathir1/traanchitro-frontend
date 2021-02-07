@@ -12,7 +12,8 @@ Vue.mixin(MyMixins);
 
 Vue.use(Vuelidate);
 
-axios.defaults.baseURL="https://protean-smile-275412.el.r.appspot.com/";
+// axios.defaults.baseURL="https://protean-smile-275412.el.r.appspot.com/";
+axios.defaults.baseURL="https://traanchitro-backend.herokuapp.com/";
 
 Vue.config.productionTip = false;
 

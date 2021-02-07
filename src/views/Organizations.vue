@@ -246,7 +246,7 @@
                     'x-auth': localStorage.getItem('x-auth'),
                 };
 
-                let url = '/api/orgdetails';
+                let url = '/orgdetails';
 
                 this.$apiRequestLog(url,params,headers);
 

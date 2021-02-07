@@ -154,7 +154,7 @@
                 let headers = {
                     'x-auth': localStorage.getItem('x-auth'),
                 };
-                let url = '/api/activities';
+                let url = '/activities';
 
                 this.$apiRequestLog(url,params,headers);
 

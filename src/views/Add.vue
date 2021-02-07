@@ -345,12 +345,19 @@
                 this.saveLoaderFlag = true;
 
                 let data = {
+                    orgName: "Bangladesh Relief Organization",
                     typeOfRelief: this.selectedTypes,
                     location: {
                         lat: this.location.lat,
                         lng: this.location.lng,
                     },
-                    contents: this.content,
+                    contents: [
+                        {
+                            item: this.content,
+                            quantity: 1,
+                            description: "dummy"
+                        }
+                    ],
                     supplyDate: this.date
                 };
 
@@ -358,7 +365,7 @@
                     'x-auth': localStorage.getItem('x-auth')
                 };
 
-                let url = '/api/activity';
+                let url = '/activity';
 
                 this.$apiRequestLog(url,data,headers);
                 // console.log('DATA: ', data);
