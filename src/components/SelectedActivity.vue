@@ -11,7 +11,18 @@
                     <tbody>
                     <tr>
                         <td class="teal--text text--accent-1">Location:</td>
-                        <td class="white--text">{{formattedAddress}}</td>
+                        <td class="white--text">
+                            <template v-if="formattedAddress===null">
+                                <v-progress-circular
+                                    indeterminate
+                                    color="primary"
+                                ></v-progress-circular>
+                            </template>
+                            <template v-else>
+                                {{formattedAddress}}
+                            </template>
+
+                        </td>
                     </tr>
                     <tr>
                         <td class="teal--text text--accent-1">Relief Type:</td>
@@ -44,11 +55,11 @@
             <p class="subtitle-2 white--text" v-if="activity.supplyDate">
                 {{new Date(activity.supplyDate).toDateString()}}
             </p>
-            <template v-if="activity.contents">
+            <template v-if="activity.contents.length!==0">
                     <p class="title teal--text text--accent-1">Description:</p>
                     <p class="subtitle-2 white--text"
                     >
-                        {{activity.contents}}
+                        {{activity.contents[0].item}}
                     </p>
             </template>
 
@@ -79,12 +90,13 @@
                 if (this.$store.getters.getMaps) {
                     this.maps = this.$store.getters.getMaps;
 
+                    clearInterval(interval);
                     //this.callGeoCodeAPI();
                     this.callMapjsAPI();
 
-                    clearInterval(interval);
+
                 }
-            }, 100);
+            }, 1000);
 
 
         },
@@ -98,8 +110,8 @@
                 console.log("%cCALLING MAPSJAVASCRIPT API",'color:#1799B5');
                 let geocoder = new this.maps.Geocoder();
                 var latlng = {
-                    lat: this.activity.location.coordinates[1],
-                    lng: this.activity.location.coordinates[0]
+                    lat: this.activity.location.lat,
+                    lng: this.activity.location.lng
                 };
 
                 let self = this;

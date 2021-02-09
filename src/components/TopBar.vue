@@ -159,12 +159,12 @@
                         if (results[0].geometry.bounds) {
                             bounds = {
                                 northeast: {
-                                    lat: results[0].geometry.bounds.Ya.j,
-                                    lng: results[0].geometry.bounds.Ua.j,
+                                    lat: results[0].geometry.bounds.Va.j,
+                                    lng: results[0].geometry.bounds.Qa.j,
                                 },
                                 southwest: {
-                                    lat: results[0].geometry.bounds.Ya.i,
-                                    lng: results[0].geometry.bounds.Ua.i
+                                    lat: results[0].geometry.bounds.Va.i,
+                                    lng: results[0].geometry.bounds.Qa.i
                                 }
                             }
                         }

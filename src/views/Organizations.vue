@@ -144,9 +144,9 @@
                                 <p class="teal--text text--accent-1"><b>Supply Date:</b></p>
                                 <p class="white--text"> {{new Date(activity.supplyDate).toDateString()}}</p>
                             </template>
-                            <template v-if="activity.contents">
+                            <template v-if="activity.contents.length!==0">
                                 <p class="teal--text text--accent-1"><b>Contents:</b></p>
-                                <p class="white--text">{{activity.contents}}</p>
+                                <p class="white--text">{{activity.contents[0].item}}</p>
                             </template>
 
                             <p v-if="!activity.supplyDate && !activity.contents">

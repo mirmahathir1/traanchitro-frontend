@@ -108,12 +108,12 @@
                         lng: this.map.getCenter().lng()
                     },
                     northeast: {
-                        lat: bounds.Ya.j,
-                        lng: bounds.Ua.j,
+                        lat: bounds.Va.j,
+                        lng: bounds.Qa.j,
                     },
                     southwest: {
-                        lat: bounds.Ya.i,
-                        lng: bounds.Ua.i
+                        lat: bounds.Va.i,
+                        lng: bounds.Qa.i
                     }
                 };
                 this.$store.commit('setNewReliefLocation', newReliefLocation);

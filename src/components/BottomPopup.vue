@@ -123,6 +123,7 @@
 
             selectActivity(index) {
                 this.selectedActivity = this.activities[index];
+                console.log("INSIDE selectActivity in BottomPopup: ",this.selectedActivity);
                 this.activitySelectedFlag = true;
             },
 
