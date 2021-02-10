@@ -12,6 +12,7 @@
     import Map from "./components/Map";
     import TopBar from "./components/TopBar";
     import SideDrawer from "./components/SideDrawer";
+    import {Plugins} from '@capacitor/core';
 
     export default {
         props: {
@@ -24,6 +25,21 @@
         },
         created() {
             this.$store.dispatch('fetchOrganizations');
+        },
+        methods: {
+            yourCallBackFunction () {
+                if(this.$route.path==="/"){
+                    Plugins.App.exitApp();
+                }else{
+                    this.$router.go(-1);
+                }
+            }
+        },
+        mounted () {
+            document.addEventListener("backbutton", this.yourCallBackFunction, false);
+        },
+        beforeDestroy () {
+            document.removeEventListener("backbutton", this.yourCallBackFunction);
         }
     }
 </script>

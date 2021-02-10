@@ -8,6 +8,9 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@capacitor/android": "^2.4.6",
+    "@capacitor/cli": "^2.4.6",
+    "@capacitor/core": "^2.4.6",
     "@google/markerclusterer": "^2.0.8",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",

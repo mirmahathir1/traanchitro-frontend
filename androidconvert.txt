@@ -1,0 +1,67 @@
+#!
+echo "Enter app name"
+read appName
+
+#sudo npm install -g @vue/cli
+vue create "$appName"
+
+cd "$appName"
+
+vue add vuetify
+
+npm install --save @capacitor/core @capacitor/cli
+
+npm run build
+
+npx cap init --web-dir=dist
+
+npx cap add android
+
+
+
+echo "Add the following line to public/index.html"
+cat << EndOfMessage
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+EndOfMessage
+gedit public/index.html
+
+echo "Add the following line to the capacitor.config.json:"
+cat << EndOfMessage
+"linuxAndroidStudioPath": "/home/$USER/Softwares/android-studio/bin/studio.sh"
+EndOfMessage
+gedit capacitor.config.json
+
+echo "Copy these lines to src/App.vue to enable backbutton exit"
+cat << EndOfMessage
+<script>
+import {Plugins} from '@capacitor/core';
+export default {
+methods: {
+    yourCallBackFunction () {
+      if(this.\$route.path==="/"){
+        Plugins.App.exitApp();
+      }else{
+        this.\$router.go(-1);
+      }
+    }
+  },
+  mounted () {
+    document.addEventListener("backbutton", this.yourCallBackFunction, false);
+  },
+  beforeDestroy () {
+    document.removeEventListener("backbutton", this.yourCallBackFunction);
+  }
+  };
+  </script>
+EndOfMessage
+gedit src/App.vue
+
+npm run build
+npx cap sync
+
+echo "Open android studio using:"
+echo "npx cap open android"
+echo "Sync capacitor using:"
+echo "npx cap sync"
+
+# npm run serve
